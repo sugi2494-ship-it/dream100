@@ -935,16 +935,25 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+  // ===================================
+  // Supabase 연결
+  // ===================================
+  const SB_URL = 'https://oqxlsnyuwtmjmbhgzjoz.supabase.co';
+  const SB_KEY = 'sb_publishable_mn7lAEbiyw1ArefbUh9R7w_fZOdW5g0';
+  const sb = supabase.createClient(SB_URL, SB_KEY);
+  const ADMIN_EMAIL = 'sugi2494@gmail.com';
+
   // ===================================
   // 인증
   // ===================================
-  const ADMIN_PW = '1004';
-  const AUTH_KEY = 'ggumpasho_auth_v2';
-
-  function checkAuth() {
-    if (sessionStorage.getItem(AUTH_KEY) === '1') { showAdmin(); }
-    else { showLogin(); }
+  async function checkAuth() {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) { await fetchAll(); showAdmin(); return; }
+    } catch (e) {}
+    showLogin();
   }
   function showLogin() {
     document.getElementById('loginScreen').style.display = 'flex';
@@ -955,20 +964,22 @@
     document.getElementById('adminLayout').style.display = 'grid';
     refreshAll();
   }
-  function handleLogin() {
+  async function handleLogin() {
     const pw = document.getElementById('loginPw').value;
-    if (pw === ADMIN_PW) {
-      sessionStorage.setItem(AUTH_KEY, '1');
-      showAdmin();
-      showToast('로그인 성공! 🎉', 'success');
-    } else {
+    if (!pw) return;
+    const { error } = await sb.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pw });
+    if (error) {
       showToast('비밀번호가 올바르지 않습니다.', 'error');
       document.getElementById('loginPw').value = '';
+    } else {
+      await fetchAll();
+      showAdmin();
+      showToast('로그인 성공! 🎉', 'success');
     }
   }
-  function handleLogout() {
+  async function handleLogout() {
     if (!confirm('로그아웃하시겠습니까?')) return;
-    sessionStorage.removeItem(AUTH_KEY);
+    await sb.auth.signOut();
     showLogin();
   }
 
@@ -982,12 +993,40 @@
     donations: 'ggumpasho_donations_2026',
     banner: 'ggumpasho_event_banner',
   };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null };
+  const KEYMAP = {};
+  KEYMAP[STORE.photos] = 'photos';
+  KEYMAP[STORE.activities] = 'activities';
+  KEYMAP[STORE.donations] = 'donations';
+  KEYMAP[STORE.banner] = 'banner';
+
+  async function fetchAll() {
+    const { data: rows, error: e1 } = await sb.from('site_content').select('key,value');
+    if (!e1 && rows) rows.forEach(r => { if (r.key in CACHE) CACHE[r.key] = r.value; });
+    const { data: inqs, error: e2 } = await sb.from('inquiries').select('*').order('created_at', { ascending: false });
+    if (!e2 && inqs) CACHE.inquiries = inqs.map(r => ({
+      id: r.id, name: r.name, email: r.email, phone: r.phone, type: r.type,
+      message: r.message, status: r.status, receipt: r.receipt, createdAt: r.created_at,
+    }));
+  }
   function load(key, def) {
-    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(def)); } catch(e) { return def; }
+    if (key === STORE.inquiries) return CACHE.inquiries;
+    const v = CACHE[KEYMAP[key]];
+    return (v === undefined || v === null) ? def : v;
   }
   function save(key, val) {
-    try { localStorage.setItem(key, JSON.stringify(val)); }
-    catch(e) { showToast('저장 실패: 브라우저 저장 용량 초과 (~5MB)', 'error'); }
+    if (key === STORE.inquiries) { CACHE.inquiries = val; return; }
+    const k = KEYMAP[key];
+    CACHE[k] = val;
+    sb.from('site_content').upsert({ key: k, value: val, updated_at: new Date().toISOString() })
+      .then(({ error }) => { if (error) showToast('서버 저장 실패: ' + error.message, 'error'); });
+  }
+  async function uploadToStorage(file, prefix) {
+    const extMatch = (file.name || '').match(/\.[A-Za-z0-9]+$/);
+    const path = prefix + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) + (extMatch ? extMatch[0].toLowerCase() : '');
+    const { error } = await sb.storage.from('uploads').upload(path, file, { contentType: file.type || undefined });
+    if (error) throw error;
+    return sb.storage.from('uploads').getPublicUrl(path).data.publicUrl;
   }
   function fmtDate(iso) {
     if (!iso) return '-';
@@ -1116,7 +1155,7 @@
     for (const f of files) {
       if (!f.type.startsWith('image/')) continue;
       const dataUrl = await readAsDataURL(f);
-      pendingFiles.push({ name: f.name, size: f.size, type: f.type, dataUrl });
+      pendingFiles.push({ name: f.name, size: f.size, type: f.type, dataUrl, file: f });
       const thumb = document.createElement('div');
       thumb.style.cssText = 'width:70px; height:70px; border-radius:6px; overflow:hidden; border:1px solid var(--color-border);';
       thumb.innerHTML = `<img src="${dataUrl}" style="width:100%; height:100%; object-fit:cover;" />`;
@@ -1143,27 +1182,35 @@
     uploadPreview.style.display = 'none';
     fileInput.value = '';
   }
-  function saveUpload(publish) {
+  async function saveUpload(publish) {
     if (pendingFiles.length === 0) return;
     const category = document.getElementById('uploadCategory').value;
     const title = document.getElementById('uploadTitle').value.trim() || '제목 없음';
+    const count = pendingFiles.length;
+    showToast('파일 업로드 중...', '');
     const photos = load(STORE.photos, []);
-    for (const f of pendingFiles) {
-      photos.unshift({
-        id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-        title: pendingFiles.length > 1 ? `${title} - ${f.name.replace(/\.[^.]+$/,'')}` : title,
-        category,
-        dataUrl: f.dataUrl,
-        size: f.size,
-        status: publish ? 'published' : 'draft',
-        createdAt: new Date().toISOString(),
-      });
+    try {
+      for (const f of pendingFiles) {
+        const url = await uploadToStorage(f.file, 'photos');
+        photos.unshift({
+          id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+          title: count > 1 ? `${title} - ${f.name.replace(/\.[^.]+$/,'')}` : title,
+          category,
+          dataUrl: url,
+          size: f.size,
+          status: publish ? 'published' : 'draft',
+          createdAt: new Date().toISOString(),
+        });
+      }
+    } catch (err) {
+      showToast('업로드 실패: ' + (err.message || err), 'error');
+      return;
     }
     save(STORE.photos, photos);
     cancelUpload();
     renderPhotos();
     renderDashboard();
-    showToast(publish ? `${pendingFiles.length}장 게시 완료! 🚀` : `${pendingFiles.length}장 임시저장!`, 'success');
+    showToast(publish ? `${count}장 게시 완료! 🚀` : `${count}장 임시저장!`, 'success');
   }
 
   function renderPhotos() {
@@ -1219,7 +1266,10 @@
     const imgFile = document.getElementById('actImage').files[0];
     if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
     let image = null;
-    if (imgFile && imgFile.type.startsWith('image/')) image = await readAsDataURL(imgFile);
+    if (imgFile && imgFile.type.startsWith('image/')) {
+      try { image = await uploadToStorage(imgFile, 'activities'); }
+      catch (err) { showToast('이미지 업로드 실패: ' + (err.message || err), 'error'); return; }
+    }
 
     const acts = load(STORE.activities, []);
     acts.unshift({
@@ -1371,7 +1421,8 @@
     const idx = inqs.findIndex(i => i.id === id);
     if (idx < 0) return;
     inqs[idx].status = inqs[idx].status === 'done' ? 'new' : 'done';
-    save(STORE.inquiries, inqs);
+    sb.from('inquiries').update({ status: inqs[idx].status }).eq('id', id)
+      .then(({ error }) => { if (error) showToast('서버 저장 실패: ' + error.message, 'error'); });
     renderInquiries();
     renderBadges();
     renderDashboard();
@@ -1381,11 +1432,14 @@
     const idx = inqs.findIndex(i => i.id === id);
     if (idx < 0) return;
     inqs[idx].receipt = !inqs[idx].receipt;
-    save(STORE.inquiries, inqs);
+    sb.from('inquiries').update({ receipt: inqs[idx].receipt }).eq('id', id)
+      .then(({ error }) => { if (error) showToast('서버 저장 실패: ' + error.message, 'error'); });
   }
   function deleteInquiry(id) {
     if (!confirm('삭제하시겠습니까?')) return;
-    save(STORE.inquiries, load(STORE.inquiries, []).filter(i => i.id !== id));
+    CACHE.inquiries = load(STORE.inquiries, []).filter(i => i.id !== id);
+    sb.from('inquiries').delete().eq('id', id)
+      .then(({ error }) => { if (error) showToast('서버 삭제 실패: ' + error.message, 'error'); });
     renderInquiries();
     renderBadges();
     renderDashboard();
@@ -1477,10 +1531,11 @@
   }
   async function uploadFinance(monthKey, file) {
     if (!file) return;
-    if (file.size > 4 * 1024 * 1024) {
-      if (!confirm(`파일 크기가 큽니다 (${fmtBytes(file.size)}). 브라우저 저장소 한계로 문제가 생길 수 있습니다. 계속하시겠습니까?`)) return;
-    }
-    const dataUrl = await readAsDataURL(file);
+    if (file.size > 45 * 1024 * 1024) { showToast('파일이 너무 큽니다 (최대 45MB).', 'error'); return; }
+    showToast('파일 업로드 중...', '');
+    let dataUrl;
+    try { dataUrl = await uploadToStorage(file, 'finance'); }
+    catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); return; }
     const donations = load(STORE.donations, {});
     donations[monthKey] = {
       fileName: file.name,
