@@ -1,0 +1,2960 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="비영리민간단체 꿈파쇼 - 청소년의 꿈을 후원하고 봉사하는 울산 지역 NGO. 꿈비전발표대회, 진로멘토링, 장학금후원사업을 통해 청소년의 미래를 지원합니다." />
+<title>꿈파쇼 | 청소년의 꿈을 후원하고 봉사하는</title>
+
+<!-- Pretendard 폰트 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+<style>
+  /* ============================================
+     🎨 디자인 시스템 - 꿈파쇼 브랜드 컬러
+     리플렛 기반: 코랄핑크(#E85D75) + 옐로우(#FFD54F) + 크림(#FFF5F0)
+     ============================================ */
+  :root {
+    /* Primary - 꿈파쇼 브랜드 코랄 핑크 */
+    --color-primary: #C9284D;
+    --color-primary-dark: #A01E3D;
+    --color-primary-light: #FCE8EE;
+
+    /* Accent - 희망의 옐로우 */
+    --color-accent: #FFD54F;
+    --color-accent-dark: #F5B800;
+
+    /* Warm - 활기찬 코랄 */
+    --color-warm: #E85D75;
+    --color-warm-soft: #FDD7DE;
+
+    /* 크림 배경 (리플렛과 동일) */
+    --color-cream: #FFF5F0;
+    --color-cream-soft: #FDF9F6;
+
+    /* Neutral */
+    --color-text: #2A2A2A;
+    --color-text-muted: #5A6472;
+    --color-text-light: #8B95A1;
+    --color-border: #F0E4E4;
+    --color-bg: #FFFFFF;
+    --color-bg-soft: #FDF9F6;
+    --color-bg-dark: #3D2635;
+
+    /* 간격 */
+    --container: 1200px;
+    --radius: 10px;
+    --radius-lg: 20px;
+
+    /* 그림자 */
+    --shadow-sm: 0 2px 8px rgba(201,40,77,0.06);
+    --shadow-md: 0 4px 16px rgba(201,40,77,0.1);
+    --shadow-lg: 0 8px 32px rgba(201,40,77,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    color: var(--color-text);
+    background: var(--color-bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  ul { list-style: none; }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  h1, h2, h3, h4 { line-height: 1.3; font-weight: 700; letter-spacing: -0.02em; }
+  .section-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .section-subtitle {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 1.05rem;
+    max-width: 680px;
+    margin: 0 auto 48px;
+  }
+  .section-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+  .section-header { text-align: center; margin-bottom: 56px; }
+
+  section { padding: 80px 0; }
+
+  /* ============================================
+     📣 이벤트 배너
+     ============================================ */
+  .event-banner {
+    background: linear-gradient(90deg, var(--color-warm), var(--color-primary));
+    color: white;
+    position: relative;
+    z-index: 90;
+  }
+  .event-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+  .event-banner .event-icon { font-size: 1.1rem; }
+  .event-banner .event-text { font-weight: 600; }
+  .event-banner .event-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: 700;
+    padding: 4px 10px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .event-banner .event-link:hover { background: rgba(255,255,255,0.15); }
+  .event-banner .event-close {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 1rem;
+    opacity: 0.8;
+    padding: 4px 8px;
+  }
+  .event-banner .event-close:hover { opacity: 1; }
+  @media (max-width: 600px) {
+    .event-banner-inner { padding-right: 40px; }
+    .event-banner .event-text { font-size: 0.85rem; }
+  }
+
+  /* ============================================
+     🔴 헤더 (네비게이션)
+     ============================================ */
+  .topbar {
+    background: var(--color-bg-dark);
+    color: #fff;
+    font-size: 0.85rem;
+  }
+  .topbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .topbar .contact-quick {
+    display: flex;
+    gap: 20px;
+    opacity: 0.85;
+  }
+  .topbar .util-links {
+    display: flex;
+    gap: 20px;
+  }
+  .topbar a { opacity: 0.85; transition: opacity .2s; }
+  .topbar a:hover { opacity: 1; }
+
+  header.main-header {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    z-index: 100;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--color-primary-dark);
+    letter-spacing: -0.03em;
+  }
+  .logo-mark {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(201,40,77,0.18);
+    border: 2px solid var(--color-primary-light);
+  }
+  .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .logo-text-sub {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    letter-spacing: 0;
+    margin-top: 2px;
+  }
+
+  nav.gnb ul {
+    display: flex;
+    gap: 36px;
+  }
+  nav.gnb a {
+    font-weight: 600;
+    font-size: 0.98rem;
+    color: var(--color-text);
+    padding: 8px 4px;
+    position: relative;
+    transition: color .2s;
+  }
+  nav.gnb a:hover { color: var(--color-primary); }
+  nav.gnb a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transition: transform .2s;
+  }
+  nav.gnb a:hover::after { transform: scaleX(1); }
+
+  .header-cta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn {
+    padding: 12px 22px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all .2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary {
+    background: var(--color-primary);
+    color: white;
+  }
+  .btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-warm {
+    background: var(--color-warm);
+    color: white;
+  }
+  .btn-warm:hover {
+    background: #D14563;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-primary-dark);
+    border: 1.5px solid var(--color-primary);
+  }
+  .btn-outline:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .mobile-toggle {
+    display: none;
+    width: 40px; height: 40px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+  }
+  .mobile-toggle span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--color-text);
+    transition: all .3s;
+  }
+
+  /* ============================================
+     🎯 HERO 섹션
+     ============================================ */
+  .hero {
+    position: relative;
+    padding: 80px 0 100px;
+    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-cream-soft) 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(232,93,117,0.12), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -150px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,213,79,0.15), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+  }
+  .hero-content { position: relative; z-index: 2; }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid var(--color-primary-light);
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .hero-tag .dot {
+    width: 8px; height: 8px;
+    background: var(--color-warm);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+  }
+  .hero h1 .highlight {
+    color: var(--color-primary);
+    position: relative;
+    display: inline-block;
+  }
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 4px;
+    height: 14px;
+    background: rgba(255, 213, 79, 0.5);
+    z-index: -1;
+  }
+  .hero .sub-slogan {
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .hero p.lead {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-bottom: 36px;
+    max-width: 540px;
+    line-height: 1.75;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* Hero 이미지 영역 - 슬라이더 */
+  .hero-image {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #FCE8EE 0%, #FFF5C4 100%);
+  }
+  .hero-slider {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity .35s ease-in-out;
+  }
+  .hero-slide.active { opacity: 1; }
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    display: block;
+  }
+  .hero-slide .caption-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 40px 24px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 50%, transparent 100%);
+    color: white;
+    pointer-events: none;
+  }
+  .hero-slide .cap-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .hero-slide .cap-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  }
+  .hero-slide .cap-title .cap-meta {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .hero-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    color: var(--color-primary-dark);
+    font-size: 1.2rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 3;
+    transition: all .2s;
+  }
+  .hero-nav:hover { background: white; transform: translateY(-50%) scale(1.08); }
+  .hero-nav.prev { left: 12px; }
+  .hero-nav.next { right: 12px; }
+  .hero-dots {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+    z-index: 3;
+  }
+  .hero-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all .2s;
+    border: none;
+    padding: 0;
+  }
+  .hero-dot.active {
+    background: white;
+    width: 24px;
+    border-radius: 4px;
+  }
+  /* 기존 정적 img fallback을 위한 스타일도 유지 */
+  .hero-image > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    display: block;
+  }
+  .hero-image .caption-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 40px 24px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 50%, transparent 100%);
+    color: white;
+    pointer-events: none;
+  }
+  .hero-image .cap-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .hero-image .cap-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  }
+  .hero-image .cap-title .cap-meta {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 500;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .placeholder-img {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 20px;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(201,40,77,0.04) 10px,
+      rgba(201,40,77,0.04) 20px
+    );
+  }
+  .hero-floating-card {
+    position: absolute;
+    background: white;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-floating-card.card-1 {
+    bottom: 30px;
+    left: -30px;
+  }
+  .hero-floating-card.card-2 {
+    top: 40px;
+    right: -20px;
+  }
+  .hero-floating-card .icon {
+    width: 44px; height: 44px;
+    background: var(--color-primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+  .hero-floating-card .num {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+  .hero-floating-card .label {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  /* ============================================
+     💌 회장 인사말 (리플렛 반영)
+     ============================================ */
+  .greeting {
+    background: var(--color-cream-soft);
+    padding: 80px 0;
+  }
+  .greeting-inner {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .greeting-photo {
+    aspect-ratio: 4/5;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--color-warm-soft) 0%, var(--color-cream) 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .greeting-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+  .greeting-content h3 {
+    font-size: 1rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .greeting-content h2 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    margin-bottom: 24px;
+    color: var(--color-text);
+  }
+  .greeting-content p {
+    color: var(--color-text-muted);
+    margin-bottom: 16px;
+    font-size: 1.02rem;
+    line-height: 1.85;
+  }
+  .greeting-content .signature {
+    margin-top: 32px;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    text-align: right;
+  }
+  .greeting-content .signature strong {
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    font-size: 1.1rem;
+  }
+
+  /* ============================================
+     📊 임팩트 숫자
+     ============================================ */
+  .impact {
+    background: var(--color-primary);
+    color: white;
+    padding: 60px 0;
+    background-image: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  }
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    text-align: center;
+  }
+  .impact-item .num {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    display: block;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+    color: var(--color-accent);
+  }
+  .impact-item .label {
+    font-size: 0.95rem;
+    opacity: 0.95;
+  }
+
+  /* ============================================
+     💼 사업소개
+     ============================================ */
+  .programs { background: var(--color-cream-soft); }
+  .programs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .program-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all .3s;
+    border: 1px solid var(--color-border);
+  }
+  .program-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary);
+  }
+  .program-thumb {
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #FCE8EE 0%, #F9C6D2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .program-thumb.thumb-2 { background: linear-gradient(135deg, #FFF5C4 0%, #FFE082 100%); }
+  .program-thumb.thumb-3 { background: linear-gradient(135deg, #FFE0D3 0%, #FFB599 100%); }
+  .program-thumb.thumb-4 { background: linear-gradient(135deg, #E8D5E8 0%, #C8A2C8 100%); }
+  .program-thumb > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s;
+  }
+  .program-card:hover .program-thumb > img { transform: scale(1.05); }
+  .program-thumb .thumb-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .program-thumb .badge {
+    position: absolute;
+    top: 16px; left: 16px;
+    background: rgba(255,255,255,0.95);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+  }
+  .program-body {
+    padding: 28px;
+  }
+  .program-body h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+  }
+  .program-body .subtitle {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+  .program-body p {
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .program-body .more {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ============================================
+     👥 단체소개 (탭)
+     ============================================ */
+  .about-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 12px 28px;
+    border-radius: 999px;
+    background: var(--color-bg-soft);
+    color: var(--color-text-muted);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all .2s;
+    border: 1.5px solid transparent;
+  }
+  .tab.active {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeIn .3s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* 미션/비전 카드 */
+  .mv-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .mv-card {
+    padding: 36px 28px;
+    border-radius: var(--radius-lg);
+    background: var(--color-cream);
+    border-top: 4px solid var(--color-primary);
+  }
+  .mv-card:nth-child(2) { border-top-color: var(--color-accent); }
+  .mv-card:nth-child(3) { border-top-color: var(--color-warm); }
+  .mv-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    color: var(--color-primary-dark);
+  }
+  .mv-card:nth-child(2) h3 { color: #B8860B; }
+  .mv-card:nth-child(3) h3 { color: var(--color-warm); }
+  .mv-card p { color: var(--color-text-muted); font-size: 1rem; line-height: 1.75; }
+  .mv-card .num {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    background: white;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    color: var(--color-primary-dark);
+    letter-spacing: 0.05em;
+  }
+
+  /* 연혁 타임라인 */
+  .timeline {
+    max-width: 820px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 28px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--color-border);
+  }
+  .tl-item {
+    position: relative;
+    padding-bottom: 28px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -26px; top: 6px;
+    width: 14px; height: 14px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+  .tl-item.highlight::before {
+    background: var(--color-accent);
+    box-shadow: 0 0 0 2px var(--color-accent-dark);
+    width: 18px; height: 18px;
+    left: -28px;
+  }
+  .tl-year {
+    font-weight: 900;
+    color: var(--color-primary-dark);
+    font-size: 1.15rem;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+  .tl-year .month { font-size: 0.85rem; color: var(--color-text-muted); font-weight: 500; margin-left: 4px; }
+  .tl-desc {
+    color: var(--color-text-muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .tl-desc strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  /* 임원 그리드 */
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px 24px;
+  }
+  .board-card {
+    text-align: center;
+    transition: transform .3s;
+  }
+  .board-card:hover { transform: translateY(-4px); }
+  .board-photo {
+    aspect-ratio: 4/5;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-soft);
+    margin-bottom: 18px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .3s;
+  }
+  .board-card:hover .board-photo { box-shadow: var(--shadow-md); }
+  .board-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+  .board-photo.leader::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 3px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+  }
+  .board-photo .role-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: rgba(255,255,255,0.95);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    letter-spacing: 0.02em;
+  }
+  .board-photo .role-badge.primary {
+    background: var(--color-primary);
+    color: white;
+  }
+  .board-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .board-card .role {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+  }
+  .board-card .bio {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  /* ============================================
+     💝 후원하기
+     ============================================ */
+  .donate {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .donate::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,213,79,0.15), transparent 70%);
+    border-radius: 50%;
+  }
+  .donate .section-tag {
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+  .donate .section-title, .donate .section-subtitle { color: white; }
+  .donate .section-subtitle { opacity: 0.95; }
+
+  .donate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 960px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* 온라인 후원 신청 배너 (강조 CTA) */
+  .donate-cta-banner {
+    max-width: 960px;
+    margin: 0 auto 32px;
+    background: white;
+    color: var(--color-text);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    padding: 36px 40px;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 32px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .donate-cta-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-primary), var(--color-warm));
+  }
+  .donate-cta-banner .cta-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+  }
+  .donate-cta-banner h3 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--color-primary-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .donate-cta-banner p {
+    color: var(--color-text-muted);
+    margin-bottom: 20px;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .donate-cta-banner .cta-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .donate-cta-banner .btn-cta {
+    padding: 14px 26px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.98rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .2s;
+  }
+  .donate-cta-banner .btn-cta:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .donate-cta-banner .btn-cta-outline {
+    padding: 14px 22px;
+    background: transparent;
+    color: var(--color-primary);
+    border: 1.5px solid var(--color-primary);
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 0.98rem;
+    transition: all .2s;
+  }
+  .donate-cta-banner .btn-cta-outline:hover {
+    background: var(--color-primary-light);
+  }
+  .cta-qr-wrap {
+    text-align: center;
+    padding: 12px;
+    background: var(--color-cream);
+    border-radius: var(--radius);
+    border: 2px dashed var(--color-primary-light);
+  }
+  .cta-qr-wrap img {
+    width: 100%;
+    aspect-ratio: 1;
+    display: block;
+    border-radius: 6px;
+    background: white;
+  }
+  .cta-qr-wrap .qr-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+  .cta-qr-wrap .qr-label small {
+    display: block;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    margin-top: 2px;
+  }
+  .donate-card {
+    background: white;
+    color: var(--color-text);
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .donate-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: var(--color-primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .account-info {
+    background: var(--color-cream);
+    padding: 22px;
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    border-left: 4px solid var(--color-primary);
+  }
+  .account-info .bank {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .account-info .number {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--color-text);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+  .account-info .holder {
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .copy-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius);
+    font-weight: 700;
+    transition: background .2s;
+    font-size: 0.98rem;
+  }
+  .copy-btn:hover { background: var(--color-primary-dark); }
+
+  .support-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .support-options .opt {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--color-cream-soft);
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  .support-options .opt strong { color: var(--color-primary-dark); }
+
+  .donate-info {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--color-cream-soft);
+    border-radius: var(--radius);
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+  .donate-info strong { color: var(--color-primary-dark); }
+
+  .donate-note {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 0.95rem;
+    opacity: 0.95;
+    position: relative;
+    line-height: 1.75;
+  }
+
+  /* ============================================
+     🖼️ 갤러리
+     ============================================ */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    grid-auto-rows: minmax(0, auto);
+  }
+  .gallery-item {
+    aspect-ratio: 4/3;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg-soft);
+    position: relative;
+    cursor: pointer;
+    transition: transform .3s;
+  }
+  .gallery-item:hover { transform: scale(1.02); }
+  .gallery-item.tall { grid-row: span 2; aspect-ratio: 4/6; }
+  .gallery-item > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s;
+  }
+  .gallery-item:hover > img { transform: scale(1.08); }
+  .gallery-item .gallery-caption {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    z-index: 2;
+  }
+  .gallery-item .gallery-caption .tag {
+    display: inline-block;
+    background: var(--color-primary);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .gallery-item .gallery-caption .tag.yellow { background: var(--color-accent-dark); color: var(--color-text); }
+  .gallery-item .gallery-caption .tag.warm { background: var(--color-warm); }
+  .gallery-item .gallery-caption .tag.dark { background: var(--color-bg-dark); }
+  .gallery-inner {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      135deg,
+      #FDF0F0,
+      #FDF0F0 15px,
+      #F5E0E0 15px,
+      #F5E0E0 30px
+    );
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 20px;
+  }
+  .gallery-inner .tag {
+    background: var(--color-primary);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    font-family: 'Pretendard Variable', sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+  /* ============================================
+     📰 소식/뉴스
+     ============================================ */
+  .news { background: var(--color-cream-soft); }
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .news-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all .3s;
+  }
+  .news-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .news-thumb {
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #FCE8EE 0%, #F9C6D2 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .news-thumb.t2 { background: linear-gradient(135deg, #FFF5C4 0%, #FFE082 100%); }
+  .news-thumb.t3 { background: linear-gradient(135deg, #FFE0D3 0%, #FFB599 100%); }
+  .news-thumb > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .5s;
+  }
+  .news-card:hover .news-thumb > img { transform: scale(1.05); }
+  .news-cat {
+    position: absolute;
+    top: 14px; left: 14px;
+    padding: 5px 12px;
+    background: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    letter-spacing: 0.05em;
+  }
+  .news-body { padding: 24px; }
+  .news-date { font-size: 0.85rem; color: var(--color-text-light); margin-bottom: 10px; font-weight: 600; }
+  .news-body h4 { font-size: 1.1rem; margin-bottom: 10px; line-height: 1.4; }
+  .news-body p { font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.6; }
+
+  /* ============================================
+     📊 재정보고
+     ============================================ */
+  .finance-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .finance-text h2 {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    margin-bottom: 16px;
+  }
+  .finance-text p {
+    color: var(--color-text-muted);
+    margin-bottom: 24px;
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+  .finance-docs { display: flex; flex-direction: column; gap: 10px; }
+  .doc-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    background: var(--color-cream);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--color-primary);
+    transition: all .2s;
+  }
+  .doc-link:hover { background: var(--color-primary-light); transform: translateX(4px); }
+  .doc-link .name { font-weight: 700; }
+  .doc-link .meta { font-size: 0.85rem; color: var(--color-text-muted); margin-top: 2px; }
+  .doc-icon {
+    color: var(--color-primary);
+    font-weight: 800;
+    font-size: 1.4rem;
+  }
+
+  .finance-chart {
+    background: white;
+    padding: 36px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--color-border);
+  }
+  .chart-title {
+    font-weight: 800;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 1.1rem;
+  }
+  .chart-title .year { font-size: 0.9rem; color: var(--color-text-muted); font-weight: 600; }
+  .chart-bars { display: flex; flex-direction: column; gap: 18px; }
+  .chart-row .label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .chart-row .label .pct { font-weight: 800; color: var(--color-primary-dark); }
+  .chart-bar {
+    height: 10px;
+    background: var(--color-cream);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .chart-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 999px;
+  }
+  .chart-fill.c2 { background: var(--color-accent-dark); }
+  .chart-fill.c3 { background: var(--color-warm); }
+  .chart-fill.c4 { background: #C8A2C8; }
+  .chart-fill.c5 { background: #B0B8C1; }
+
+  /* 2026 월별 후원금 내역 */
+  .donation-monthly {
+    margin-top: 56px;
+    padding: 40px;
+    background: var(--color-cream-soft);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+  .donation-monthly-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .donation-monthly-header h3 {
+    font-size: 1.35rem;
+    margin: 4px 0 6px;
+    color: var(--color-primary-dark);
+  }
+  .donation-monthly-header p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+  }
+  .donation-months {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+  .month-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px 12px;
+    text-align: center;
+    border: 1.5px solid var(--color-border);
+    transition: all .15s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .month-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .month-card.empty {
+    background: transparent;
+    border: 1.5px dashed var(--color-border);
+    opacity: 0.55;
+    cursor: default;
+  }
+  .month-card.empty:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .month-card.filled {
+    border-color: var(--color-primary);
+    background: white;
+  }
+  .month-card.filled .month-status {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+  .month-card .month-num {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--color-primary-dark);
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .month-card.empty .month-num { color: var(--color-text-light); }
+  .month-card .month-status {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+  @media (max-width: 900px) {
+    .donation-months { grid-template-columns: repeat(4, 1fr); }
+    .donation-monthly { padding: 28px 22px; }
+  }
+  @media (max-width: 480px) {
+    .donation-months { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ============================================
+     📩 문의/뉴스레터
+     ============================================ */
+  .contact-newsletter {
+    background: var(--color-bg-dark);
+    color: white;
+  }
+  .cn-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  .cn-block h3 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+  .cn-block p {
+    opacity: 0.85;
+    margin-bottom: 24px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .form-row {
+    display: flex;
+    gap: 8px;
+  }
+  .form-row input {
+    flex: 1;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    background: rgba(255,255,255,0.1);
+    color: white;
+  }
+  .form-row input::placeholder { color: rgba(255,255,255,0.5); }
+  .form-row button {
+    padding: 14px 26px;
+    background: var(--color-accent);
+    color: var(--color-bg-dark);
+    border-radius: var(--radius);
+    font-weight: 800;
+  }
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .contact-item .ico {
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+  .contact-item .label {
+    font-size: 0.82rem;
+    opacity: 0.7;
+    margin-bottom: 2px;
+    letter-spacing: 0.05em;
+  }
+  .contact-item .value {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  /* ============================================
+     푸터
+     ============================================ */
+  footer {
+    background: #2A1A24;
+    color: rgba(255,255,255,0.7);
+    padding: 60px 0 30px;
+    font-size: 0.9rem;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .footer-col h5 {
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    font-weight: 700;
+  }
+  .footer-col ul li { margin-bottom: 8px; }
+  .footer-col a { transition: color .2s; }
+  .footer-col a:hover { color: white; }
+  .footer-brand p {
+    margin-top: 12px;
+    line-height: 1.75;
+    font-size: 0.85rem;
+  }
+  .footer-brand .logo {
+    color: white;
+  }
+  .footer-bottom {
+    padding-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.85rem;
+  }
+  .footer-bottom .legal-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  /* ============================================
+     📱 반응형 - 모바일 최적화
+     ============================================ */
+  @media (max-width: 1024px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-image { max-width: 640px; margin: 0 auto; }
+    .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
+    .board-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .greeting-inner { grid-template-columns: 260px 1fr; gap: 40px; }
+    .finance-inner { gap: 40px; }
+    .gallery-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 60px 0; }
+    .topbar { display: none; }
+
+    nav.gnb {
+      position: fixed;
+      top: 80px;
+      left: 0; right: 0;
+      background: white;
+      border-bottom: 1px solid var(--color-border);
+      transform: translateY(-120%);
+      transition: transform .3s;
+      box-shadow: var(--shadow-md);
+    }
+    nav.gnb.open { transform: translateY(0); }
+    nav.gnb ul {
+      flex-direction: column;
+      gap: 0;
+      padding: 12px 20px 20px;
+    }
+    nav.gnb a {
+      display: block;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 1rem;
+    }
+    .mobile-toggle { display: flex; }
+    .header-cta .btn-outline { display: none; }
+
+    .hero { padding: 60px 0 80px; }
+    .hero-floating-card.card-1 { left: 10px; bottom: 10px; padding: 12px 14px; }
+    .hero-floating-card.card-2 { right: 10px; top: 10px; padding: 12px 14px; }
+    .hero-floating-card .num { font-size: 1.15rem; }
+    .hero-floating-card .icon { width: 36px; height: 36px; font-size: 1.1rem; }
+
+    .greeting-inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .greeting-photo { max-width: 280px; margin: 0 auto; }
+    .greeting-content .signature { text-align: center; }
+
+    .programs-grid { grid-template-columns: 1fr; }
+    .mv-grid { grid-template-columns: 1fr; }
+    .board-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .donate-grid { grid-template-columns: 1fr; gap: 24px; }
+    .donate-cta-banner { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px; text-align: center; }
+    .donate-cta-banner .cta-buttons { justify-content: center; }
+    .cta-qr-wrap { max-width: 220px; margin: 0 auto; }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.tall { grid-row: span 1; aspect-ratio: 4/3; }
+    .news-grid { grid-template-columns: 1fr; }
+    .finance-inner { grid-template-columns: 1fr; gap: 40px; }
+    .cn-grid { grid-template-columns: 1fr; gap: 40px; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 30px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 0 16px; }
+    .header-inner { height: 68px; }
+    nav.gnb { top: 68px; }
+    .logo { font-size: 1.25rem; }
+    .logo-mark { width: 42px; height: 42px; }
+    .hero-floating-card { display: none; }
+    .impact-grid { grid-template-columns: 1fr 1fr; }
+    .board-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr; }
+    .hero-cta { flex-direction: column; }
+    .hero-cta .btn { width: 100%; justify-content: center; }
+    .donate-card { padding: 28px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     상단 유틸리티 바
+     ============================================ -->
+<div class="topbar">
+  <div class="container">
+    <div class="contact-quick">
+      <span>👤 국장 010-8343-7772</span>
+      <span>📞 대표 1600-7218</span>
+      <span>✉ dream_ss100@naver.com</span>
+    </div>
+    <div class="util-links">
+      <a href="#login">회원 로그인</a>
+      <a href="#volunteer">자원봉사 신청</a>
+      <a href="#contact">오시는 길</a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================
+     메인 헤더
+     ============================================ -->
+<header class="main-header">
+  <div class="container header-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark"><img src="assets/logo/ggumpasho_logo.png" alt="꿈파쇼 로고" /></span>
+      <span>
+        꿈파쇼
+        <span class="logo-text-sub">비영리민간단체</span>
+      </span>
+    </a>
+
+    <nav class="gnb" id="gnb">
+      <ul>
+        <li><a href="#about">단체소개</a></li>
+        <li><a href="#programs">사업안내</a></li>
+        <li><a href="#gallery">갤러리</a></li>
+        <li><a href="#news">소식</a></li>
+        <li><a href="#finance">재정보고</a></li>
+        <li><a href="#contact">문의</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-cta">
+      <a href="#donate" class="btn btn-primary">
+        <span>♥</span> 후원하기
+      </a>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="메뉴 열기">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================
+     HERO 섹션
+     ============================================ -->
+<!-- 📣 이벤트 배너 (관리자가 관리) -->
+<div id="eventBanner" class="event-banner" style="display:none;">
+  <div class="container event-banner-inner">
+    <span class="event-icon">📣</span>
+    <span class="event-text" id="eventBannerText"></span>
+    <a href="#" class="event-link" id="eventBannerLink" style="display:none;">자세히 보기 →</a>
+    <button class="event-close" onclick="closeEventBanner()" aria-label="배너 닫기">✕</button>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="dot"></span>
+        울산광역시 등록 비영리민간단체 제381호
+      </div>
+      <h1>
+        청소년의 꿈을<br />
+        <span class="highlight">후원하고 봉사</span>하는<br />
+        진로교육멘토
+      </h1>
+      <p class="lead">
+        비영리민간단체 <strong style="color: var(--color-primary-dark);">꿈파쇼</strong>는
+        대한민국의 미래인 청소년들이 꿈과 재능을 발휘하여
+        자신의 꿈을 펼칠 수 있도록 응원하는 울산광역시 등록 비영리민간단체입니다.
+        2013년 창립 이래 12년째 청소년의 성장을 함께해 오고 있습니다.
+      </p>
+      <div class="hero-cta">
+        <a href="#donate" class="btn btn-primary">
+          지금 후원하기 →
+        </a>
+        <a href="#programs" class="btn btn-outline">
+          사업 살펴보기
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-image">
+      <div class="hero-slider" id="heroSlider">
+        <!-- 최근 꿈비전 발표대회 사진들만 (자동 1초씩 전환) -->
+        <div class="hero-slide active">
+          <img src="assets/hero/dream_vision_5th.jpg" alt="울산청소년 꿈비전발표대회 단체 사진" />
+          <div class="caption-overlay">
+            <span class="cap-tag">꿈비전 발표대회</span>
+            <p class="cap-title">
+              울산청소년 꿈비전발표대회
+              <span class="cap-meta">청소년의 꿈을 응원하는 무대</span>
+            </p>
+          </div>
+        </div>
+        <div class="hero-slide">
+          <img src="assets/gallery/07_kid_police.jpg" alt="꿈비전발표대회 미래의 경찰 발표" />
+          <div class="caption-overlay">
+            <span class="cap-tag">꿈비전 발표대회</span>
+            <p class="cap-title">
+              "미래의 경찰" 청소년 발표자
+              <span class="cap-meta">청소년이 자신의 꿈을 이야기하는 무대</span>
+            </p>
+          </div>
+        </div>
+        <div class="hero-slide">
+          <img src="assets/gallery/dream_vision_speech.jpg" alt="꿈비전 발표대회 발표 현장" />
+          <div class="caption-overlay">
+            <span class="cap-tag">꿈비전 발표대회</span>
+            <p class="cap-title">
+              청소년 꿈비전 발표 현장
+              <span class="cap-meta">"스타를 기억하렴"</span>
+            </p>
+          </div>
+        </div>
+        <div class="hero-slide">
+          <img src="assets/gallery/03_audience.jpg" alt="꿈비전 발표대회 강연장" />
+          <div class="caption-overlay">
+            <span class="cap-tag">꿈비전 발표대회</span>
+            <p class="cap-title">
+              꿈비전 발표대회 강연장
+              <span class="cap-meta">청소년들의 꿈이 시작되는 곳</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 좌우 네비게이션 -->
+      <button class="hero-nav prev" onclick="heroPrev()" aria-label="이전 사진">‹</button>
+      <button class="hero-nav next" onclick="heroNext()" aria-label="다음 사진">›</button>
+
+      <!-- 인디케이터 -->
+      <div class="hero-dots" id="heroDots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     회장 인사말
+     ============================================ -->
+<section class="greeting" id="greeting">
+  <div class="container">
+    <div class="greeting-inner">
+      <div class="greeting-photo">
+        <img src="assets/board/01_chairman_choi.jpg" alt="꿈파쇼 회장 최해숙" />
+      </div>
+      <div class="greeting-content">
+        <h3>GREETING</h3>
+        <h2>회장 인사말</h2>
+        <p>
+          안녕하세요. 꿈파쇼 회장 <strong style="color: var(--color-primary-dark);">최해숙</strong>입니다.
+        </p>
+        <p>
+          우리 청소년들이 자신의 꿈을 자신 있게 말하며 도전할 수 있도록
+          많은 지역사회 인프라들과 멘토단들이 함께하고 있습니다.
+          꿈파쇼에서 만나는 작은 경험들이 청소년들에게 큰 변화로 이어지길 기대합니다.
+        </p>
+        <p>
+          여러분의 관심과 참여가 우리 청소년들에게 새로운 희망을 선물합니다.
+          많은 참여 부탁드립니다. 감사합니다.
+        </p>
+        <div class="signature">
+          — 회장 <strong>최해숙</strong> 배상
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     임팩트 숫자
+     ============================================ -->
+<section class="impact" style="padding: 60px 0;">
+  <div class="container">
+    <div class="impact-grid">
+      <div class="impact-item">
+        <span class="num">2013</span>
+        <span class="label">단체 설립 (12년+)</span>
+      </div>
+      <div class="impact-item">
+        <span class="num">150명+</span>
+        <span class="label">누적 회원</span>
+      </div>
+      <div class="impact-item">
+        <span class="num">20+</span>
+        <span class="label">협찬사 파트너</span>
+      </div>
+      <div class="impact-item">
+        <span class="num">7회</span>
+        <span class="label">꿈비전 발표대회 개최</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     단체소개 (미션·비전·연혁·임원)
+     ============================================ -->
+<section class="about-org" id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">ABOUT US</span>
+      <h2 class="section-title">비영리민간단체 꿈파쇼</h2>
+      <p class="section-subtitle">
+        "청소년의 행복한 미래를 지원합니다!"<br />
+        꿈파쇼는 대한민국의 미래인 청소년들이 꿈과 재능을 발휘하여
+        자신의 꿈을 펼칠 수 있도록 응원하는 울산광역시 등록 비영리민간단체입니다.
+      </p>
+    </div>
+
+    <div class="about-tabs">
+      <button class="tab active" data-tab="mission">미션·비전</button>
+      <button class="tab" data-tab="history">연혁</button>
+      <button class="tab" data-tab="board">임원 소개</button>
+    </div>
+
+    <!-- 미션/비전 -->
+    <div class="tab-panel active" id="tab-mission">
+      <div class="mv-grid">
+        <div class="mv-card">
+          <span class="num">01 MISSION</span>
+          <h3>우리의 미션</h3>
+          <p>취약계층 청소년이 경제적·환경적 어려움 없이 자신의 꿈을 발견하고 실현할 수 있도록 장학후원과 진로교육의 기회를 제공합니다.</p>
+        </div>
+        <div class="mv-card">
+          <span class="num">02 VISION</span>
+          <h3>우리의 비전</h3>
+          <p>모든 청소년이 배경과 관계없이 동등한 기회 속에서 자신의 잠재력을 마음껏 펼치는 사회를 만들어 갑니다.</p>
+        </div>
+        <div class="mv-card">
+          <span class="num">03 VALUES</span>
+          <h3>핵심 가치</h3>
+          <p>신뢰(Trust) · 소통(Communication) · 지속가능성(Sustainability)을 바탕으로 지역사회와 함께 청소년의 성장을 지원합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 연혁 (실제 리플렛 기반) -->
+    <div class="tab-panel" id="tab-history">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2025</div>
+          <div class="tl-desc">
+            제7회 울산 청소년 꿈비전 발표 대회 개최<br />
+            청운중학교, 화진중학교에 멘토링 활동 진행<br />
+            진로프로젝트 "별빛이 되어줄래" 멘토링 공익사업<br />
+            청소년 진로멘토링 "드림 캠퍼스" 멘토링 공익 사업
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-year">2024 <span class="month">· 만 10주년</span></div>
+          <div class="tl-desc">
+            <strong>꿈파쇼 만10주년 최해숙 회장 승격</strong><br />
+            제6회 울산청소년꿈비전발표대회 개최<br />
+            울산남구청 신정3동 도시재생 사업 시니어여가 자격교육과정 운영
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2023</div>
+          <div class="tl-desc">
+            제5회 울산청소년꿈비전발표대회 개최<br />
+            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
+            울산영웅100인프로젝트 100명 완성
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022</div>
+          <div class="tl-desc">
+            제4회 울산청소년꿈비전 발표대회 개최<br />
+            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
+            울산광역시 교육청 인성교육공모사업 "컬러강점으로 진로찾GO! 꿈찾GO!"<br />
+            울산광역시 비영리민간단체 공익활동 지원사업 "ESG환경과 함께하는 진로"<br />
+            자원봉사 수요처 등록
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2021</div>
+          <div class="tl-desc">
+            울산광역시 교육청 인성교육공모사업 선정<br />
+            울산광역시 비영리민간단체 공익활동 지원사업 "꿈에 날개를 달아라"<br />
+            꿈파쇼 청소년 후원의 밤 개최
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2020</div>
+          <div class="tl-desc">
+            이용준 운영위원장 위임 / 기부금영수증 정식단체 인증<br />
+            울산교육청 민간단체보조금지원사업 안전교육 "폭력 싫어요, 따뜻한 소통문화"<br />
+            울산광역시자원봉사센터 우수공모사업 "꼬지락 희망교실" 우수단체 수상
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2019</div>
+          <div class="tl-desc">
+            제2회 울산 청소년 꿈비전 발표대회 개최<br />
+            꿈파쇼 드림캠프 진행<br />
+            정동희 운영위원장 고문 위임 및 최해숙대표 운영위원장 겸임
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2018</div>
+          <div class="tl-desc">
+            <strong>비영리민간단체 등록 완료</strong><br />
+            제1회 울산 청소년 꿈비전 발표대회 개최
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2016 · 2017</div>
+          <div class="tl-desc">
+            2016년 회원 150명, 협찬사 40여개사 / 정동희 운영위원장 취임<br />
+            2015년 회원 100명, 협찬사 20개사 등록, 운영위원 10명 조직<br />
+            2014년 회원 50명, 운영위원 8명 조직
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-year">2013 <span class="month">· 12월 21일</span></div>
+          <div class="tl-desc"><strong>비영리민간단체 꿈파쇼 설립</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 임원 (실제 7명) -->
+    <div class="tab-panel" id="tab-board">
+      <!-- 리더십 -->
+      <h3 style="text-align:center; font-size:0.95rem; color:var(--color-primary-dark); font-weight:800; margin-bottom:28px; letter-spacing:0.1em;">
+        — LEADERSHIP · 리더십 —
+      </h3>
+      <div class="board-grid" style="grid-template-columns: repeat(4, 1fr); max-width: 1080px; margin: 0 auto 60px;">
+        <div class="board-card">
+          <div class="board-photo leader">
+            <img src="assets/board/01_chairman_choi.jpg" alt="최해숙 회장" />
+          </div>
+          <h4>최해숙</h4>
+          <div class="role">꿈파쇼 회장</div>
+          <p class="bio">2024년 만10주년 승격<br />청소년 꿈 후원 총괄</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/08_vp_jung.jpg" alt="정희삼 부회장" />
+          </div>
+          <h4>정희삼</h4>
+          <div class="role">부회장</div>
+          <p class="bio">꿈파쇼 예산 · 재정 감독<br />장학 후원 총괄</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/06_vp_lee.jpg" alt="이은영 부회장" />
+          </div>
+          <h4>이은영</h4>
+          <div class="role">부회장</div>
+          <p class="bio">대외 협력 및<br />후원 네트워크 운영</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/07_vp_kim.jpg" alt="김수겸 부회장" />
+          </div>
+          <h4>김수겸</h4>
+          <div class="role">부회장</div>
+          <p class="bio">청소년 교육·봉사 기획<br />사업 파트너십 담당</p>
+        </div>
+      </div>
+
+      <!-- 사무국·직제 -->
+      <h3 style="text-align:center; font-size:0.95rem; color:var(--color-primary-dark); font-weight:800; margin-bottom:28px; letter-spacing:0.1em;">
+        — EXECUTIVES · 사무국·직제 —
+      </h3>
+      <div class="board-grid">
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/02_secretary_yoon.jpg" alt="윤수진 사무국장" />
+          </div>
+          <h4>윤수진</h4>
+          <div class="role">사무국장</div>
+          <p class="bio">꿈파쇼 전반 운영 총괄<br />회원·협찬사 관리</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/03_mentor_kim.jpg" alt="김주연 진로멘토단장" />
+          </div>
+          <h4>김주연</h4>
+          <div class="role">진로멘토단장</div>
+          <p class="bio">"별빛이 되어줄래"<br />드림캠퍼스 운영</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/04_business_bae.jpg" alt="배수정 사업지원국장" />
+          </div>
+          <h4>배수정</h4>
+          <div class="role">사업지원국장</div>
+          <p class="bio">꿈비전발표대회 및<br />공익사업 기획·지원</p>
+        </div>
+        <div class="board-card">
+          <div class="board-photo">
+            <img src="assets/board/05_marketing_choi.jpg" alt="최재식 마케팅 홍보국장" />
+          </div>
+          <h4>최재식</h4>
+          <div class="role">마케팅 홍보국장</div>
+          <p class="bio">대외 홍보 · SNS 운영<br />언론 및 미디어 담당</p>
+        </div>
+      </div>
+      <p style="text-align: center; margin-top: 40px; font-size: 0.9rem; color: var(--color-text-muted); line-height: 1.7;">
+        ※ 꿈파쇼 임원진은 청소년의 꿈을 지원하기 위해 자발적으로 헌신하고 있습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     사업소개 (실제 4대 사업)
+     ============================================ -->
+<section class="programs" id="programs">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">OUR PROGRAMS</span>
+      <h2 class="section-title">꿈파쇼 4대 공익 사업</h2>
+      <p class="section-subtitle">
+        청소년의 꿈과 재능을 발휘할 수 있도록 다양한 교육·멘토링 프로그램을 운영합니다.
+      </p>
+    </div>
+
+    <div class="programs-grid">
+      <article class="program-card">
+        <div class="program-thumb thumb-1">
+          <img src="assets/gallery/dream_vision_speech.jpg" alt="꿈비전 발표대회" />
+          <div class="thumb-overlay"></div>
+          <span class="badge">01 발표대회</span>
+        </div>
+        <div class="program-body">
+          <h3>꿈비전 발표대회</h3>
+          <div class="subtitle">진로를 찾고 꿈을 찾는 프로젝트</div>
+          <p>만 13~17세 청소년들이 자신의 꿈과 비전을 발표하는 자기효능감 향상 대회입니다. 2018년 제1회를 시작으로 매년 개최하여 <strong>2025년 제7회</strong>를 맞이했습니다.</p>
+          <a href="#" class="more">자세히 보기 →</a>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <div class="program-thumb thumb-2">
+          <img src="assets/gallery/mentoring.jpg" alt="청소년 진로멘토링" />
+          <div class="thumb-overlay"></div>
+          <span class="badge">02 진로멘토링</span>
+        </div>
+        <div class="program-body">
+          <h3>청소년 진로멘토링</h3>
+          <div class="subtitle">"별빛이 되어줄래" · "드림 캠퍼스"</div>
+          <p>꿈파쇼 진로멘토단을 통한 학교 및 공익 활동사업으로 청소년을 위한 교육과 멘토링을 제공합니다. (청운중·화진중 등 진행)</p>
+          <a href="#" class="more">자세히 보기 →</a>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <div class="program-thumb thumb-3">
+          <img src="assets/gallery/scholarship.jpg" alt="장학금 후원사업" />
+          <div class="thumb-overlay"></div>
+          <span class="badge">03 장학사업</span>
+        </div>
+        <div class="program-body">
+          <h3>장학금 후원사업</h3>
+          <div class="subtitle">취약계층 청소년 장학후원</div>
+          <p>경제적 어려움으로 배움을 이어가기 어려운 취약계층 청소년에게 장학금과 학습 지원을 제공합니다.</p>
+          <a href="#" class="more">자세히 보기 →</a>
+        </div>
+      </article>
+
+      <article class="program-card">
+        <div class="program-thumb thumb-4">
+          <img src="assets/gallery/16_culture_point.jpg" alt="울산문화점빵 공익활동" />
+          <div class="thumb-overlay"></div>
+          <span class="badge">04 공익활동</span>
+        </div>
+        <div class="program-body">
+          <h3>공익활동 및 봉사활동</h3>
+          <div class="subtitle">지역 봉사활동 및 환경정화</div>
+          <p>울산문화점빵, ESG환경, 야영장 활성화 프로그램 등 지역사회와 함께하는 공익·봉사활동을 전개합니다.</p>
+          <a href="#" class="more">자세히 보기 →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     후원하기 (실제 계좌 정보)
+     ============================================ -->
+<section class="donate" id="donate">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">DONATION</span>
+      <h2 class="section-title">함께 만들어가는 청소년의 미래</h2>
+      <p class="section-subtitle">
+        여러분의 따뜻한 후원이 취약계층 청소년의 장학금·진로 교육활동·멘토링을 위해 소중히 사용됩니다.<br />
+        꿈파쇼에 후원해 주심에 진심으로 감사합니다.
+      </p>
+    </div>
+
+    <!-- 🚀 온라인 후원/멘토단 신청 CTA 배너 -->
+    <div class="donate-cta-banner">
+      <div>
+        <span class="cta-badge">📝 온라인 간편신청</span>
+        <h3>지금 바로 후원 신청하기</h3>
+        <p>
+          종이 서류 없이 네이버 폼으로 간편하게 신청하세요.<br />
+          <strong>일반후원 · 정기후원(CMS) · 진로멘토단</strong> 모두 신청 가능합니다.
+        </p>
+        <div class="cta-buttons">
+          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta">
+            온라인 신청서 작성하기 →
+          </a>
+          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta-outline">
+            링크 복사
+          </a>
+        </div>
+      </div>
+      <div class="cta-qr-wrap">
+        <img src="assets/donation/donation_form_qr.png" alt="꿈파쇼 후원 신청서 QR코드" />
+        <div class="qr-label">핸드폰으로 스캔<small>카메라로 찍으면 신청 페이지 이동</small></div>
+      </div>
+    </div>
+
+    <div class="donate-grid">
+      <!-- 계좌 후원 -->
+      <div class="donate-card">
+        <h3>🏦 계좌이체 후원</h3>
+        <div class="account-info">
+          <div class="bank">새마을금고</div>
+          <div class="number">9002-1780-0175-4</div>
+          <div class="holder">예금주: 꿈을파는강연쇼</div>
+        </div>
+        <button class="copy-btn" onclick="copyAccount()">📋 계좌번호 복사하기</button>
+
+        <div class="support-options">
+          <div class="opt"><span>일반 후원</span><strong>자유 금액</strong></div>
+          <div class="opt"><span>정기 후원 (CMS)</span><strong>월 5천원~10만원</strong></div>
+          <div class="opt"><span>물품 후원</span><strong>국장 문의</strong></div>
+        </div>
+
+        <div class="donate-info">
+          기부금 영수증 발급을 원하시면<br />
+          국장 <strong>010-8343-7772</strong> 로 연락주시기 바랍니다.
+        </div>
+      </div>
+
+      <!-- 후원 및 멘토단 신청 -->
+      <div class="donate-card">
+        <h3>💛 후원 및 멘토단 신청</h3>
+        <div class="account-info" style="background: var(--color-warm-soft); border-left-color: var(--color-warm);">
+          <div class="bank" style="color: var(--color-primary-dark); font-weight: 700;">신청 방식</div>
+          <div style="font-size: 1rem; margin-top: 8px; line-height: 1.75;">
+            ✓ <strong>일반 후원</strong> - 정기/일시 후원 선택<br />
+            ✓ <strong>진로 멘토단</strong> - 소속·경력 등록 후 멘토링 참여
+          </div>
+        </div>
+
+        <p style="margin: 20px 0 12px; font-weight: 600; font-size: 0.95rem;">신청 방법</p>
+        <div class="support-options">
+          <div class="opt"><span>👤 국장 직통</span><strong>010-8343-7772</strong></div>
+          <div class="opt"><span>📞 대표전화</span><strong>1600-7218</strong></div>
+          <div class="opt"><span>✉ 이메일 신청</span><strong>dream_ss100@naver.com</strong></div>
+          <div class="opt"><span>📠 팩스 신청</span><strong>0504-435-7997</strong></div>
+        </div>
+
+        <div class="donate-info">
+          취약계층 청소년 장학금·진로 교육활동·<br />
+          멘토링을 위해 꿈파쇼에 후원해 주심에<br />
+          <strong>진심으로 감사드립니다.</strong>
+        </div>
+      </div>
+    </div>
+
+    <p class="donate-note">
+      💡 꿈파쇼는 <strong>기부금대상민간단체(2020년 인증)</strong>로,<br />
+      기부금은 연말정산 시 세액공제 대상입니다.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================
+     갤러리
+     ============================================ -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">GALLERY</span>
+      <h2 class="section-title">활동 갤러리</h2>
+      <p class="section-subtitle">
+        꿈파쇼의 다양한 활동 현장을 사진으로 만나보세요.
+      </p>
+    </div>
+
+    <div class="gallery-grid">
+      <!-- 1. 제5회 꿈비전발표대회 (세로형 대표) -->
+      <div class="gallery-item tall">
+        <img src="assets/hero/dream_vision_5th.jpg" alt="제5회 꿈비전발표대회 단체 사진" />
+        <div class="gallery-caption"><span class="tag">제5회 발표대회</span></div>
+      </div>
+
+      <!-- 2. 미래의 경찰 발표 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/07_kid_police.jpg" alt="미래의 경찰 어린이 발표" />
+        <div class="gallery-caption"><span class="tag">발표대회</span></div>
+      </div>
+
+      <!-- 3. 꿈비전 발표 현장 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/dream_vision_speech.jpg" alt="꿈비전 발표대회 발표 현장" />
+        <div class="gallery-caption"><span class="tag">발표 현장</span></div>
+      </div>
+
+      <!-- 4. 울산영웅 100인 (2인) -->
+      <div class="gallery-item">
+        <img src="assets/gallery/01_hero_award.jpg" alt="울산영웅 100인 프로젝트 수상" />
+        <div class="gallery-caption"><span class="tag warm">울산영웅 100인</span></div>
+      </div>
+
+      <!-- 5. 울산영웅 100인 인증식 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/04_ulsan_hero100.jpg" alt="울산영웅 100인 인증식" />
+        <div class="gallery-caption"><span class="tag warm">100인 인증</span></div>
+      </div>
+
+      <!-- 6. 2019 진로 멘토링 (세로형) -->
+      <div class="gallery-item tall">
+        <img src="assets/gallery/08_kids_class.jpg" alt="꿈파쇼 청소년 교실 활동" />
+        <div class="gallery-caption"><span class="tag yellow">청소년 교육</span></div>
+      </div>
+
+      <!-- 7. 진로멘토링 교실 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/mentoring.jpg" alt="청소년 진로멘토링 현장" />
+        <div class="gallery-caption"><span class="tag yellow">진로멘토링</span></div>
+      </div>
+
+      <!-- 8. 2019 경영기획 특강 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/02_mentoring_2019.jpg" alt="2019 경영·기획 전문가 진로특강" />
+        <div class="gallery-caption"><span class="tag yellow">전문가 특강</span></div>
+      </div>
+
+      <!-- 9. 장학금 후원 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/scholarship.jpg" alt="장학금 후원사업 현장" />
+        <div class="gallery-caption"><span class="tag warm">장학후원</span></div>
+      </div>
+
+      <!-- 10. 진로 멘토 단체 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/11_career_mentoring.jpg" alt="꿈파쇼 진로 멘토링 단체 사진" />
+        <div class="gallery-caption"><span class="tag yellow">멘토단</span></div>
+      </div>
+
+      <!-- 11. 2017 진로특강 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/09_mentors_2017.jpg" alt="2017 직업인과의 대화 진로특강" />
+        <div class="gallery-caption"><span class="tag yellow">직업인 대화</span></div>
+      </div>
+
+      <!-- 12. 멘토 단체사진 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/10_mentors_group.jpg" alt="꿈파쇼 멘토 단체 사진" />
+        <div class="gallery-caption"><span class="tag yellow">멘토 모임</span></div>
+      </div>
+
+      <!-- 13. 드림워커 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/05_dreamworker.jpg" alt="드림워커 진로 체험" />
+        <div class="gallery-caption"><span class="tag">드림워커</span></div>
+      </div>
+
+      <!-- 14. 드림캠프 배너 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/13_dream_camp_banner.jpg" alt="2018 꿈파쇼 청소년 드림캠프" />
+        <div class="gallery-caption"><span class="tag">드림캠프</span></div>
+      </div>
+
+      <!-- 15. 드림캠프 참여 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/12_dream_camp_kids.jpg" alt="드림캠프 참여 청소년들" />
+        <div class="gallery-caption"><span class="tag">DREAM CAMP</span></div>
+      </div>
+
+      <!-- 16. 7월 꿈파쇼 단체행사 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/06_ceremony_july.jpg" alt="꿈파쇼 7월 단체 행사" />
+        <div class="gallery-caption"><span class="tag dark">공익행사</span></div>
+      </div>
+
+      <!-- 17. 1주년 기념 (2014) -->
+      <div class="gallery-item">
+        <img src="assets/gallery/14_1st_anniversary.jpg" alt="꿈파쇼 1주년 기념 (2014)" />
+        <div class="gallery-caption"><span class="tag dark">1주년 기념</span></div>
+      </div>
+
+      <!-- 18. 무대 축하 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/15_stage_celebration.jpg" alt="꿈파쇼 무대 축하" />
+        <div class="gallery-caption"><span class="tag">축하 무대</span></div>
+      </div>
+
+      <!-- 19. 청중 강연 참여 -->
+      <div class="gallery-item">
+        <img src="assets/gallery/03_audience.jpg" alt="꿈파쇼 강연 청중" />
+        <div class="gallery-caption"><span class="tag dark">강연 참여</span></div>
+      </div>
+    </div>
+
+    <p style="text-align:center; margin-top:32px; font-size:0.9rem; color:var(--color-text-muted); line-height:1.7;">
+      ✨ 꿈파쇼의 <strong style="color:var(--color-primary-dark);">2013~2025년 다양한 활동</strong>을 담았습니다.<br />
+      최신 활동 사진은 정기적으로 업데이트됩니다.
+    </p>
+
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="admin.html" class="btn btn-outline">🔐 관리자 페이지에서 사진 추가하기 →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     소식/뉴스
+     ============================================ -->
+<section class="news" id="news">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">NEWS & NOTICE</span>
+      <h2 class="section-title">꿈파쇼 소식</h2>
+      <p class="section-subtitle">
+        꿈파쇼의 최근 활동과 소식을 확인해보세요.
+      </p>
+    </div>
+
+    <div class="news-grid">
+      <article class="news-card">
+        <div class="news-thumb">
+          <img src="assets/hero/dream_vision_5th.jpg" alt="꿈비전 발표대회" />
+          <span class="news-cat">활동</span>
+        </div>
+        <div class="news-body">
+          <h4>울산 청소년 꿈비전 발표대회 개최</h4>
+          <p>꿈비전 발표대회가 성공적으로 개최되었습니다. 청소년들의 꿈을 응원해 주신 모든 분들께 감사드립니다.</p>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-thumb">
+          <img src="assets/gallery/mentoring.jpg" alt="진로멘토링 활동" />
+          <span class="news-cat">멘토링</span>
+        </div>
+        <div class="news-body">
+          <h4>청운중·화진중학교 진로멘토링 진행</h4>
+          <p>"별빛이 되어줄래" 진로프로젝트로 청운중학교와 화진중학교에서 진로멘토링 활동을 진행했습니다.</p>
+        </div>
+      </article>
+
+      <article class="news-card">
+        <div class="news-thumb">
+          <img src="assets/gallery/16_culture_point.jpg" alt="울산문화점빵 공익활동" />
+          <span class="news-cat">공익</span>
+        </div>
+        <div class="news-body">
+          <h4>울산문화점빵 사업 성과보고</h4>
+          <p>문화체육관광부·울산중구청과 함께한 울산문화점빵 사업이 성공적으로 마무리되었습니다. 지역사회와 함께하는 꿈파쇼입니다.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     재정보고
+     ============================================ -->
+<section class="finance" id="finance">
+  <div class="container">
+    <div class="finance-inner">
+      <div class="finance-text">
+        <span class="section-tag">TRANSPARENCY</span>
+        <h2>투명한 재정 공시</h2>
+        <p>
+          꿈파쇼는 후원자 여러분의 소중한 후원금이 어떻게 사용되는지
+          모든 내역을 투명하게 공개합니다. 연간 사업보고서와
+          결산자료를 확인해 주세요.
+        </p>
+
+        <div class="finance-docs">
+          <a href="assets/finance/2023_문화점빵_결과보고서.pdf" download class="doc-link" target="_blank" rel="noopener">
+            <div>
+              <div class="name">2023 울산문화점빵 결과보고서</div>
+              <div class="meta">PDF · 22.9 MB · 2023.12 게시</div>
+            </div>
+            <span class="doc-icon">↓</span>
+          </a>
+          <a href="assets/finance/2024_꿈파쇼_송년회_리플렛.pdf" download class="doc-link" target="_blank" rel="noopener">
+            <div>
+              <div class="name">2024 꿈파쇼 송년회 리플렛</div>
+              <div class="meta">PDF · 17.0 MB · 2024.12 게시</div>
+            </div>
+            <span class="doc-icon">↓</span>
+          </a>
+          <a href="#" class="doc-link" onclick="alert('2025년 연간 사업보고서는 2026년 3월 발행 예정입니다.'); return false;">
+            <div>
+              <div class="name">2025년 연간 사업보고서</div>
+              <div class="meta">PDF · 2026.03 게시 예정</div>
+            </div>
+            <span class="doc-icon">↓</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="finance-chart">
+        <div class="chart-title">
+          <span>2023년 사업비 집행 예시</span>
+          <span class="year">울산문화점빵 · 3억원</span>
+        </div>
+        <div class="chart-bars">
+          <div class="chart-row">
+            <div class="label"><span>꿈비전 발표대회</span><span class="pct">30%</span></div>
+            <div class="chart-bar"><div class="chart-fill" style="width:30%"></div></div>
+          </div>
+          <div class="chart-row">
+            <div class="label"><span>진로멘토링 사업</span><span class="pct">25%</span></div>
+            <div class="chart-bar"><div class="chart-fill c2" style="width:25%"></div></div>
+          </div>
+          <div class="chart-row">
+            <div class="label"><span>장학금 후원</span><span class="pct">20%</span></div>
+            <div class="chart-bar"><div class="chart-fill c3" style="width:20%"></div></div>
+          </div>
+          <div class="chart-row">
+            <div class="label"><span>공익활동·문화점빵</span><span class="pct">20%</span></div>
+            <div class="chart-bar"><div class="chart-fill c4" style="width:20%"></div></div>
+          </div>
+          <div class="chart-row">
+            <div class="label"><span>운영비</span><span class="pct">5%</span></div>
+            <div class="chart-bar"><div class="chart-fill c5" style="width:5%"></div></div>
+          </div>
+        </div>
+        <p style="margin-top:20px; font-size:0.8rem; color:var(--color-text-muted); text-align:center;">
+          ※ 실제 결산 데이터로 교체가 필요합니다.
+        </p>
+      </div>
+    </div>
+
+    <!-- 💰 2026년 후원금 내역 (월별 공시) -->
+    <div class="donation-monthly">
+      <div class="donation-monthly-header">
+        <div>
+          <span class="section-tag" style="margin-bottom: 10px;">2026 DONATION</span>
+          <h3>2026년 후원금 내역</h3>
+          <p>월별 후원금 접수 및 사용 내역을 투명하게 공개합니다.</p>
+        </div>
+        <a href="admin.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 8px 16px;">🔐 관리자 업로드</a>
+      </div>
+      <div class="donation-months" id="donationMonths">
+        <!-- 월별 카드 (관리자가 업로드 시 노출) -->
+        <div class="month-card empty">
+          <div class="month-num">1월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">2월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">3월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">4월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">5월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">6월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">7월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">8월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">9월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">10월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">11월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+        <div class="month-card empty">
+          <div class="month-num">12월</div>
+          <div class="month-status">파일 대기</div>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--color-text-muted);">
+        💡 관리자가 매월 후원금 내역 파일을 업로드하면 이곳에서 다운로드할 수 있습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     문의 & 뉴스레터
+     ============================================ -->
+<section class="contact-newsletter" id="contact">
+  <div class="container">
+    <div class="cn-grid">
+      <div class="cn-block">
+        <h3>💬 후원·멘토 문의 및 뉴스레터</h3>
+        <p>궁금한 점을 남겨주시면 담당자가 빠르게 회신드립니다.</p>
+        <form onsubmit="submitInquiry(event)" style="display: flex; flex-direction: column; gap: 10px;">
+          <input type="text" name="name" placeholder="이름" required
+            style="padding: 12px 16px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; background: rgba(255,255,255,0.1); color: white;" />
+          <div style="display: flex; gap: 10px;">
+            <input type="email" name="email" placeholder="이메일" required
+              style="flex:1; padding: 12px 16px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; background: rgba(255,255,255,0.1); color: white;" />
+            <input type="tel" name="phone" placeholder="연락처 (선택)"
+              style="flex:1; padding: 12px 16px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; background: rgba(255,255,255,0.1); color: white;" />
+          </div>
+          <select name="type" required
+            style="padding: 12px 16px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; background: rgba(255,255,255,0.1); color: white;">
+            <option value="" style="color:#000;">문의 유형 선택 *</option>
+            <option value="후원 문의" style="color:#000;">💛 후원 문의</option>
+            <option value="멘토 신청" style="color:#000;">🎓 멘토 신청</option>
+            <option value="자원봉사" style="color:#000;">🤝 자원봉사</option>
+            <option value="일반 문의" style="color:#000;">📝 일반 문의</option>
+            <option value="뉴스레터 구독" style="color:#000;">📮 뉴스레터 구독</option>
+          </select>
+          <textarea name="message" placeholder="문의 내용을 입력하세요 (뉴스레터 구독 시 생략 가능)"
+            style="padding: 12px 16px; border-radius: 8px; border: none; font-family: inherit; font-size: 0.95rem; background: rgba(255,255,255,0.1); color: white; resize: vertical; min-height: 90px;"></textarea>
+          <button type="submit"
+            style="padding: 14px 26px; background: var(--color-accent); color: var(--color-bg-dark); border-radius: 8px; font-weight: 800; font-size: 1rem;">
+            문의 접수하기 →
+          </button>
+        </form>
+        <p style="margin-top: 14px; font-size: 0.82rem; opacity: 0.7;">
+          ※ 접수된 내용은 꿈파쇼 국장에게 전달됩니다. 회신은 영업일 기준 1~3일 소요됩니다.
+        </p>
+      </div>
+
+      <div class="cn-block">
+        <h3>📞 문의하기</h3>
+        <p>궁금한 점이 있으시면 아래 연락처로 문의해 주세요.</p>
+        <div class="contact-list">
+          <div class="contact-item">
+            <div class="ico">📍</div>
+            <div>
+              <div class="label">주소</div>
+              <div class="value">울산광역시 (등록번호: 제 381호)</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ico">👤</div>
+            <div>
+              <div class="label">국장 직통</div>
+              <div class="value">010-8343-7772</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ico">☎</div>
+            <div>
+              <div class="label">대표전화</div>
+              <div class="value">1600-7218</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ico">📠</div>
+            <div>
+              <div class="label">팩스</div>
+              <div class="value">0504-435-7997</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ico">✉</div>
+            <div>
+              <div class="label">이메일</div>
+              <div class="value">dream_ss100@naver.com</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     푸터
+     ============================================ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-col footer-brand">
+        <div class="logo" style="color:white;">
+          <span class="logo-mark"><img src="assets/logo/ggumpasho_logo.png" alt="꿈파쇼 로고" /></span>
+          <span>
+            꿈파쇼
+            <span class="logo-text-sub" style="color:rgba(255,255,255,0.6);">비영리민간단체</span>
+          </span>
+        </div>
+        <p>
+          비영리민간단체 꿈파쇼<br />
+          울산광역시 등록 제381호<br />
+          대표자: 최해숙 회장<br />
+          기부금대상민간단체 (2020년 인증)
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5>단체 안내</h5>
+        <ul>
+          <li><a href="#about">단체소개</a></li>
+          <li><a href="#greeting">회장 인사말</a></li>
+          <li><a href="#about">연혁</a></li>
+          <li><a href="#about">임원소개</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>참여하기</h5>
+        <ul>
+          <li><a href="#donate">후원하기</a></li>
+          <li><a href="#donate">진로 멘토단</a></li>
+          <li><a href="#programs">공익 봉사활동</a></li>
+          <li><a href="#news">뉴스레터</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>고객지원</h5>
+        <ul>
+          <li><a href="#contact">👤 국장 010-8343-7772</a></li>
+          <li><a href="#contact">📞 대표 1600-7218</a></li>
+          <li><a href="#contact">✉ dream_ss100@naver.com</a></li>
+          <li><a href="#finance">재정보고</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>© 2026 비영리민간단체 꿈파쇼. All rights reserved.</div>
+      <div class="legal-links">
+        <a href="#">개인정보처리방침</a>
+        <a href="#">이용약관</a>
+        <a href="#">이메일무단수집거부</a>
+        <a href="admin.html" style="color: var(--color-accent);">🔐 관리자</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ============================================
+  // 관리자 데이터 연동 (localStorage 기반)
+  // ============================================
+  (function loadAdminData() {
+    // 1) 이벤트 배너 로드
+    try {
+      const banner = JSON.parse(localStorage.getItem('ggumpasho_event_banner') || 'null');
+      if (banner && banner.enabled && banner.text) {
+        const bannerEl = document.getElementById('eventBanner');
+        const textEl = document.getElementById('eventBannerText');
+        const linkEl = document.getElementById('eventBannerLink');
+        // 사용자가 이미 닫았는지 확인 (배너 ID 별로 dismiss 기록)
+        const dismissedKey = 'banner_dismissed_' + (banner.updatedAt || '');
+        if (!sessionStorage.getItem(dismissedKey)) {
+          textEl.textContent = banner.text;
+          if (banner.link) {
+            linkEl.href = banner.link;
+            linkEl.style.display = 'inline-block';
+          }
+          bannerEl.style.display = 'block';
+        }
+      }
+    } catch(e) {}
+
+    // 2) 2026 월별 후원금 내역 로드
+    try {
+      const donations = JSON.parse(localStorage.getItem('ggumpasho_donations_2026') || '{}');
+      document.querySelectorAll('.month-card').forEach((card) => {
+        const num = card.querySelector('.month-num')?.textContent?.trim();
+        if (!num) return;
+        const monthKey = num.replace('월', '').padStart(2, '0');
+        const item = donations[monthKey];
+        if (item && item.fileName) {
+          card.classList.remove('empty');
+          card.classList.add('filled');
+          card.setAttribute('href', item.dataUrl || '#');
+          if (item.dataUrl) card.setAttribute('download', item.fileName);
+          card.setAttribute('target', '_blank');
+          card.querySelector('.month-status').textContent = '📎 ' + item.fileName.slice(0, 12) + (item.fileName.length > 12 ? '…' : '');
+          card.setAttribute('title', item.fileName);
+        }
+      });
+    } catch(e) {}
+
+    // 3) 활동 리스트 (관리자가 추가한 활동을 news 카드로 대체 로드)
+    try {
+      const activities = JSON.parse(localStorage.getItem('ggumpasho_activities') || '[]');
+      const published = activities.filter(a => a.status === 'published').slice(0, 3);
+      if (published.length > 0) {
+        const grid = document.querySelector('.news-grid');
+        if (grid) {
+          // 관리자가 추가한 것으로 대체
+          grid.innerHTML = published.map(a => `
+            <article class="news-card">
+              <div class="news-thumb">
+                ${a.image ? `<img src="${a.image}" alt="${escapeHtml(a.title)}" />` : `<div class="placeholder-img" style="height:100%">[ 활동사진 ]</div>`}
+                <span class="news-cat">${escapeHtml(a.category || '활동')}</span>
+              </div>
+              <div class="news-body">
+                <h4>${escapeHtml(a.title)}</h4>
+                <p>${escapeHtml(a.desc || '')}</p>
+              </div>
+            </article>
+          `).join('');
+        }
+      }
+    } catch(e) {}
+  })();
+
+  function closeEventBanner() {
+    const banner = document.getElementById('eventBanner');
+    banner.style.display = 'none';
+    try {
+      const b = JSON.parse(localStorage.getItem('ggumpasho_event_banner') || 'null');
+      if (b && b.updatedAt) sessionStorage.setItem('banner_dismissed_' + b.updatedAt, '1');
+    } catch(e) {}
+  }
+
+  function escapeHtml(s) {
+    return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+
+  // 문의/멘토/뉴스레터 접수 → 관리자 페이지로 저장
+  function submitInquiry(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!data.type) { alert('문의 유형을 선택해주세요.'); return; }
+
+    const inquiries = JSON.parse(localStorage.getItem('ggumpasho_inquiries') || '[]');
+    inquiries.unshift({
+      id: 'i_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      name: data.name,
+      email: data.email,
+      phone: data.phone || '',
+      type: data.type,
+      message: data.message || '',
+      status: 'new',
+      createdAt: new Date().toISOString(),
+    });
+    localStorage.setItem('ggumpasho_inquiries', JSON.stringify(inquiries));
+
+    alert('✅ 문의가 정상 접수되었습니다.\n\n담당자가 확인 후 회신드리겠습니다.\n(' + data.type + ')');
+    form.reset();
+  }
+
+  // ============================================
+  // 히어로 슬라이더
+  // ============================================
+  (function initHeroSlider() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dotsWrap = document.getElementById('heroDots');
+    if (!slides.length || !dotsWrap) return;
+
+    let cur = 0;
+    let timer = null;
+    const INTERVAL = 1000; // 1초
+
+    // 인디케이터 생성
+    slides.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'hero-dot' + (i === 0 ? ' active' : '');
+      b.setAttribute('aria-label', (i+1) + '번 사진 보기');
+      b.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(b);
+    });
+    const dots = dotsWrap.querySelectorAll('.hero-dot');
+
+    function goTo(idx) {
+      slides[cur].classList.remove('active');
+      dots[cur].classList.remove('active');
+      cur = (idx + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      dots[cur].classList.add('active');
+      restart();
+    }
+    function next() { goTo(cur + 1); }
+    function prev() { goTo(cur - 1); }
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, INTERVAL);
+    }
+
+    window.heroNext = next;
+    window.heroPrev = prev;
+    restart();
+
+    // 호버 시 일시정지
+    const container = document.querySelector('.hero-image');
+    if (container) {
+      container.addEventListener('mouseenter', () => clearInterval(timer));
+      container.addEventListener('mouseleave', restart);
+    }
+  })();
+
+  // 모바일 메뉴 토글
+  const toggle = document.getElementById('mobileToggle');
+  const gnb = document.getElementById('gnb');
+  toggle.addEventListener('click', () => {
+    gnb.classList.toggle('open');
+  });
+
+  // 네비게이션 클릭 시 모바일 메뉴 닫기
+  document.querySelectorAll('nav.gnb a').forEach(link => {
+    link.addEventListener('click', () => {
+      gnb.classList.remove('open');
+    });
+  });
+
+  // 탭 전환
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+    });
+  });
+
+  // 계좌번호 복사
+  function copyAccount() {
+    const account = '새마을금고 9002-1780-0175-4 (꿈을파는강연쇼)';
+    navigator.clipboard.writeText(account).then(() => {
+      alert('✅ 계좌번호가 복사되었습니다.\n\n' + account);
+    }).catch(() => {
+      alert('복사에 실패했습니다. 직접 복사해주세요.\n\n' + account);
+    });
+  }
+</script>
+</body>
+</html>

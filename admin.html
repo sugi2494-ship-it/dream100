@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>꿈파쇼 관리자 대시보드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+<style>
+  :root {
+    --color-primary: #C9284D;
+    --color-primary-dark: #A01E3D;
+    --color-primary-light: #FCE8EE;
+    --color-accent: #FFD54F;
+    --color-warm: #E85D75;
+    --color-cream: #FFF5F0;
+    --color-cream-soft: #FDF9F6;
+    --color-text: #2A2A2A;
+    --color-text-muted: #5A6472;
+    --color-text-light: #8B95A1;
+    --color-border: #F0E4E4;
+    --color-bg: #FFFFFF;
+    --color-bg-soft: #F7F5F3;
+    --color-success: #16A085;
+    --color-warning: #F39C12;
+    --color-danger: #E74C3C;
+    --color-info: #3498DB;
+    --radius: 10px;
+    --radius-lg: 18px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(201,40,77,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--color-bg-soft);
+    color: var(--color-text);
+    -webkit-font-smoothing: antialiased;
+    word-break: keep-all;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  ul { list-style: none; }
+  img { max-width: 100%; display: block; }
+  input, select, textarea { font-family: inherit; }
+
+  /* ===== 로그인 화면 ===== */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-cream-soft) 100%);
+  }
+  .login-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 48px 40px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(201,40,77,0.15);
+    text-align: center;
+  }
+  .login-logo {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(201,40,77,0.15);
+    border: 2px solid var(--color-primary-light);
+    overflow: hidden;
+  }
+  .login-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .login-card h1 { font-size: 1.5rem; margin-bottom: 6px; }
+  .login-card .subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+  }
+  .login-card input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    margin-bottom: 12px;
+    transition: border-color .2s;
+  }
+  .login-card input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+  .login-card .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-top: 8px;
+    transition: background .2s;
+  }
+  .login-card .login-btn:hover { background: var(--color-primary-dark); }
+  .login-hint {
+    margin-top: 20px;
+    padding: 12px;
+    background: var(--color-cream);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+  .login-hint code {
+    background: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    font-family: monospace;
+  }
+  .back-link {
+    display: block;
+    margin-top: 20px;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  .back-link:hover { color: var(--color-primary); }
+
+  /* ===== 관리자 레이아웃 ===== */
+  .admin-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+  .sidebar {
+    background: white;
+    border-right: 1px solid var(--color-border);
+    padding: 24px 16px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 8px 20px;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 20px;
+  }
+  .sidebar-logo .mark {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--color-primary-light);
+    overflow: hidden;
+  }
+  .sidebar-logo .mark img { width: 100%; height: 100%; object-fit: cover; }
+  .sidebar-logo .name {
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+  }
+  .sidebar-logo .name small {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .sidebar-menu-title {
+    font-size: 0.7rem;
+    color: var(--color-text-light);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 12px 12px 8px;
+  }
+  .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: 3px;
+    transition: all .15s;
+    font-size: 0.92rem;
+    position: relative;
+  }
+  .sidebar nav a:hover {
+    background: var(--color-cream);
+    color: var(--color-primary-dark);
+  }
+  .sidebar nav a.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    font-weight: 700;
+  }
+  .sidebar nav a .ico { width: 20px; text-align: center; font-size: 1rem; }
+  .sidebar nav a .badge {
+    position: absolute;
+    right: 10px;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+  }
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+  }
+  .logout-btn {
+    color: var(--color-danger);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 4px;
+  }
+
+  /* 메인 콘텐츠 */
+  .main { padding: 28px 36px; }
+  .main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .main-header h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
+  .main-header .subtitle {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+  .admin-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: white;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .admin-user .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--color-success);
+  }
+
+  /* 탭 컨텐츠 */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn .25s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* KPI */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card .label {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kpi-card .num {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: var(--color-primary-dark);
+    letter-spacing: -0.02em;
+  }
+  .kpi-card .num small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-left: 4px;
+  }
+
+  /* 카드 (공통) */
+  .card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+    margin-bottom: 24px;
+  }
+  .card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card .card-desc {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    margin-bottom: 18px;
+  }
+  .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  /* 버튼 */
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    transition: all .15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary { background: var(--color-primary); color: white; }
+  .btn-primary:hover { background: var(--color-primary-dark); }
+  .btn-success { background: var(--color-success); color: white; }
+  .btn-success:hover { filter: brightness(1.1); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    border: 1.5px solid var(--color-border);
+  }
+  .btn-ghost:hover { background: var(--color-bg-soft); }
+  .btn-sm { padding: 7px 12px; font-size: 0.82rem; }
+
+  /* 폼 */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .form-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+  }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    background: white;
+    transition: border-color .15s;
+  }
+  .form-field textarea { resize: vertical; min-height: 70px; }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  /* 드롭존 */
+  .dropzone {
+    border: 2px dashed var(--color-primary-light);
+    border-radius: var(--radius);
+    padding: 32px 16px;
+    text-align: center;
+    background: var(--color-cream-soft);
+    transition: all .2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .dropzone.dragover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+  }
+  .dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .dropzone .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+  .dropzone .upload-title {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .dropzone .upload-hint {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+
+  /* 사진 그리드 */
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .photo-card {
+    background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+  .photo-thumb {
+    aspect-ratio: 4/3;
+    background: var(--color-bg-soft);
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-thumb .status-badge {
+    position: absolute;
+    top: 8px; left: 8px;
+    padding: 3px 9px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+  .photo-thumb .status-badge.published { background: var(--color-success); color: white; }
+  .photo-thumb .status-badge.draft { background: var(--color-text-light); color: white; }
+  .photo-body { padding: 12px; }
+  .photo-body h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; line-height: 1.35; }
+  .photo-body .meta { font-size: 0.72rem; color: var(--color-text-muted); margin-bottom: 8px; }
+  .photo-actions { display: flex; gap: 5px; }
+  .photo-actions button {
+    flex: 1;
+    padding: 6px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: white;
+    color: var(--color-text-muted);
+  }
+  .photo-actions .publish { background: var(--color-primary); color: white; border-color: var(--color-primary); }
+  .photo-actions .unpublish { background: var(--color-accent); color: var(--color-text); border-color: var(--color-accent); }
+  .photo-actions .delete { color: var(--color-danger); border-color: var(--color-danger); }
+  .photo-actions .delete:hover { background: var(--color-danger); color: white; }
+
+  /* 테이블 */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .data-table thead th {
+    background: var(--color-cream);
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+    border-bottom: 2px solid var(--color-primary-light);
+    white-space: nowrap;
+  }
+  .data-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+  }
+  .data-table tbody tr:hover { background: var(--color-cream-soft); }
+  .data-table .status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .data-table .status.new { background: var(--color-primary-light); color: var(--color-primary-dark); }
+  .data-table .status.done { background: #E0F5E9; color: var(--color-success); }
+  .data-table .status.hold { background: #FEF3D7; color: var(--color-warning); }
+  .data-table .row-actions button {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-right: 4px;
+    border: 1px solid var(--color-border);
+    background: white;
+    color: var(--color-text-muted);
+  }
+  .data-table .row-actions .del { color: var(--color-danger); border-color: var(--color-danger); }
+  .data-table .row-actions .toggle { color: var(--color-primary); border-color: var(--color-primary); }
+  .table-wrapper { overflow-x: auto; }
+
+  /* 월별 후원금 카드 */
+  .month-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+  .month-slot {
+    background: var(--color-bg-soft);
+    border: 1.5px dashed var(--color-border);
+    border-radius: 10px;
+    padding: 14px 8px;
+    text-align: center;
+    position: relative;
+    min-height: 100px;
+  }
+  .month-slot.filled {
+    background: white;
+    border: 1.5px solid var(--color-primary);
+  }
+  .month-slot .m-num {
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 4px;
+  }
+  .month-slot .m-info {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+    min-height: 26px;
+    line-height: 1.3;
+  }
+  .month-slot .m-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .month-slot .m-actions button, .month-slot .m-actions label {
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    background: white;
+    cursor: pointer;
+  }
+  .month-slot .m-actions label:hover, .month-slot .m-actions button:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+  .month-slot .m-actions .del { border-color: var(--color-danger); color: var(--color-danger); }
+  .month-slot .m-actions .del:hover { background: var(--color-danger); color: white; }
+  @media (max-width: 900px) { .month-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 480px) { .month-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  /* 빈 상태 */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--color-text-muted);
+  }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .empty-state p { font-size: 0.92rem; }
+
+  /* 안내 배너 */
+  .info-banner {
+    background: #FFF9E5;
+    border: 1px solid #FFD54F;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    font-size: 0.88rem;
+    color: #7A5900;
+    line-height: 1.6;
+  }
+  .info-banner strong { color: #5A4200; }
+
+  /* 토스트 */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--color-text);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    opacity: 0;
+    transition: all .3s;
+    z-index: 999;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.success { background: var(--color-success); }
+  .toast.error { background: var(--color-danger); }
+
+  /* 반응형 */
+  @media (max-width: 900px) {
+    .admin-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; padding: 16px 20px; }
+    .sidebar-footer { margin-top: 20px; }
+    .main { padding: 20px; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========================================
+     🔐 로그인 화면
+     ======================================== -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="assets/logo/ggumpasho_logo.png" alt="꿈파쇼 로고" />
+    </div>
+    <h1>관리자 로그인</h1>
+    <p class="subtitle">꿈파쇼 통합 관리 시스템</p>
+    <form onsubmit="event.preventDefault(); handleLogin();">
+      <input type="password" id="loginPw" placeholder="비밀번호 입력" autocomplete="current-password" required autofocus />
+      <button type="submit" class="login-btn">로그인</button>
+    </form>
+    <div class="login-hint">
+      🔑 <strong>담당자 비밀번호</strong>를 입력해주세요.
+    </div>
+    <a href="index.html" class="back-link">← 메인 홈페이지로 돌아가기</a>
+  </div>
+</div>
+
+<!-- ========================================
+     🏠 관리자 대시보드
+     ======================================== -->
+<div class="admin-layout" id="adminLayout" style="display:none;">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="mark"><img src="assets/logo/ggumpasho_logo.png" alt="꿈파쇼" /></div>
+      <div class="name">꿈파쇼<small>관리자 시스템</small></div>
+    </div>
+
+    <div class="sidebar-menu-title">MAIN MENU</div>
+    <nav>
+      <a href="#" class="menu-link active" data-tab="dashboard"><span class="ico">📊</span> 대시보드</a>
+      <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동사진 관리</a>
+      <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 활동/소식 관리</a>
+      <a href="#" class="menu-link" data-tab="banner"><span class="ico">📣</span> 이벤트 배너</a>
+    </nav>
+
+    <div class="sidebar-menu-title">신청·문의</div>
+    <nav>
+      <a href="#" class="menu-link" data-tab="donors"><span class="ico">💛</span> 후원자 신청 <span class="badge" id="badgeDonors" style="display:none;">0</span></a>
+      <a href="#" class="menu-link" data-tab="mentors"><span class="ico">🎓</span> 멘토 신청 <span class="badge" id="badgeMentors" style="display:none;">0</span></a>
+      <a href="#" class="menu-link" data-tab="inquiries"><span class="ico">💬</span> 일반 문의 <span class="badge" id="badgeInquiries" style="display:none;">0</span></a>
+    </nav>
+
+    <div class="sidebar-menu-title">재정 관리</div>
+    <nav>
+      <a href="#" class="menu-link" data-tab="finance"><span class="ico">💰</span> 후원금 내역 (월별)</a>
+    </nav>
+
+    <div class="sidebar-menu-title">바로가기</div>
+    <nav>
+      <a href="index.html" target="_blank"><span class="ico">🌐</span> 메인 사이트 보기</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div style="margin-bottom:6px;">👤 <strong>관리자</strong></div>
+      <button class="logout-btn" onclick="handleLogout()">🚪 로그아웃</button>
+    </div>
+  </aside>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="main">
+
+    <!-- ========== 대시보드 ========== -->
+    <div class="tab-content active" id="tab-dashboard">
+      <div class="main-header">
+        <div>
+          <h1>대시보드</h1>
+          <p class="subtitle">꿈파쇼 홈페이지 현황을 한눈에 확인합니다.</p>
+        </div>
+        <div class="admin-user"><span class="dot"></span><span>관리자 접속 중</span></div>
+      </div>
+
+      <div class="info-banner">
+        💡 <strong>데이터 저장 방식 안내</strong> — 현재는 이 브라우저(로컬)에 저장되는 데모 모드입니다.
+        후원자가 다른 기기에서 접수한 문의는 <strong>이 브라우저에서만 표시</strong>되며 팀원과 공유되지 않습니다.
+        여러 팀원이 함께 관리하려면 서버 연동이 필요합니다.
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="label">🖼️ 사진 등록</div><div class="num" id="kpiPhotos">0<small>장</small></div></div>
+        <div class="kpi-card"><div class="label">📰 게시된 활동</div><div class="num" id="kpiActivities">0<small>건</small></div></div>
+        <div class="kpi-card"><div class="label">💛 후원자 신청</div><div class="num" id="kpiDonors">0<small>명</small></div></div>
+        <div class="kpi-card"><div class="label">🎓 멘토 신청</div><div class="num" id="kpiMentors">0<small>명</small></div></div>
+        <div class="kpi-card"><div class="label">💬 문의</div><div class="num" id="kpiInquiries">0<small>건</small></div></div>
+        <div class="kpi-card"><div class="label">💰 등록된 월별 내역</div><div class="num" id="kpiFinance">0<small>/12</small></div></div>
+      </div>
+
+      <div class="card">
+        <h2>🔥 최근 접수 내역</h2>
+        <p class="card-desc">최근 홈페이지에서 접수된 문의 5건</p>
+        <div class="table-wrapper">
+          <table class="data-table" id="recentTable">
+            <thead>
+              <tr><th>일시</th><th>유형</th><th>이름</th><th>연락처</th><th>상태</th></tr>
+            </thead>
+            <tbody id="recentTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 활동사진 관리 ========== -->
+    <div class="tab-content" id="tab-photos">
+      <div class="main-header"><div><h1>🖼️ 활동사진 관리</h1><p class="subtitle">활동 사진을 업로드하고 갤러리에 게시합니다.</p></div></div>
+
+      <div class="card">
+        <h2>📤 새 사진 업로드</h2>
+        <p class="card-desc">여러 장 동시 업로드 가능</p>
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept="image/*" multiple />
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-title">사진을 놓거나 클릭해서 선택</div>
+          <div class="upload-hint">JPG · PNG · WebP</div>
+        </div>
+        <div id="uploadPreview" style="display:none; margin-top:16px;">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>카테고리</label>
+              <select id="uploadCategory">
+                <option>꿈비전 발표대회</option><option>진로멘토링</option><option>드림캠퍼스</option>
+                <option>장학후원</option><option>공익활동</option><option>안전교육</option>
+                <option>봉사활동</option><option>송년회·행사</option><option>기타</option>
+              </select>
+            </div>
+            <div class="form-field"><label>사진 제목</label><input type="text" id="uploadTitle" placeholder="예: 제7회 꿈비전 발표대회" /></div>
+          </div>
+          <div id="previewThumbs" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;"></div>
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+            <button class="btn btn-ghost" onclick="cancelUpload()">취소</button>
+            <button class="btn btn-primary" onclick="saveUpload(false)">💾 임시저장</button>
+            <button class="btn btn-success" onclick="saveUpload(true)">🚀 저장 + 게시</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-row">
+          <div><h2>📸 등록된 사진</h2><p class="card-desc">전체 목록</p></div>
+        </div>
+        <div id="photosGrid" class="photos-grid"></div>
+        <div id="photosEmpty" class="empty-state" style="display:none;">
+          <div class="icon">📭</div><p>아직 업로드된 사진이 없습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 활동/소식 관리 ========== -->
+    <div class="tab-content" id="tab-activities">
+      <div class="main-header"><div><h1>📰 활동/소식 관리</h1><p class="subtitle">메인의 "꿈파쇼 소식" 카드에 게시됩니다. (게시 상태 3개까지 자동 노출)</p></div></div>
+
+      <div class="card">
+        <h2>➕ 새 활동 등록</h2>
+        <p class="card-desc">활동/소식을 등록하면 메인 페이지 소식 카드에 자동으로 반영됩니다.</p>
+        <div class="form-grid">
+          <div class="form-field"><label>카테고리</label>
+            <select id="actCategory">
+              <option>활동</option><option>멘토링</option><option>공익</option><option>공지</option><option>언론</option>
+            </select>
+          </div>
+          <div class="form-field"><label>제목</label><input type="text" id="actTitle" placeholder="예: 꿈비전 발표대회 개최" /></div>
+        </div>
+        <div class="form-grid full" style="margin-top:10px;">
+          <div class="form-field"><label>설명</label><textarea id="actDesc" placeholder="활동에 대한 설명을 입력하세요."></textarea></div>
+        </div>
+        <div class="form-grid full" style="margin-top:10px;">
+          <div class="form-field"><label>대표 이미지 (선택)</label>
+            <input type="file" id="actImage" accept="image/*" />
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+          <button class="btn btn-success" onclick="saveActivity()">🚀 등록 + 게시</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>📋 등록된 활동 목록</h2>
+        <div class="table-wrapper">
+          <table class="data-table" id="activitiesTable">
+            <thead><tr><th>일시</th><th>카테고리</th><th>제목</th><th>설명</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="activitiesTbody"></tbody>
+          </table>
+        </div>
+        <div id="activitiesEmpty" class="empty-state" style="display:none;"><div class="icon">📭</div><p>등록된 활동이 없습니다.</p></div>
+      </div>
+    </div>
+
+    <!-- ========== 이벤트 배너 ========== -->
+    <div class="tab-content" id="tab-banner">
+      <div class="main-header"><div><h1>📣 이벤트 배너</h1><p class="subtitle">메인 페이지 최상단에 표시되는 배너를 관리합니다.</p></div></div>
+
+      <div class="card">
+        <h2>배너 내용</h2>
+        <p class="card-desc">활성화하면 메인 홈페이지 상단에 배너가 표시됩니다.</p>
+        <div class="form-grid full">
+          <div class="form-field"><label>배너 텍스트</label>
+            <input type="text" id="bannerText" placeholder="예: 🎉 제7회 꿈비전 발표대회 참가자 모집 중! (~11.30)" />
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>연결 링크 (선택)</label>
+            <input type="url" id="bannerLink" placeholder="https://form.naver.com/... (비워두면 링크 없음)" />
+          </div>
+          <div class="form-field" style="display:flex; align-items:flex-end; gap:8px;">
+            <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
+              <input type="checkbox" id="bannerEnabled" style="width:20px; height:20px;" />
+              <span style="font-weight:600;">배너 활성화</span>
+            </label>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+          <button class="btn btn-ghost" onclick="clearBanner()">비활성화</button>
+          <button class="btn btn-success" onclick="saveBanner()">💾 저장 + 반영</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>미리보기</h2>
+        <div id="bannerPreview" style="padding:14px 20px; background:linear-gradient(90deg, #E85D75, #C9284D); color:white; border-radius:8px; text-align:center; font-weight:600;">
+          배너 텍스트를 입력하고 저장하세요.
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 후원자 신청 ========== -->
+    <div class="tab-content" id="tab-donors">
+      <div class="main-header">
+        <div><h1>💛 후원자 신청 관리</h1><p class="subtitle">홈페이지에서 접수된 후원 신청 목록과 기부금 영수증 발급 대상을 관리합니다.</p></div>
+        <button class="btn btn-primary" onclick="exportExcel('donors')">📥 엑셀 다운로드</button>
+      </div>
+
+      <div class="info-banner">
+        💡 홈페이지 문의폼에서 "후원 문의"로 접수된 건이 여기에 자동 등록됩니다.
+        기부금 영수증이 필요한 경우 상태를 "완료"로 변경하시면 별도 엑셀로 관리할 수 있습니다.
+      </div>
+
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="donorsTable">
+            <thead><tr><th>접수일</th><th>이름</th><th>이메일</th><th>연락처</th><th>내용</th><th>영수증</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="donorsTbody"></tbody>
+          </table>
+        </div>
+        <div id="donorsEmpty" class="empty-state" style="display:none;"><div class="icon">💛</div><p>아직 접수된 후원 신청이 없습니다.</p></div>
+      </div>
+    </div>
+
+    <!-- ========== 멘토 신청 ========== -->
+    <div class="tab-content" id="tab-mentors">
+      <div class="main-header">
+        <div><h1>🎓 멘토단 신청 관리</h1><p class="subtitle">진로멘토단 활동을 신청한 분들의 목록입니다.</p></div>
+        <button class="btn btn-primary" onclick="exportExcel('mentors')">📥 엑셀 다운로드</button>
+      </div>
+
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="mentorsTable">
+            <thead><tr><th>접수일</th><th>이름</th><th>이메일</th><th>연락처</th><th>내용</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="mentorsTbody"></tbody>
+          </table>
+        </div>
+        <div id="mentorsEmpty" class="empty-state" style="display:none;"><div class="icon">🎓</div><p>아직 접수된 멘토 신청이 없습니다.</p></div>
+      </div>
+    </div>
+
+    <!-- ========== 일반 문의 ========== -->
+    <div class="tab-content" id="tab-inquiries">
+      <div class="main-header">
+        <div><h1>💬 일반 문의 관리</h1><p class="subtitle">일반 문의·자원봉사·뉴스레터 등 기타 접수 내역입니다.</p></div>
+        <button class="btn btn-primary" onclick="exportExcel('inquiries')">📥 엑셀 다운로드</button>
+      </div>
+
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table" id="inquiriesTable">
+            <thead><tr><th>접수일</th><th>유형</th><th>이름</th><th>이메일</th><th>연락처</th><th>내용</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="inquiriesTbody"></tbody>
+          </table>
+        </div>
+        <div id="inquiriesEmpty" class="empty-state" style="display:none;"><div class="icon">📭</div><p>접수된 문의가 없습니다.</p></div>
+      </div>
+    </div>
+
+    <!-- ========== 월별 후원금 내역 (재정) ========== -->
+    <div class="tab-content" id="tab-finance">
+      <div class="main-header"><div><h1>💰 2026년 월별 후원금 내역</h1><p class="subtitle">매월 후원금 내역 파일을 업로드하면 메인 재정공시 섹션에 자동 반영됩니다.</p></div></div>
+
+      <div class="info-banner">
+        💡 각 월별 슬롯에 파일(엑셀·PDF 등)을 업로드하면 메인 홈페이지 재정공시에서 방문자가 다운로드할 수 있습니다.
+      </div>
+
+      <div class="card">
+        <h2>월별 파일 관리</h2>
+        <p class="card-desc">각 월을 클릭해 파일을 업로드하거나 삭제할 수 있습니다.</p>
+        <div class="month-grid" id="monthGrid"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===================================
+  // 인증
+  // ===================================
+  const ADMIN_PW = '1004';
+  const AUTH_KEY = 'ggumpasho_auth_v2';
+
+  function checkAuth() {
+    if (sessionStorage.getItem(AUTH_KEY) === '1') { showAdmin(); }
+    else { showLogin(); }
+  }
+  function showLogin() {
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminLayout').style.display = 'none';
+  }
+  function showAdmin() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminLayout').style.display = 'grid';
+    refreshAll();
+  }
+  function handleLogin() {
+    const pw = document.getElementById('loginPw').value;
+    if (pw === ADMIN_PW) {
+      sessionStorage.setItem(AUTH_KEY, '1');
+      showAdmin();
+      showToast('로그인 성공! 🎉', 'success');
+    } else {
+      showToast('비밀번호가 올바르지 않습니다.', 'error');
+      document.getElementById('loginPw').value = '';
+    }
+  }
+  function handleLogout() {
+    if (!confirm('로그아웃하시겠습니까?')) return;
+    sessionStorage.removeItem(AUTH_KEY);
+    showLogin();
+  }
+
+  // ===================================
+  // 데이터 스토어
+  // ===================================
+  const STORE = {
+    photos: 'ggumpasho_photos',
+    activities: 'ggumpasho_activities',
+    inquiries: 'ggumpasho_inquiries',
+    donations: 'ggumpasho_donations_2026',
+    banner: 'ggumpasho_event_banner',
+  };
+  function load(key, def) {
+    try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(def)); } catch(e) { return def; }
+  }
+  function save(key, val) {
+    try { localStorage.setItem(key, JSON.stringify(val)); }
+    catch(e) { showToast('저장 실패: 브라우저 저장 용량 초과 (~5MB)', 'error'); }
+  }
+  function fmtDate(iso) {
+    if (!iso) return '-';
+    const d = new Date(iso);
+    return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+  }
+  function fmtDateTime(iso) {
+    if (!iso) return '-';
+    const d = new Date(iso);
+    return fmtDate(iso) + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+  }
+  function fmtBytes(b) {
+    if (!b) return '-';
+    if (b < 1024) return b + 'B';
+    if (b < 1024*1024) return (b/1024).toFixed(1) + 'KB';
+    return (b/1024/1024).toFixed(1) + 'MB';
+  }
+  function escapeHtml(s) {
+    return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function truncate(s, n) {
+    s = String(s||'');
+    return s.length > n ? s.slice(0, n) + '…' : s;
+  }
+
+  // ===================================
+  // 탭 전환
+  // ===================================
+  document.querySelectorAll('.menu-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = link.dataset.tab;
+      if (!tab) return;
+      document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      window.scrollTo(0, 0);
+    });
+  });
+
+  // ===================================
+  // 전체 갱신
+  // ===================================
+  function refreshAll() {
+    renderDashboard();
+    renderPhotos();
+    renderActivities();
+    renderBanner();
+    renderInquiries();
+    renderFinance();
+    renderBadges();
+  }
+
+  function renderBadges() {
+    const inqs = load(STORE.inquiries, []);
+    const newInqs = inqs.filter(i => i.status === 'new');
+    const donors = newInqs.filter(i => i.type === '후원 문의').length;
+    const mentors = newInqs.filter(i => i.type === '멘토 신청').length;
+    const others = newInqs.length - donors - mentors;
+    function setBadge(id, n) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (n > 0) { el.textContent = n; el.style.display = 'inline-block'; }
+      else el.style.display = 'none';
+    }
+    setBadge('badgeDonors', donors);
+    setBadge('badgeMentors', mentors);
+    setBadge('badgeInquiries', others);
+  }
+
+  // ===================================
+  // 대시보드
+  // ===================================
+  function renderDashboard() {
+    const photos = load(STORE.photos, []);
+    const acts = load(STORE.activities, []);
+    const inqs = load(STORE.inquiries, []);
+    const donations = load(STORE.donations, {});
+
+    const donors = inqs.filter(i => i.type === '후원 문의');
+    const mentors = inqs.filter(i => i.type === '멘토 신청');
+    const others = inqs.filter(i => i.type !== '후원 문의' && i.type !== '멘토 신청');
+
+    document.getElementById('kpiPhotos').innerHTML = photos.length + '<small>장</small>';
+    document.getElementById('kpiActivities').innerHTML = acts.filter(a => a.status === 'published').length + '<small>건</small>';
+    document.getElementById('kpiDonors').innerHTML = donors.length + '<small>명</small>';
+    document.getElementById('kpiMentors').innerHTML = mentors.length + '<small>명</small>';
+    document.getElementById('kpiInquiries').innerHTML = others.length + '<small>건</small>';
+    document.getElementById('kpiFinance').innerHTML = Object.keys(donations).length + '<small>/12</small>';
+
+    const tbody = document.getElementById('recentTbody');
+    const recent = inqs.slice(0, 5);
+    if (recent.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--color-text-muted);">접수 내역이 없습니다.</td></tr>';
+    } else {
+      tbody.innerHTML = recent.map(i => `
+        <tr>
+          <td>${fmtDateTime(i.createdAt)}</td>
+          <td>${escapeHtml(i.type)}</td>
+          <td>${escapeHtml(i.name)}</td>
+          <td>${escapeHtml(i.phone || i.email || '-')}</td>
+          <td><span class="status ${i.status === 'done' ? 'done' : 'new'}">${i.status === 'done' ? '완료' : '신규'}</span></td>
+        </tr>
+      `).join('');
+    }
+  }
+
+  // ===================================
+  // 사진 업로드/관리
+  // ===================================
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('fileInput');
+  const uploadPreview = document.getElementById('uploadPreview');
+  const previewThumbs = document.getElementById('previewThumbs');
+  let pendingFiles = [];
+
+  fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+  ['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); }));
+  ['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
+  dropzone.addEventListener('drop', (e) => { e.preventDefault(); if (e.dataTransfer.files) handleFiles(e.dataTransfer.files); });
+
+  async function handleFiles(files) {
+    pendingFiles = [];
+    previewThumbs.innerHTML = '';
+    for (const f of files) {
+      if (!f.type.startsWith('image/')) continue;
+      const dataUrl = await readAsDataURL(f);
+      pendingFiles.push({ name: f.name, size: f.size, type: f.type, dataUrl });
+      const thumb = document.createElement('div');
+      thumb.style.cssText = 'width:70px; height:70px; border-radius:6px; overflow:hidden; border:1px solid var(--color-border);';
+      thumb.innerHTML = `<img src="${dataUrl}" style="width:100%; height:100%; object-fit:cover;" />`;
+      previewThumbs.appendChild(thumb);
+    }
+    if (pendingFiles.length > 0) {
+      uploadPreview.style.display = 'block';
+      const titleEl = document.getElementById('uploadTitle');
+      if (pendingFiles.length === 1) titleEl.value = pendingFiles[0].name.replace(/\.[^.]+$/, '');
+      else titleEl.value = `업로드 ${pendingFiles.length}장 (${fmtDate(new Date().toISOString())})`;
+    }
+  }
+  function readAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = reject;
+      r.readAsDataURL(file);
+    });
+  }
+  function cancelUpload() {
+    pendingFiles = [];
+    previewThumbs.innerHTML = '';
+    uploadPreview.style.display = 'none';
+    fileInput.value = '';
+  }
+  function saveUpload(publish) {
+    if (pendingFiles.length === 0) return;
+    const category = document.getElementById('uploadCategory').value;
+    const title = document.getElementById('uploadTitle').value.trim() || '제목 없음';
+    const photos = load(STORE.photos, []);
+    for (const f of pendingFiles) {
+      photos.unshift({
+        id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+        title: pendingFiles.length > 1 ? `${title} - ${f.name.replace(/\.[^.]+$/,'')}` : title,
+        category,
+        dataUrl: f.dataUrl,
+        size: f.size,
+        status: publish ? 'published' : 'draft',
+        createdAt: new Date().toISOString(),
+      });
+    }
+    save(STORE.photos, photos);
+    cancelUpload();
+    renderPhotos();
+    renderDashboard();
+    showToast(publish ? `${pendingFiles.length}장 게시 완료! 🚀` : `${pendingFiles.length}장 임시저장!`, 'success');
+  }
+
+  function renderPhotos() {
+    const photos = load(STORE.photos, []);
+    const grid = document.getElementById('photosGrid');
+    const empty = document.getElementById('photosEmpty');
+    if (photos.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    grid.innerHTML = photos.map(p => `
+      <div class="photo-card">
+        <div class="photo-thumb">
+          <img src="${p.dataUrl}" alt="${escapeHtml(p.title)}" />
+          <span class="status-badge ${p.status}">${p.status === 'published' ? '● 게시' : '○ 임시'}</span>
+        </div>
+        <div class="photo-body">
+          <h4>${escapeHtml(p.title)}</h4>
+          <div class="meta">${escapeHtml(p.category)} · ${fmtBytes(p.size)}</div>
+          <div class="photo-actions">
+            ${p.status === 'published'
+              ? `<button class="unpublish" onclick="togglePhoto('${p.id}')">비공개</button>`
+              : `<button class="publish" onclick="togglePhoto('${p.id}')">🚀 게시</button>`}
+            <button class="delete" onclick="deletePhoto('${p.id}')">🗑</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  function togglePhoto(id) {
+    const photos = load(STORE.photos, []);
+    const idx = photos.findIndex(p => p.id === id);
+    if (idx < 0) return;
+    photos[idx].status = photos[idx].status === 'published' ? 'draft' : 'published';
+    save(STORE.photos, photos);
+    renderPhotos();
+    renderDashboard();
+    showToast(photos[idx].status === 'published' ? '게시되었습니다.' : '비공개 처리되었습니다.', 'success');
+  }
+  function deletePhoto(id) {
+    if (!confirm('삭제하시겠습니까?')) return;
+    save(STORE.photos, load(STORE.photos, []).filter(p => p.id !== id));
+    renderPhotos();
+    renderDashboard();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 활동/소식
+  // ===================================
+  async function saveActivity() {
+    const category = document.getElementById('actCategory').value;
+    const title = document.getElementById('actTitle').value.trim();
+    const desc = document.getElementById('actDesc').value.trim();
+    const imgFile = document.getElementById('actImage').files[0];
+    if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
+    let image = null;
+    if (imgFile && imgFile.type.startsWith('image/')) image = await readAsDataURL(imgFile);
+
+    const acts = load(STORE.activities, []);
+    acts.unshift({
+      id: 'a_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+      category, title, desc, image,
+      status: 'published',
+      createdAt: new Date().toISOString(),
+    });
+    save(STORE.activities, acts);
+    document.getElementById('actTitle').value = '';
+    document.getElementById('actDesc').value = '';
+    document.getElementById('actImage').value = '';
+    renderActivities();
+    renderDashboard();
+    showToast('활동이 등록·게시되었습니다! 🚀', 'success');
+  }
+  function renderActivities() {
+    const acts = load(STORE.activities, []);
+    const tbody = document.getElementById('activitiesTbody');
+    const empty = document.getElementById('activitiesEmpty');
+    if (acts.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    tbody.innerHTML = acts.map(a => `
+      <tr>
+        <td>${fmtDate(a.createdAt)}</td>
+        <td>${escapeHtml(a.category)}</td>
+        <td>${escapeHtml(a.title)}</td>
+        <td>${escapeHtml(truncate(a.desc, 40))}</td>
+        <td><span class="status ${a.status === 'published' ? 'done' : 'hold'}">${a.status === 'published' ? '게시' : '임시'}</span></td>
+        <td class="row-actions">
+          <button class="toggle" onclick="toggleActivity('${a.id}')">${a.status === 'published' ? '숨김' : '게시'}</button>
+          <button class="del" onclick="deleteActivity('${a.id}')">삭제</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+  function toggleActivity(id) {
+    const acts = load(STORE.activities, []);
+    const idx = acts.findIndex(a => a.id === id);
+    if (idx < 0) return;
+    acts[idx].status = acts[idx].status === 'published' ? 'draft' : 'published';
+    save(STORE.activities, acts);
+    renderActivities();
+    renderDashboard();
+    showToast('상태가 변경되었습니다.', 'success');
+  }
+  function deleteActivity(id) {
+    if (!confirm('삭제하시겠습니까?')) return;
+    save(STORE.activities, load(STORE.activities, []).filter(a => a.id !== id));
+    renderActivities();
+    renderDashboard();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 이벤트 배너
+  // ===================================
+  function renderBanner() {
+    const b = load(STORE.banner, null);
+    if (b) {
+      document.getElementById('bannerText').value = b.text || '';
+      document.getElementById('bannerLink').value = b.link || '';
+      document.getElementById('bannerEnabled').checked = !!b.enabled;
+      updateBannerPreview();
+    }
+    document.getElementById('bannerText').addEventListener('input', updateBannerPreview);
+  }
+  function updateBannerPreview() {
+    const text = document.getElementById('bannerText').value.trim() || '배너 텍스트를 입력하고 저장하세요.';
+    document.getElementById('bannerPreview').innerHTML = '📣 &nbsp; ' + escapeHtml(text);
+  }
+  function saveBanner() {
+    const text = document.getElementById('bannerText').value.trim();
+    const link = document.getElementById('bannerLink').value.trim();
+    const enabled = document.getElementById('bannerEnabled').checked;
+    if (enabled && !text) { showToast('배너 텍스트를 입력해주세요.', 'error'); return; }
+    save(STORE.banner, {
+      text, link, enabled,
+      updatedAt: new Date().toISOString(),
+    });
+    showToast('배너가 저장되었습니다! 🎉', 'success');
+  }
+  function clearBanner() {
+    if (!confirm('배너를 비활성화하시겠습니까?')) return;
+    save(STORE.banner, { text: '', link: '', enabled: false, updatedAt: new Date().toISOString() });
+    document.getElementById('bannerEnabled').checked = false;
+    showToast('배너가 비활성화되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 문의 (후원자 / 멘토 / 일반)
+  // ===================================
+  function renderInquiries() {
+    const inqs = load(STORE.inquiries, []);
+    renderInquiryTable('donorsTbody', 'donorsEmpty', inqs.filter(i => i.type === '후원 문의'), 'donors');
+    renderInquiryTable('mentorsTbody', 'mentorsEmpty', inqs.filter(i => i.type === '멘토 신청'), 'mentors');
+    renderInquiryTable('inquiriesTbody', 'inquiriesEmpty', inqs.filter(i => i.type !== '후원 문의' && i.type !== '멘토 신청'), 'inquiries');
+  }
+  function renderInquiryTable(tbodyId, emptyId, list, kind) {
+    const tbody = document.getElementById(tbodyId);
+    const empty = document.getElementById(emptyId);
+    if (list.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    tbody.innerHTML = list.map(i => {
+      let cols = '';
+      if (kind === 'donors') {
+        cols = `
+          <td>${fmtDateTime(i.createdAt)}</td>
+          <td><strong>${escapeHtml(i.name)}</strong></td>
+          <td>${escapeHtml(i.email)}</td>
+          <td>${escapeHtml(i.phone || '-')}</td>
+          <td>${escapeHtml(truncate(i.message, 25))}</td>
+          <td><label style="display:inline-flex; gap:4px; align-items:center; cursor:pointer;">
+            <input type="checkbox" ${i.receipt ? 'checked' : ''} onchange="toggleReceipt('${i.id}')" />
+            <small>필요</small></label></td>
+        `;
+      } else if (kind === 'mentors') {
+        cols = `
+          <td>${fmtDateTime(i.createdAt)}</td>
+          <td><strong>${escapeHtml(i.name)}</strong></td>
+          <td>${escapeHtml(i.email)}</td>
+          <td>${escapeHtml(i.phone || '-')}</td>
+          <td>${escapeHtml(truncate(i.message, 30))}</td>
+        `;
+      } else {
+        cols = `
+          <td>${fmtDateTime(i.createdAt)}</td>
+          <td>${escapeHtml(i.type)}</td>
+          <td><strong>${escapeHtml(i.name)}</strong></td>
+          <td>${escapeHtml(i.email)}</td>
+          <td>${escapeHtml(i.phone || '-')}</td>
+          <td>${escapeHtml(truncate(i.message, 30))}</td>
+        `;
+      }
+      return `
+        <tr>
+          ${cols}
+          <td><span class="status ${i.status === 'done' ? 'done' : 'new'}">${i.status === 'done' ? '완료' : '신규'}</span></td>
+          <td class="row-actions">
+            <button class="toggle" onclick="toggleInquiryStatus('${i.id}')">${i.status === 'done' ? '재열기' : '완료'}</button>
+            <button class="del" onclick="deleteInquiry('${i.id}')">삭제</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+  function toggleInquiryStatus(id) {
+    const inqs = load(STORE.inquiries, []);
+    const idx = inqs.findIndex(i => i.id === id);
+    if (idx < 0) return;
+    inqs[idx].status = inqs[idx].status === 'done' ? 'new' : 'done';
+    save(STORE.inquiries, inqs);
+    renderInquiries();
+    renderBadges();
+    renderDashboard();
+  }
+  function toggleReceipt(id) {
+    const inqs = load(STORE.inquiries, []);
+    const idx = inqs.findIndex(i => i.id === id);
+    if (idx < 0) return;
+    inqs[idx].receipt = !inqs[idx].receipt;
+    save(STORE.inquiries, inqs);
+  }
+  function deleteInquiry(id) {
+    if (!confirm('삭제하시겠습니까?')) return;
+    save(STORE.inquiries, load(STORE.inquiries, []).filter(i => i.id !== id));
+    renderInquiries();
+    renderBadges();
+    renderDashboard();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 엑셀 다운로드 (CSV 형식으로 다운로드하되 확장자 .xls로 - Excel에서 열림)
+  // ===================================
+  function exportExcel(kind) {
+    const inqs = load(STORE.inquiries, []);
+    let list, headers, rows, filename;
+
+    if (kind === 'donors') {
+      list = inqs.filter(i => i.type === '후원 문의');
+      headers = ['접수일', '이름', '이메일', '연락처', '문의내용', '영수증필요', '상태'];
+      rows = list.map(i => [
+        fmtDateTime(i.createdAt), i.name, i.email, i.phone || '',
+        (i.message || '').replace(/[\r\n]+/g, ' '),
+        i.receipt ? 'Y' : 'N',
+        i.status === 'done' ? '완료' : '신규'
+      ]);
+      filename = '꿈파쇼_후원자신청_' + fmtDate(new Date().toISOString()).replace(/\./g,'') + '.xls';
+    } else if (kind === 'mentors') {
+      list = inqs.filter(i => i.type === '멘토 신청');
+      headers = ['접수일', '이름', '이메일', '연락처', '내용', '상태'];
+      rows = list.map(i => [
+        fmtDateTime(i.createdAt), i.name, i.email, i.phone || '',
+        (i.message || '').replace(/[\r\n]+/g, ' '),
+        i.status === 'done' ? '완료' : '신규'
+      ]);
+      filename = '꿈파쇼_멘토신청_' + fmtDate(new Date().toISOString()).replace(/\./g,'') + '.xls';
+    } else {
+      list = inqs.filter(i => i.type !== '후원 문의' && i.type !== '멘토 신청');
+      headers = ['접수일', '유형', '이름', '이메일', '연락처', '내용', '상태'];
+      rows = list.map(i => [
+        fmtDateTime(i.createdAt), i.type, i.name, i.email, i.phone || '',
+        (i.message || '').replace(/[\r\n]+/g, ' '),
+        i.status === 'done' ? '완료' : '신규'
+      ]);
+      filename = '꿈파쇼_일반문의_' + fmtDate(new Date().toISOString()).replace(/\./g,'') + '.xls';
+    }
+
+    if (list.length === 0) { showToast('다운로드할 데이터가 없습니다.', 'error'); return; }
+
+    // Excel이 잘 인식하는 HTML 테이블 형식 (한글 UTF-8 BOM)
+    const html = `\uFEFF<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8" /><style>td,th{padding:6px 10px;border:1px solid #999;font-family:sans-serif;font-size:12px;} th{background:#FCE8EE;font-weight:bold;}</style></head>
+<body><table>
+<thead><tr>${headers.map(h => '<th>'+escapeHtml(h)+'</th>').join('')}</tr></thead>
+<tbody>${rows.map(r => '<tr>'+r.map(c => '<td>'+escapeHtml(c)+'</td>').join('')+'</tr>').join('')}</tbody>
+</table></body></html>`;
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=UTF-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('엑셀 파일이 다운로드되었습니다! 📥', 'success');
+  }
+
+  // ===================================
+  // 월별 후원금 내역
+  // ===================================
+  function renderFinance() {
+    const donations = load(STORE.donations, {});
+    const grid = document.getElementById('monthGrid');
+    grid.innerHTML = '';
+    for (let m = 1; m <= 12; m++) {
+      const key = String(m).padStart(2, '0');
+      const item = donations[key];
+      const filled = !!item;
+      const slot = document.createElement('div');
+      slot.className = 'month-slot' + (filled ? ' filled' : '');
+      slot.innerHTML = `
+        <div class="m-num">${m}월</div>
+        <div class="m-info">${filled ? '📎 ' + escapeHtml(truncate(item.fileName, 14)) : '<em style="color:var(--color-text-light);">파일 없음</em>'}</div>
+        <div class="m-actions">
+          <label>
+            📤 ${filled ? '교체' : '업로드'}
+            <input type="file" style="display:none" onchange="uploadFinance('${key}', this.files[0])" />
+          </label>
+          ${filled ? `<a class="btn-sm" href="${item.dataUrl}" download="${escapeHtml(item.fileName)}" style="padding:5px 8px;border-radius:4px;font-size:0.68rem;font-weight:600;border:1px solid var(--color-success);color:var(--color-success);background:white;text-decoration:none;">💾</a>` : ''}
+          ${filled ? `<button class="del" onclick="deleteFinance('${key}')">🗑</button>` : ''}
+        </div>
+      `;
+      grid.appendChild(slot);
+    }
+  }
+  async function uploadFinance(monthKey, file) {
+    if (!file) return;
+    if (file.size > 4 * 1024 * 1024) {
+      if (!confirm(`파일 크기가 큽니다 (${fmtBytes(file.size)}). 브라우저 저장소 한계로 문제가 생길 수 있습니다. 계속하시겠습니까?`)) return;
+    }
+    const dataUrl = await readAsDataURL(file);
+    const donations = load(STORE.donations, {});
+    donations[monthKey] = {
+      fileName: file.name,
+      size: file.size,
+      dataUrl,
+      uploadedAt: new Date().toISOString(),
+    };
+    save(STORE.donations, donations);
+    renderFinance();
+    renderDashboard();
+    showToast(`${parseInt(monthKey)}월 후원금 내역이 업로드되었습니다! 💾`, 'success');
+  }
+  function deleteFinance(monthKey) {
+    if (!confirm(`${parseInt(monthKey)}월 파일을 삭제하시겠습니까?`)) return;
+    const donations = load(STORE.donations, {});
+    delete donations[monthKey];
+    save(STORE.donations, donations);
+    renderFinance();
+    renderDashboard();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 토스트
+  // ===================================
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  // 초기화
+  checkAuth();
+</script>
+</body>
+</html>
