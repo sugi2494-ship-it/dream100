@@ -937,7 +937,10 @@
       </div>
 
       <div class="card">
-        <h2>보관 중인 자료</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <h2 style="margin:0;">보관 중인 자료</h2>
+          <button class="btn btn-ghost" onclick="createArchiveFolder()">➕ 폴더 만들기</button>
+        </div>
         <div class="table-wrapper">
           <table class="data-table">
             <thead><tr><th>등록일</th><th>자료 이름</th><th>상태</th><th>다운로드 기록</th><th>관리</th></tr></thead>
@@ -1175,8 +1178,9 @@
     banner: 'ggumpasho_event_banner',
     hero: 'ggumpasho_hero',
     archive: 'ggumpasho_archive',
+    folders: 'ggumpasho_folders',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [] };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [], folders: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
@@ -1184,6 +1188,7 @@
   KEYMAP[STORE.banner] = 'banner';
   KEYMAP[STORE.hero] = 'hero';
   KEYMAP[STORE.archive] = 'archive';
+  KEYMAP[STORE.folders] = 'folders';
 
   async function fetchAll() {
     const { data: rows, error: e1 } = await sb.from('site_content').select('key,value');
@@ -1861,6 +1866,13 @@
       return ((ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)) || a.localeCompare(b);
     });
     window.__archiveOpen = window.__archiveOpen || {};
+    (load(STORE.folders, []) || []).forEach(f => { if (!groups[f]) groups[f] = []; if (!keys.includes(f)) keys.push(f); });
+    keys.sort((a, b) => {
+      const ia = FOLDER_ORDER.indexOf(a), ib = FOLDER_ORDER.indexOf(b);
+      return ((ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)) || a.localeCompare(b);
+    });
+    const dl = document.getElementById('archiveFolders');
+    if (dl) dl.innerHTML = [...new Set([...FOLDER_ORDER, ...keys])].map(f => '<option>' + escapeHtml(f) + '</option>').join('');
     tbody.innerHTML = keys.map(k => {
       const open = !!window.__archiveOpen[k];
       const header = `
@@ -1868,6 +1880,9 @@
         <td colspan="5" style="background:#FDF3F5; font-weight:800;">${open ? '📂' : '📁'} ${escapeHtml(k)} <small style="color:var(--color-text-muted); font-weight:500;">(${groups[k].length}개)</small> <span style="float:right; color:var(--color-text-muted);">${open ? '▲ 접기' : '▼ 펼치기'}</span></td>
       </tr>`;
       if (!open) return header;
+      if (groups[k].length === 0) {
+        return header + `<tr><td colspan="5" style="text-align:center; color:var(--color-text-muted); padding:14px;">빈 폴더입니다. 위에서 이 폴더 이름으로 업로드하거나, <button class="del" onclick="deleteArchiveFolder('${escapeHtml(k)}')">폴더 삭제</button></td></tr>`;
+      }
       return header + groups[k].map(d => `
       <tr>
         <td>${fmtDate(d.uploadedAt)}</td>
@@ -1884,6 +1899,28 @@
         </td>
       </tr>`).join('');
     }).join('');
+  }
+  function createArchiveFolder() {
+    const n = prompt('새 폴더 이름을 입력하세요.');
+    if (!n || !n.trim()) return;
+    const name = n.trim();
+    const arr = load(STORE.folders, []) || [];
+    const items = load(STORE.archive, []);
+    if (arr.includes(name) || items.some(d => (d.category || '기타') === name)) { showToast('이미 있는 폴더입니다.', 'error'); return; }
+    arr.push(name);
+    save(STORE.folders, arr);
+    window.__archiveOpen = window.__archiveOpen || {};
+    window.__archiveOpen[name] = true;
+    renderArchive();
+    showToast('"' + name + '" 폴더가 생성되었습니다! 📁', 'success');
+  }
+  function deleteArchiveFolder(k) {
+    const items = load(STORE.archive, []).filter(d => (d.category || '기타') === k);
+    if (items.length > 0) { showToast('폴더에 자료가 있어 삭제할 수 없습니다.', 'error'); return; }
+    if (!confirm('"' + k + '" 폴더를 삭제할까요?')) return;
+    save(STORE.folders, (load(STORE.folders, []) || []).filter(f => f !== k));
+    renderArchive();
+    showToast('폴더가 삭제되었습니다.', 'success');
   }
   function toggleArchiveFolder(k) {
     window.__archiveOpen = window.__archiveOpen || {};

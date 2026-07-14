@@ -1964,91 +1964,6 @@
     </div>
 
     <!-- 연혁 (실제 리플렛 기반) -->
-    <h3 class="panel-divider" style="text-align:center; font-size:1.3rem; color:var(--color-primary-dark); margin:80px 0 34px;">📜 연혁</h3>
-    <div class="tab-panel" id="tab-history" style="display:block !important;">
-      <div class="timeline">
-        <div class="tl-item">
-          <div class="tl-year">2025</div>
-          <div class="tl-desc">
-            제7회 울산 청소년 꿈비전 발표 대회 개최<br />
-            청운중학교, 화진중학교에 멘토링 활동 진행<br />
-            진로프로젝트 "별빛이 되어줄래" 멘토링 공익사업<br />
-            청소년 진로멘토링 "드림 캠퍼스" 멘토링 공익 사업
-          </div>
-        </div>
-        <div class="tl-item highlight">
-          <div class="tl-year">2024 <span class="month">· 만 10주년</span></div>
-          <div class="tl-desc">
-            <strong>꿈파쇼 만10주년 최해숙 회장 승격</strong><br />
-            제6회 울산청소년꿈비전발표대회 개최<br />
-            울산남구청 신정3동 도시재생 사업 시니어여가 자격교육과정 운영
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2023</div>
-          <div class="tl-desc">
-            제5회 울산청소년꿈비전발표대회 개최<br />
-            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
-            울산영웅100인프로젝트 100명 완성
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2022</div>
-          <div class="tl-desc">
-            제4회 울산청소년꿈비전 발표대회 개최<br />
-            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
-            울산광역시 교육청 인성교육공모사업 "컬러강점으로 진로찾GO! 꿈찾GO!"<br />
-            울산광역시 비영리민간단체 공익활동 지원사업 "ESG환경과 함께하는 진로"<br />
-            자원봉사 수요처 등록
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2021</div>
-          <div class="tl-desc">
-            울산광역시 교육청 인성교육공모사업 선정<br />
-            울산광역시 비영리민간단체 공익활동 지원사업 "꿈에 날개를 달아라"<br />
-            꿈파쇼 청소년 후원의 밤 개최
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2020</div>
-          <div class="tl-desc">
-            이용준 운영위원장 위임 / 기부금영수증 정식단체 인증<br />
-            울산교육청 민간단체보조금지원사업 안전교육 "폭력 싫어요, 따뜻한 소통문화"<br />
-            울산광역시자원봉사센터 우수공모사업 "꼬지락 희망교실" 우수단체 수상
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2019</div>
-          <div class="tl-desc">
-            제2회 울산 청소년 꿈비전 발표대회 개최<br />
-            꿈파쇼 드림캠프 진행<br />
-            정동희 운영위원장 고문 위임 및 최해숙대표 운영위원장 겸임
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2018</div>
-          <div class="tl-desc">
-            <strong>비영리민간단체 등록 완료</strong><br />
-            제1회 울산 청소년 꿈비전 발표대회 개최
-          </div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-year">2016 · 2017</div>
-          <div class="tl-desc">
-            2016년 회원 150명, 협찬사 40여개사 / 정동희 운영위원장 취임<br />
-            2015년 회원 100명, 협찬사 20개사 등록, 운영위원 10명 조직<br />
-            2014년 회원 50명, 운영위원 8명 조직
-          </div>
-        </div>
-        <div class="tl-item highlight">
-          <div class="tl-year">2013 <span class="month">· 12월 21일</span></div>
-          <div class="tl-desc"><strong>비영리민간단체 꿈파쇼 설립</strong></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 임원 (실제 7명) -->
     <h3 class="panel-divider" style="text-align:center; font-size:1.3rem; color:var(--color-primary-dark); margin:80px 0 34px;">🤝 임원진</h3>
     <div class="tab-panel" id="tab-board" style="display:block !important;">
       <!-- 리더십 -->
@@ -2132,6 +2047,91 @@
         ※ 꿈파쇼 임원진은 청소년의 꿈을 지원하기 위해 자발적으로 봉사하고 있습니다.
       </p>
     </div>
+    <h3 class="panel-divider" onclick="const p = document.getElementById('tab-history'); const open = p.style.display === 'none'; p.style.display = open ? 'block' : 'none'; document.getElementById('historyArrow').textContent = open ? '▲ 접기' : '▼ 펼쳐보기';" style="text-align:center; font-size:1.3rem; color:var(--color-primary-dark); margin:80px 0 34px; cursor:pointer;">📜 연혁 <span id="historyArrow" style="font-size:0.85rem; color:var(--color-text-muted);">▼ 펼쳐보기</span></h3>
+    <div class="tab-panel" id="tab-history" style="display:none;">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2025</div>
+          <div class="tl-desc">
+            제7회 울산 청소년 꿈비전 발표 대회 개최<br />
+            청운중학교, 화진중학교에 멘토링 활동 진행<br />
+            진로프로젝트 "별빛이 되어줄래" 멘토링 공익사업<br />
+            청소년 진로멘토링 "드림 캠퍼스" 멘토링 공익 사업
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-year">2024 <span class="month">· 만 10주년</span></div>
+          <div class="tl-desc">
+            <strong>꿈파쇼 만10주년 최해숙 회장 승격</strong><br />
+            제6회 울산청소년꿈비전발표대회 개최<br />
+            울산남구청 신정3동 도시재생 사업 시니어여가 자격교육과정 운영
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2023</div>
+          <div class="tl-desc">
+            제5회 울산청소년꿈비전발표대회 개최<br />
+            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
+            울산영웅100인프로젝트 100명 완성
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2022</div>
+          <div class="tl-desc">
+            제4회 울산청소년꿈비전 발표대회 개최<br />
+            문화체육관광부·울산중구청 "울산문화점빵" 사업주관<br />
+            울산광역시 교육청 인성교육공모사업 "컬러강점으로 진로찾GO! 꿈찾GO!"<br />
+            울산광역시 비영리민간단체 공익활동 지원사업 "ESG환경과 함께하는 진로"<br />
+            자원봉사 수요처 등록
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2021</div>
+          <div class="tl-desc">
+            울산광역시 교육청 인성교육공모사업 선정<br />
+            울산광역시 비영리민간단체 공익활동 지원사업 "꿈에 날개를 달아라"<br />
+            꿈파쇼 청소년 후원의 밤 개최
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2020</div>
+          <div class="tl-desc">
+            이용준 운영위원장 위임 / 기부금영수증 정식단체 인증<br />
+            울산교육청 민간단체보조금지원사업 안전교육 "폭력 싫어요, 따뜻한 소통문화"<br />
+            울산광역시자원봉사센터 우수공모사업 "꼬지락 희망교실" 우수단체 수상
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2019</div>
+          <div class="tl-desc">
+            제2회 울산 청소년 꿈비전 발표대회 개최<br />
+            꿈파쇼 드림캠프 진행<br />
+            정동희 운영위원장 고문 위임 및 최해숙대표 운영위원장 겸임
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2018</div>
+          <div class="tl-desc">
+            <strong>비영리민간단체 등록 완료</strong><br />
+            제1회 울산 청소년 꿈비전 발표대회 개최
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2016 · 2017</div>
+          <div class="tl-desc">
+            2016년 회원 150명, 협찬사 40여개사 / 정동희 운영위원장 취임<br />
+            2015년 회원 100명, 협찬사 20개사 등록, 운영위원 10명 조직<br />
+            2014년 회원 50명, 운영위원 8명 조직
+          </div>
+        </div>
+        <div class="tl-item highlight">
+          <div class="tl-year">2013 <span class="month">· 12월 21일</span></div>
+          <div class="tl-desc"><strong>비영리민간단체 꿈파쇼 설립</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 임원 (실제 7명) -->
   </div>
 </section>
 
