@@ -2273,32 +2273,44 @@
   // ===================================
   // 월별 후원금 내역
   // ===================================
+  const FIN_SLOTS = [['income', '후원금 내역'], ['usage', '사용내역'], ['donors', '후원자 명단']];
+  function financeFiles(item) {
+    if (!item) return {};
+    if (item.files) return item.files;
+    return { income: item };
+  }
   function renderFinance() {
     const donations = load(STORE.donations, {});
     const grid = document.getElementById('monthGrid');
     grid.innerHTML = '';
     for (let m = 1; m <= 12; m++) {
       const key = String(m).padStart(2, '0');
-      const item = donations[key];
-      const filled = !!item;
+      const files = financeFiles(donations[key]);
+      const filled = Object.keys(files).length > 0;
       const slot = document.createElement('div');
       slot.className = 'month-slot' + (filled ? ' filled' : '');
       slot.innerHTML = `
         <div class="m-num">${m}월</div>
-        <div class="m-info">${filled ? '📎 ' + escapeHtml(truncate(item.fileName, 14)) : '<em style="color:var(--color-text-light);">파일 없음</em>'}</div>
-        <div class="m-actions">
-          <label>
-            📤 ${filled ? '교체' : '업로드'}
-            <input type="file" style="display:none" onchange="uploadFinance('${key}', this.files[0])" />
-          </label>
-          ${filled ? `<button class="btn-sm" onclick="downloadFinance('${key}')" style="padding:5px 8px;border-radius:4px;font-size:0.68rem;font-weight:600;border:1px solid var(--color-success);color:var(--color-success);background:white;cursor:pointer;">💾</button>` : ''}
-          ${filled ? `<button class="del" onclick="deleteFinance('${key}')">🗑</button>` : ''}
-        </div>
+        ${FIN_SLOTS.map(s => {
+          const f = files[s[0]];
+          return `<div style="display:flex; align-items:center; justify-content:space-between; gap:6px; padding:5px 0; border-bottom:1px dashed var(--color-border); font-size:0.72rem;">
+            <span style="font-weight:700; flex-shrink:0;">${s[1]}</span>
+            <span style="color:var(--color-text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${f ? '📎 ' + escapeHtml(truncate(f.fileName, 10)) : '-'}</span>
+            <span style="display:flex; gap:4px; flex-shrink:0;">
+              <label style="cursor:pointer; color:var(--color-primary); font-weight:700;">
+                ${f ? '교체' : '📤 올리기'}
+                <input type="file" style="display:none" onchange="uploadFinance('${key}', '${s[0]}', this.files[0])" />
+              </label>
+              ${f ? `<button class="btn-sm" onclick="downloadFinance('${key}', '${s[0]}')" style="padding:2px 6px;border-radius:4px;font-size:0.68rem;border:1px solid var(--color-success);color:var(--color-success);background:white;cursor:pointer;">💾</button>` : ''}
+              ${f ? `<button class="del" onclick="deleteFinance('${key}', '${s[0]}')" style="padding:2px 6px;">🗑</button>` : ''}
+            </span>
+          </div>`;
+        }).join('')}
       `;
       grid.appendChild(slot);
     }
   }
-  async function uploadFinance(monthKey, file) {
+  async function uploadFinance(monthKey, slotKey, file) {
     if (!file) return;
     if (file.size > 45 * 1024 * 1024) { showToast('파일이 너무 큽니다 (최대 45MB).', 'error'); return; }
     showToast('파일 업로드 중...', '');
@@ -2310,25 +2322,26 @@
       return;
     }
     const donations = load(STORE.donations, {});
-    donations[monthKey] = {
+    const files = financeFiles(donations[monthKey]);
+    files[slotKey] = {
       fileName: file.name,
       size: file.size,
       path,
       url: SB_URL + '/storage/v1/object/public/uploads/' + path,
       uploadedAt: new Date().toISOString(),
     };
+    donations[monthKey] = { files, updatedAt: new Date().toISOString() };
     save(STORE.donations, donations);
     renderFinance();
     renderDashboard();
-    showToast(`${parseInt(monthKey)}월 후원금 내역이 업로드되었습니다! 💾`, 'success');
+    const label = (FIN_SLOTS.find(s => s[0] === slotKey) || ['', ''])[1];
+    showToast(`${parseInt(monthKey)}월 ${label}이(가) 게시되었습니다! 💾`, 'success');
   }
-  async function downloadFinance(monthKey) {
-    const item = load(STORE.donations, {})[monthKey];
+  async function downloadFinance(monthKey, slotKey) {
+    const files = financeFiles(load(STORE.donations, {})[monthKey]);
+    const item = files[slotKey];
     if (!item) return;
-    if (item.url) {
-      window.open(item.url, '_blank');
-      return;
-    }
+    if (item.url) { window.open(item.url, '_blank'); return; }
     if (item.path) {
       const { data, error } = await sb.storage.from('archive').createSignedUrl(item.path, 600);
       if (error || !data) { showToast('다운로드 링크 생성 실패', 'error'); return; }
@@ -2337,10 +2350,14 @@
       window.open(item.dataUrl, '_blank');
     }
   }
-  function deleteFinance(monthKey) {
-    if (!confirm(`${parseInt(monthKey)}월 파일을 삭제하시겠습니까?`)) return;
+  function deleteFinance(monthKey, slotKey) {
+    const label = (FIN_SLOTS.find(s => s[0] === slotKey) || ['', '파일'])[1];
+    if (!confirm(`${parseInt(monthKey)}월 ${label} 파일을 삭제하시겠습니까?`)) return;
     const donations = load(STORE.donations, {});
-    delete donations[monthKey];
+    const files = financeFiles(donations[monthKey]);
+    delete files[slotKey];
+    if (Object.keys(files).length === 0) delete donations[monthKey];
+    else donations[monthKey] = { files, updatedAt: new Date().toISOString() };
     save(STORE.donations, donations);
     renderFinance();
     renderDashboard();

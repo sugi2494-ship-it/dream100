@@ -1741,6 +1741,7 @@
         <li><a href="#news">소식</a></li>
         <li><a href="#programs">사업안내</a></li>
         <li><a href="mentors.html">진로멘토단</a></li>
+        <li><a href="event.html" style="color:var(--color-primary); font-weight:800;">발표대회 접수</a></li>
         <li><a href="#gallery">갤러리</a></li>
         <li><a href="#finance">재정보고</a></li>
         <li><a href="#contact">문의</a></li>
@@ -1795,6 +1796,9 @@
         </a>
         <a href="#programs" class="btn btn-outline">
           사업 살펴보기
+        </a>
+        <a href="event.html" class="btn btn-primary" style="background:#101A3C; border-color:#101A3C;">
+          🎤 발표대회 접수하기
         </a>
       </div>
     </div>
@@ -2509,60 +2513,6 @@
      ============================================ -->
 <section class="finance" id="finance">
   <div class="container">
-    <div class="finance-inner">
-      <div class="finance-text">
-        <span class="section-tag">TRANSPARENCY</span>
-        <h2>투명한 재정 공시</h2>
-        <p>
-          꿈파쇼는 후원자 여러분의 소중한 후원금이 어떻게 사용되는지
-          모든 내역을 투명하게 공개합니다. 연간 사업보고서와
-          결산자료를 확인해 주세요.
-        </p>
-
-        <div class="finance-docs" id="financeDocs">
-          <a href="#donation" class="doc-link">
-            <div>
-              <div class="name">💰 월별 후원금 내역 보기</div>
-              <div class="meta">매월 게시되는 후원금 접수·사용 내역</div>
-            </div>
-            <span class="doc-icon">→</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="finance-chart">
-        <div class="chart-title">
-          <span>2023년 사업비 집행 예시</span>
-          <span class="year">예시 데이터</span>
-        </div>
-        <div class="chart-bars">
-          <div class="chart-row">
-            <div class="label"><span>꿈비전 발표대회</span><span class="pct">30%</span></div>
-            <div class="chart-bar"><div class="chart-fill" style="width:30%"></div></div>
-          </div>
-          <div class="chart-row">
-            <div class="label"><span>진로멘토링 사업</span><span class="pct">25%</span></div>
-            <div class="chart-bar"><div class="chart-fill c2" style="width:25%"></div></div>
-          </div>
-          <div class="chart-row">
-            <div class="label"><span>장학금 후원</span><span class="pct">20%</span></div>
-            <div class="chart-bar"><div class="chart-fill c3" style="width:20%"></div></div>
-          </div>
-          <div class="chart-row">
-            <div class="label"><span>공익활동</span><span class="pct">20%</span></div>
-            <div class="chart-bar"><div class="chart-fill c4" style="width:20%"></div></div>
-          </div>
-          <div class="chart-row">
-            <div class="label"><span>운영비</span><span class="pct">5%</span></div>
-            <div class="chart-bar"><div class="chart-fill c5" style="width:5%"></div></div>
-          </div>
-        </div>
-        <p style="margin-top:20px; font-size:0.8rem; color:var(--color-text-muted); text-align:center;">
-          ※ 실제 결산 데이터로 교체가 필요합니다.
-        </p>
-      </div>
-    </div>
-
     <!-- 💰 2026년 후원금 내역 (월별 공시) -->
     <div class="donation-monthly" id="donation">
       <div class="donation-monthly-header">
@@ -2860,29 +2810,39 @@
       }
     } catch(e) {}
 
-    // 2) 2026 월별 후원금 내역: 게시글(게시판) 형태
+    // 2) 2026 월별 후원금 내역: 게시글(게시판) 형태 — 후원금 내역/사용내역/후원자 명단
     try {
       const donations = content.donations || {};
       const wrap = document.getElementById('donationMonths');
       if (wrap) {
-        const entries = Object.keys(donations).sort().map(k => ({ m: parseInt(k, 10), f: donations[k] }));
+        const SLOTS = [['income', '💰 후원금 내역'], ['usage', '📑 사용내역'], ['donors', '💛 후원자 명단']];
+        const norm = it => it ? (it.files ? it.files : { income: it }) : {};
+        const entries = Object.keys(donations).sort().map(k => ({ m: parseInt(k, 10), files: norm(donations[k]), raw: donations[k] }));
         wrap.style.display = 'block';
         wrap.innerHTML = entries.length === 0
           ? '<p style="text-align:center; color:#999; padding:20px 0;">등록된 내역이 아직 없습니다.</p>'
           : entries.map((e, i) => {
-              const isImg = /\.(png|jpe?g|gif|webp)$/i.test(e.f.fileName || '');
+              const date = ((e.raw && (e.raw.updatedAt || e.raw.uploadedAt)) || (e.files.income && e.files.income.uploadedAt) || '').slice(0, 10).replace(/-/g, '.');
+              const cnt = SLOTS.filter(s => e.files[s[0]] && e.files[s[0]].url).length;
+              const body = SLOTS.map(s => {
+                const f = e.files[s[0]];
+                if (!f || !f.url) return '';
+                const isImg = /\.(png|jpe?g|gif|webp)$/i.test(f.fileName || '');
+                return `<div style="margin-top:18px;">
+                  <div style="font-weight:800; color:var(--color-primary-dark, #8B1E3F); margin-bottom:8px;">${s[1]}</div>
+                  ${isImg
+                    ? `<img src="${f.url}" alt="${s[1]}" loading="lazy" style="max-width:100%; border-radius:8px;" />`
+                    : `<a href="${f.url}" target="_blank" rel="noopener" style="color:var(--color-primary, #C9284D); font-weight:700;">📎 ${escapeHtml(f.fileName || '파일')} 열기 →</a>`}
+                </div>`;
+              }).join('');
               return `
               <div style="border:1px solid #f0dde0; border-radius:12px; margin-bottom:10px; overflow:hidden; background:white;">
                 <div onclick="toggleDonation(${i})" style="display:flex; justify-content:space-between; align-items:center; padding:15px 18px; cursor:pointer;">
-                  <strong style="color:var(--color-primary-dark, #8B1E3F);">📄 2026년 ${e.m}월 후원금 내역</strong>
-                  <span style="font-size:0.8rem; color:#999; flex-shrink:0;">${(e.f.uploadedAt || '').slice(0, 10).replace(/-/g, '.')} 게시 <span id="donaArrow${i}">▼</span></span>
+                  <strong style="color:var(--color-primary-dark, #8B1E3F);">📄 2026년 ${e.m}월 후원금 내역${cnt > 1 ? ` <small style="color:#999; font-weight:500;">(자료 ${cnt}건)</small>` : ''}</strong>
+                  <span style="font-size:0.8rem; color:#999; flex-shrink:0;">${date} 게시 <span id="donaArrow${i}">▼</span></span>
                 </div>
                 <div id="donaBody${i}" style="display:none; padding:0 18px 18px; border-top:1px solid #f7e8ec;">
-                  ${e.f.url
-                    ? (isImg
-                      ? `<img src="${e.f.url}" alt="2026년 ${e.m}월 후원금 내역" loading="lazy" style="max-width:100%; border-radius:8px; margin-top:14px;" />`
-                      : `<a href="${e.f.url}" target="_blank" rel="noopener" style="display:inline-block; margin-top:14px; color:var(--color-primary, #C9284D); font-weight:700;">📎 ${escapeHtml(e.f.fileName || '파일')} 열기 →</a>`)
-                    : '<p style="margin-top:14px; color:#999;">파일 준비 중입니다.</p>'}
+                  ${body || '<p style="margin-top:14px; color:#999;">파일 준비 중입니다.</p>'}
                 </div>
               </div>`;
             }).join('');
