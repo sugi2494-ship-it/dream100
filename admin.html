@@ -644,7 +644,7 @@
       <button type="submit" class="login-btn">로그인</button>
     </form>
     <div class="login-hint">
-      🔑 <strong>담당자 비밀번호</strong>를 입력해주세요.
+      🔑 비밀번호는 <strong>1004 + 휴대폰 뒷 4자리</strong> (8자리)입니다.
     </div>
     <a href="index.html" class="back-link">← 메인 홈페이지로 돌아가기</a>
   </div>
@@ -675,12 +675,14 @@
       <a href="#" class="menu-link" data-tab="donors"><span class="ico">💛</span> 후원자 신청 <span class="badge" id="badgeDonors" style="display:none;">0</span></a>
       <a href="#" class="menu-link" data-tab="mentors"><span class="ico">🎓</span> 멘토 신청 <span class="badge" id="badgeMentors" style="display:none;">0</span></a>
       <a href="#" class="menu-link" data-tab="inquiries"><span class="ico">💬</span> 일반 문의 <span class="badge" id="badgeInquiries" style="display:none;">0</span></a>
+      <a href="#" class="menu-link" data-tab="event"><span class="ico">🎤</span> 발표대회 접수 <span class="badge" id="badgeEvent" style="display:none;">0</span></a>
     </nav>
 
     <div class="sidebar-menu-title">재정 관리</div>
     <nav>
       <a href="#" class="menu-link" data-tab="finance"><span class="ico">💰</span> 후원금 내역 (월별)</a>
       <a href="#" class="menu-link" data-tab="archive"><span class="ico">📂</span> 자료실</a>
+      <a href="#" class="menu-link" data-tab="admins"><span class="ico">👤</span> 관리자 계정</a>
     </nav>
 
     <div class="sidebar-menu-title">바로가기</div>
@@ -824,6 +826,70 @@
     </div>
 
     <!-- ========== 이벤트 배너 ========== -->
+    <!-- ========== 발표대회 접수 ========== -->
+    <div class="tab-content" id="tab-event">
+      <div class="main-header">
+        <div><h1>🎤 발표대회 접수 관리</h1><p class="subtitle">제8회 꿈비전 발표대회 학생 참가·봉사 신청 내역입니다. (신청 페이지: dreamshow.kr/event)</p></div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-primary" onclick="exportEventExcel('student')">📥 참가자 엑셀</button>
+          <button class="btn btn-primary" onclick="exportEventExcel('volunteer')">📥 봉사자 엑셀</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🎓 학생 참가 신청</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>접수일</th><th>이름</th><th>학교/학년/반</th><th>연락처</th><th>제출 파일</th><th>하고 싶은 말</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="evStudentTbody"></tbody>
+          </table>
+        </div>
+        <div id="evStudentEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">접수된 참가 신청이 없습니다.</div>
+      </div>
+
+      <div class="card">
+        <h2>💛 봉사 신청</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>접수일</th><th>이름</th><th>연락처</th><th>봉사시간</th><th>주민등록번호</th><th>후원·협찬</th><th>이유/문의</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="evVolunteerTbody"></tbody>
+          </table>
+        </div>
+        <div id="evVolunteerEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">접수된 봉사 신청이 없습니다.</div>
+      </div>
+    </div>
+
+    <!-- ========== 관리자 계정 ========== -->
+    <div class="tab-content" id="tab-admins">
+      <div class="main-header"><div><h1>👤 관리자 계정</h1><p class="subtitle">관리자 페이지에 로그인할 수 있는 사람을 관리합니다.</p></div></div>
+
+      <div class="info-banner">
+        🔑 등록하면 그 사람은 <strong>1004 + 본인 휴대폰 뒷 4자리</strong>를 비밀번호로 로그인할 수 있습니다.
+        (예: 뒷자리 1234 → 비밀번호 10041234)
+      </div>
+
+      <div class="card">
+        <h2>관리자 추가</h2>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>이름</label><input type="text" id="admName" placeholder="예: 윤수진" /></div>
+          <div class="form-field"><label>휴대폰 뒷 4자리</label><input type="text" id="admLast4" maxlength="4" placeholder="예: 1234" /></div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button class="btn btn-success" onclick="addAdmin()">➕ 관리자 등록</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>등록된 관리자</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>이름</th><th>비밀번호</th><th>등록일</th><th>관리</th></tr></thead>
+            <tbody id="adminsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- ========== 자료실 ========== -->
     <div class="tab-content" id="tab-archive">
       <div class="main-header"><div><h1>📂 자료실</h1><p class="subtitle">고유번호증, 도장·로고 파일, 결과보고서, 회계자료, 명단 등을 보관합니다.</p></div></div>
@@ -840,10 +906,11 @@
           <div class="form-field"><label>자료 이름 (목록에 표시될 이름)</label><input type="text" id="archiveName" placeholder="예: 2023년 결과보고서" /></div>
         </div>
         <div class="form-grid" style="margin-top:10px;">
-          <div class="form-field"><label>구분</label>
-            <select id="archiveCategory">
-              <option>재정·회계</option><option>증빙·서류</option><option>로고·디자인</option><option>명단</option><option>기타</option>
-            </select>
+          <div class="form-field"><label>구분 (폴더)</label>
+            <input type="text" id="archiveCategory" list="archiveFolders" placeholder="폴더 선택 또는 직접 입력" />
+            <datalist id="archiveFolders">
+              <option>진로멘토단</option><option>꿈비전 발표대회</option><option>드림캠프</option><option>송년후원의밤</option><option>이사회 임원회의</option><option>공익활동사업</option><option>홍보마케팅 자료</option><option>재정·회계</option><option>증빙·서류</option><option>로고·디자인</option><option>명단</option><option>기타</option>
+            </datalist>
           </div>
           <div class="form-field" style="display:flex; align-items:flex-end;">
             <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
@@ -861,7 +928,7 @@
         <h2>보관 중인 자료</h2>
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>등록일</th><th>구분</th><th>자료 이름</th><th>크기</th><th>상태</th><th>관리</th></tr></thead>
+            <thead><tr><th>등록일</th><th>자료 이름</th><th>상태</th><th>다운로드 기록</th><th>관리</th></tr></thead>
             <tbody id="archiveTbody"></tbody>
           </table>
         </div>
@@ -1046,9 +1113,14 @@
     refreshAll();
   }
   async function handleLogin() {
-    const pw = document.getElementById('loginPw').value;
+    const pw = document.getElementById('loginPw').value.trim();
     if (!pw) return;
-    const { error } = await sb.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pw });
+    if (!/^1004\d{4}$/.test(pw)) {
+      showToast('비밀번호는 1004 + 휴대폰 뒷 4자리 (총 8자리)입니다.', 'error');
+      return;
+    }
+    const email = 'admin' + pw.slice(4) + '@dreamshow.kr';
+    const { error } = await sb.auth.signInWithPassword({ email, password: pw });
     if (error) {
       showToast('비밀번호가 올바르지 않습니다.', 'error');
       document.getElementById('loginPw').value = '';
@@ -1076,7 +1148,7 @@
     hero: 'ggumpasho_hero',
     archive: 'ggumpasho_archive',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [] };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
@@ -1093,6 +1165,11 @@
       id: r.id, name: r.name, email: r.email, phone: r.phone, type: r.type,
       message: r.message, status: r.status, receipt: r.receipt, createdAt: r.created_at,
     }));
+    const { data: evs, error: e3 } = await sb.from('event_applications').select('*').order('created_at', { ascending: false });
+    if (!e3 && evs) CACHE.eventApps = evs.map(r => ({
+      id: r.id, type: r.type, name: r.name, phone: r.phone,
+      data: r.data || {}, status: r.status, createdAt: r.created_at,
+    }));
   }
   function load(key, def) {
     if (key === STORE.inquiries) return CACHE.inquiries;
@@ -1104,7 +1181,9 @@
     const k = KEYMAP[key];
     CACHE[k] = val;
     sb.from('site_content').upsert({ key: k, value: val, updated_at: new Date().toISOString() })
-      .then(({ error }) => { if (error) showToast('서버 저장 실패: ' + error.message, 'error'); });
+      .then(({ error }) => {
+        if (error) showToast('서버 저장 실패: ' + error.message + (String(error.message).includes('security') ? ' — 로그인이 만료된 것 같습니다. 페이지를 새로고침한 뒤 다시 로그인해주세요.' : ''), 'error');
+      });
   }
   async function compressImage(file, maxDim = 1600, quality = 0.82) {
     try {
@@ -1182,6 +1261,8 @@
     renderBanner();
     renderHero();
     renderArchive();
+    renderAdmins();
+    renderEventApps();
     renderInquiries();
     renderFinance();
     renderBadges();
@@ -1509,6 +1590,165 @@
   }
 
   // ===================================
+  // 관리자 계정
+  // ===================================
+  async function renderAdmins() {
+    const tbody = document.getElementById('adminsTbody');
+    if (!tbody) return;
+    const { data, error } = await sb.from('admins').select('*').order('created_at');
+    if (error) { tbody.innerHTML = '<tr><td colspan="4">불러오기 실패: ' + escapeHtml(error.message) + '</td></tr>'; return; }
+    tbody.innerHTML = (data || []).map(a => `
+      <tr>
+        <td><strong>${escapeHtml(a.name)}</strong></td>
+        <td>1004${escapeHtml(a.last4)}</td>
+        <td>${fmtDate(a.created_at)}</td>
+        <td class="row-actions"><button class="del" onclick="deleteAdmin('${a.email}', '${escapeHtml(a.name)}')">삭제</button></td>
+      </tr>`).join('');
+  }
+  async function callManageAdmin(payload) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { showToast('로그인이 만료되었습니다. 새로고침 후 다시 로그인해주세요.', 'error'); return null; }
+    const res = await fetch(SB_URL + '/functions/v1/manage-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token, 'apikey': SB_KEY },
+      body: JSON.stringify(payload),
+    });
+    return res.json();
+  }
+  async function addAdmin() {
+    const name = document.getElementById('admName').value.trim();
+    const last4 = document.getElementById('admLast4').value.trim();
+    if (!name || !/^\d{4}$/.test(last4)) { showToast('이름과 숫자 4자리를 입력해주세요.', 'error'); return; }
+    showToast('등록 중...', '');
+    const r = await callManageAdmin({ action: 'create', name, last4 });
+    if (!r) return;
+    if (r.error) { showToast(r.error, 'error'); return; }
+    document.getElementById('admName').value = '';
+    document.getElementById('admLast4').value = '';
+    renderAdmins();
+    showToast(name + ' 님 등록 완료! 비밀번호: 1004' + last4 + ' 🎉', 'success');
+  }
+  async function deleteAdmin(email, name) {
+    if (!confirm(name + ' 관리자를 삭제하시겠습니까? 더 이상 로그인할 수 없게 됩니다.')) return;
+    const r = await callManageAdmin({ action: 'delete', email });
+    if (!r) return;
+    if (r.error) { showToast(r.error, 'error'); return; }
+    renderAdmins();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 발표대회 접수
+  // ===================================
+  function renderEventApps() {
+    const apps = CACHE.eventApps || [];
+    const students = apps.filter(a => a.type === 'student');
+    const volunteers = apps.filter(a => a.type === 'volunteer');
+    const st = document.getElementById('evStudentTbody');
+    if (!st) return;
+    const se = document.getElementById('evStudentEmpty');
+    if (students.length === 0) { st.innerHTML = ''; se.style.display = 'block'; }
+    else {
+      se.style.display = 'none';
+      st.innerHTML = students.map(a => {
+        const d = a.data || {};
+        const files = [['photo', '📷 사진'], ['script', '📄 원고'], ['video', '🎬 영상']].map(p =>
+          d[p[0]] && d[p[0]].path ? `<button class="toggle" onclick="downloadSubmission('${d[p[0]].path}')">${p[1]}</button>` : ''
+        ).join(' ');
+        return `<tr>
+          <td>${fmtDateTime(a.createdAt)}</td>
+          <td><strong>${escapeHtml(a.name)}</strong></td>
+          <td>${escapeHtml(d.school || '')} ${escapeHtml(d.grade || '')} ${escapeHtml(d.klass || '')}</td>
+          <td>${escapeHtml(a.phone || '')}</td>
+          <td>${files}</td>
+          <td>${escapeHtml(truncate(d.message, 25))}</td>
+          <td><span class="status ${a.status === 'done' ? 'done' : 'new'}">${a.status === 'done' ? '완료' : '신규'}</span></td>
+          <td class="row-actions">
+            <button class="toggle" onclick="toggleEventStatus('${a.id}')">${a.status === 'done' ? '재열기' : '완료'}</button>
+            <button class="del" onclick="deleteEventApp('${a.id}')">삭제</button>
+          </td></tr>`;
+      }).join('');
+    }
+    const vt = document.getElementById('evVolunteerTbody');
+    const ve = document.getElementById('evVolunteerEmpty');
+    if (volunteers.length === 0) { vt.innerHTML = ''; ve.style.display = 'block'; }
+    else {
+      ve.style.display = 'none';
+      vt.innerHTML = volunteers.map(a => {
+        const d = a.data || {};
+        return `<tr>
+          <td>${fmtDateTime(a.createdAt)}</td>
+          <td><strong>${escapeHtml(a.name)}</strong></td>
+          <td>${escapeHtml(a.phone || '')}</td>
+          <td>${escapeHtml(d.time || '')}</td>
+          <td>${escapeHtml(d.rrn || '-')}</td>
+          <td>${d.sponsor ? '✅ ' + escapeHtml(truncate(d.sponsorDetail || '', 18)) : '-'}</td>
+          <td>${escapeHtml(truncate((d.reason || '') + (d.message ? ' / ' + d.message : ''), 35))}</td>
+          <td><span class="status ${a.status === 'done' ? 'done' : 'new'}">${a.status === 'done' ? '완료' : '신규'}</span></td>
+          <td class="row-actions">
+            <button class="toggle" onclick="toggleEventStatus('${a.id}')">${a.status === 'done' ? '재열기' : '완료'}</button>
+            <button class="del" onclick="deleteEventApp('${a.id}')">삭제</button>
+          </td></tr>`;
+      }).join('');
+    }
+    const badge = document.getElementById('badgeEvent');
+    const n = apps.filter(a => a.status === 'new').length;
+    if (badge) { badge.textContent = n; badge.style.display = n > 0 ? 'inline-block' : 'none'; }
+  }
+  async function downloadSubmission(path) {
+    const { data, error } = await sb.storage.from('submissions').createSignedUrl(path, 600);
+    if (error || !data) { showToast('다운로드 링크 생성 실패: ' + (error && error.message), 'error'); return; }
+    window.open(data.signedUrl, '_blank');
+  }
+  function toggleEventStatus(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    a.status = a.status === 'done' ? 'new' : 'done';
+    sb.from('event_applications').update({ status: a.status }).eq('id', id)
+      .then(({ error }) => { if (error) showToast('서버 저장 실패: ' + error.message, 'error'); });
+    renderEventApps();
+  }
+  async function deleteEventApp(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    if (!confirm('"' + a.name + '" 접수를 삭제하시겠습니까? 제출된 파일도 함께 삭제됩니다.')) return;
+    const d = a.data || {};
+    const paths = ['photo', 'script', 'video'].map(k => d[k] && d[k].path).filter(Boolean);
+    if (paths.length) await sb.storage.from('submissions').remove(paths);
+    await sb.from('event_applications').delete().eq('id', id);
+    CACHE.eventApps = (CACHE.eventApps || []).filter(x => x.id !== id);
+    renderEventApps();
+    showToast('삭제되었습니다.', 'success');
+  }
+  function exportEventExcel(kind) {
+    const apps = (CACHE.eventApps || []).filter(a => a.type === kind);
+    if (apps.length === 0) { showToast('다운로드할 데이터가 없습니다.', 'error'); return; }
+    let headers, rows, filename;
+    if (kind === 'student') {
+      headers = ['접수일', '이름', '학교', '학년', '반', '연락처', '하고싶은말', '상태'];
+      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.data.school || '', a.data.grade || '', a.data.klass || '', a.phone || '', (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
+      filename = '꿈비전대회_참가신청_' + fmtDate(new Date().toISOString()).replace(/\./g, '') + '.xls';
+    } else {
+      headers = ['접수일', '이름', '연락처', '봉사시간', '주민등록번호', '후원협찬', '협찬내용', '신청이유', '문의', '상태'];
+      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.phone || '', a.data.time || '', a.data.rrn || '', a.data.sponsor ? 'Y' : 'N', (a.data.sponsorDetail || '').replace(/[\r\n]+/g, ' '), (a.data.reason || '').replace(/[\r\n]+/g, ' '), (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
+      filename = '꿈비전대회_봉사신청_' + fmtDate(new Date().toISOString()).replace(/\./g, '') + '.xls';
+    }
+    const html = `\uFEFF<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8" /><style>td,th{padding:6px 10px;border:1px solid #999;font-family:sans-serif;font-size:12px;} th{background:#FCE8EE;font-weight:bold;}</style></head>
+<body><table>
+<thead><tr>${headers.map(h => '<th>' + escapeHtml(h) + '</th>').join('')}</tr></thead>
+<tbody>${rows.map(r => '<tr>' + r.map(c => '<td>' + escapeHtml(c) + '</td>').join('') + '</tr>').join('')}</tbody>
+</table></body></html>`;
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel;charset=UTF-8' });
+    const url = URL.createObjectURL(blob);
+    const el = document.createElement('a');
+    el.href = url; el.download = filename;
+    document.body.appendChild(el); el.click(); document.body.removeChild(el);
+    URL.revokeObjectURL(url);
+    showToast('엑셀 파일이 다운로드되었습니다! 📥', 'success');
+  }
+
+  // ===================================
   // 자료실
   // ===================================
   function archivePublicUrl(path) {
@@ -1521,20 +1761,29 @@
     if (!tbody) return;
     if (arr.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
-    tbody.innerHTML = arr.map(d => `
+    const FOLDER_ORDER = ['진로멘토단', '꿈비전 발표대회', '드림캠프', '송년후원의밤', '이사회 임원회의', '공익활동사업', '홍보마케팅 자료'];
+    const groups = {};
+    arr.forEach(d => { const c = d.category || '기타'; (groups[c] = groups[c] || []).push(d); });
+    const keys = Object.keys(groups).sort((a, b) => {
+      const ia = FOLDER_ORDER.indexOf(a), ib = FOLDER_ORDER.indexOf(b);
+      return ((ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)) || a.localeCompare(b);
+    });
+    tbody.innerHTML = keys.map(k => `
+      <tr><td colspan="5" style="background:#FDF3F5; font-weight:800;">📁 ${escapeHtml(k)} <small style="color:var(--color-text-muted); font-weight:500;">(${groups[k].length}개)</small></td></tr>
+      ${groups[k].map(d => `
       <tr>
         <td>${fmtDate(d.uploadedAt)}</td>
-        <td>${escapeHtml(d.category || '기타')}</td>
-        <td><strong>${escapeHtml(d.name)}</strong><br /><small style="color:var(--color-text-muted);">${escapeHtml(d.fileName || '')}</small></td>
-        <td>${fmtBytes(d.size)}</td>
+        <td><strong>${escapeHtml(d.name)}</strong><br /><small style="color:var(--color-text-muted);">${escapeHtml(d.fileName || '')} · ${fmtBytes(d.size)}</small></td>
         <td><span class="status ${d.public ? 'done' : 'hold'}">${d.public ? '공개' : '🔒 비공개'}</span></td>
-        <td class="row-actions">
+        <td>${(d.downloads && d.downloads.length) ? d.downloads.length + '회<br /><small style="color:var(--color-text-muted);">최근: ' + escapeHtml(fmtDateTime(d.downloads[d.downloads.length - 1].at) + ' ' + d.downloads[d.downloads.length - 1].name) + '</small>' : '-'}</td>
+        <td class="row-actions" style="white-space:normal;">
           <button class="toggle" onclick="downloadArchive('${d.id}')">💾 다운로드</button>
+          <button class="toggle" onclick="showDownloadLog('${d.id}')">기록</button>
           <button class="toggle" onclick="renameArchive('${d.id}')">이름변경</button>
           <button class="toggle" onclick="toggleArchivePublic('${d.id}')">${d.public ? '비공개로' : '공개로'}</button>
           <button class="del" onclick="deleteArchive('${d.id}')">삭제</button>
         </td>
-      </tr>`).join('');
+      </tr>`).join('')}`).join('');
   }
   async function uploadArchive() {
     const file = document.getElementById('archiveFile').files[0];
@@ -1567,12 +1816,26 @@
     showToast(isPublic ? '업로드 완료! 홈페이지 재정공시에 표시됩니다 🚀' : '업로드 완료! (비공개 보관) 🔒', 'success');
   }
   async function downloadArchive(id) {
-    const d = load(STORE.archive, []).find(x => x.id === id);
+    const arr = load(STORE.archive, []);
+    const d = arr.find(x => x.id === id);
     if (!d) return;
+    const who = prompt('다운로드하시는 분의 이름을 입력해주세요.');
+    if (!who || !who.trim()) { showToast('이름을 입력해야 다운로드할 수 있습니다.', 'error'); return; }
+    d.downloads = d.downloads || [];
+    d.downloads.push({ name: who.trim(), at: new Date().toISOString() });
+    save(STORE.archive, arr);
+    renderArchive();
     if (d.public) { window.open(archivePublicUrl(d.path), '_blank'); return; }
     const { data, error } = await sb.storage.from('archive').createSignedUrl(d.path, 600);
     if (error || !data) { showToast('다운로드 링크 생성 실패: ' + (error && error.message), 'error'); return; }
     window.open(data.signedUrl, '_blank');
+  }
+  function showDownloadLog(id) {
+    const d = load(STORE.archive, []).find(x => x.id === id);
+    if (!d) return;
+    const logs = d.downloads || [];
+    if (logs.length === 0) { alert('아직 다운로드 기록이 없습니다.'); return; }
+    alert('📥 "' + d.name + '" 다운로드 기록 (' + logs.length + '회)\n\n' + logs.map(l => fmtDateTime(l.at) + ' — ' + l.name).join('\n'));
   }
   function renameArchive(id) {
     const arr = load(STORE.archive, []);
@@ -1845,7 +2108,7 @@
             📤 ${filled ? '교체' : '업로드'}
             <input type="file" style="display:none" onchange="uploadFinance('${key}', this.files[0])" />
           </label>
-          ${filled ? `<a class="btn-sm" href="${item.dataUrl}" download="${escapeHtml(item.fileName)}" style="padding:5px 8px;border-radius:4px;font-size:0.68rem;font-weight:600;border:1px solid var(--color-success);color:var(--color-success);background:white;text-decoration:none;">💾</a>` : ''}
+          ${filled ? `<button class="btn-sm" onclick="downloadFinance('${key}')" style="padding:5px 8px;border-radius:4px;font-size:0.68rem;font-weight:600;border:1px solid var(--color-success);color:var(--color-success);background:white;cursor:pointer;">💾</button>` : ''}
           ${filled ? `<button class="del" onclick="deleteFinance('${key}')">🗑</button>` : ''}
         </div>
       `;
@@ -1856,20 +2119,35 @@
     if (!file) return;
     if (file.size > 45 * 1024 * 1024) { showToast('파일이 너무 큽니다 (최대 45MB).', 'error'); return; }
     showToast('파일 업로드 중...', '');
-    let dataUrl;
-    try { dataUrl = await uploadToStorage(file, 'finance'); }
-    catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); return; }
+    const extMatch = (file.name || '').match(/\.[A-Za-z0-9]+$/);
+    const path = 'finance/' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) + (extMatch ? extMatch[0].toLowerCase() : '');
+    const { error } = await sb.storage.from('archive').upload(path, file, { contentType: file.type || undefined });
+    if (error) {
+      showToast('업로드 실패: ' + error.message + (String(error.message).includes('security') ? ' — 로그인이 만료된 것 같습니다. 새로고침 후 다시 로그인해주세요.' : ''), 'error');
+      return;
+    }
     const donations = load(STORE.donations, {});
     donations[monthKey] = {
       fileName: file.name,
       size: file.size,
-      dataUrl,
+      path,
       uploadedAt: new Date().toISOString(),
     };
     save(STORE.donations, donations);
     renderFinance();
     renderDashboard();
     showToast(`${parseInt(monthKey)}월 후원금 내역이 업로드되었습니다! 💾`, 'success');
+  }
+  async function downloadFinance(monthKey) {
+    const item = load(STORE.donations, {})[monthKey];
+    if (!item) return;
+    if (item.path) {
+      const { data, error } = await sb.storage.from('archive').createSignedUrl(item.path, 600);
+      if (error || !data) { showToast('다운로드 링크 생성 실패', 'error'); return; }
+      window.open(data.signedUrl, '_blank');
+    } else if (item.dataUrl) {
+      window.open(item.dataUrl, '_blank');
+    }
   }
   function deleteFinance(monthKey) {
     if (!confirm(`${parseInt(monthKey)}월 파일을 삭제하시겠습니까?`)) return;

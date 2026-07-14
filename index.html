@@ -2824,24 +2824,37 @@
       }
     } catch(e) {}
 
-    // 2) 2026 월별 후원금 내역 로드
+    // 2) 2026 월별 후원금 내역: 팝업 목록으로 표시 (파일 다운로드는 관리자 전용)
     try {
       const donations = content.donations || {};
-      document.querySelectorAll('.month-card').forEach((card) => {
-        const num = card.querySelector('.month-num')?.textContent?.trim();
-        if (!num) return;
-        const monthKey = num.replace('월', '').padStart(2, '0');
-        const item = donations[monthKey];
-        if (item && item.fileName) {
-          card.classList.remove('empty');
-          card.classList.add('filled');
-          card.setAttribute('href', item.dataUrl || '#');
-          if (item.dataUrl) card.setAttribute('download', item.fileName);
-          card.setAttribute('target', '_blank');
-          card.querySelector('.month-status').textContent = '📎 ' + item.fileName.slice(0, 12) + (item.fileName.length > 12 ? '…' : '');
-          card.setAttribute('title', item.fileName);
-        }
-      });
+      const wrap = document.getElementById('donationMonths');
+      if (wrap) {
+        const entries = Object.keys(donations).sort().map(k => ({ m: parseInt(k, 10), f: donations[k] }));
+        wrap.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:14px 0 6px;">
+            <button onclick="document.getElementById('donationModal').style.display='flex'"
+              style="padding:13px 28px; border-radius:10px; border:none; background:var(--color-primary, #C9284D); color:white; font-family:inherit; font-size:0.95rem; font-weight:700; cursor:pointer;">
+              📋 월별 내역 보기 (${entries.length}건 게시됨)
+            </button>
+          </div>`;
+        const modal = document.createElement('div');
+        modal.id = 'donationModal';
+        modal.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; padding:20px;';
+        modal.innerHTML = `
+          <div style="background:white; border-radius:16px; max-width:440px; width:100%; max-height:80vh; overflow:auto; padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <h3 style="margin:0; font-size:1.1rem;">💰 2026년 월별 후원금 내역</h3>
+              <button onclick="document.getElementById('donationModal').style.display='none'" style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+            </div>
+            ${entries.length === 0 ? '<p style="color:#888; font-size:0.9rem;">등록된 내역이 아직 없습니다.</p>' :
+              entries.map(e => `<div style="display:flex; justify-content:space-between; gap:10px; padding:10px 4px; border-bottom:1px solid #f0dde0; font-size:0.9rem;">
+                <strong style="flex-shrink:0;">${e.m}월</strong><span style="color:#666; word-break:break-all; text-align:right;">${escapeHtml(e.f.fileName || '')} ✅ 게시됨</span>
+              </div>`).join('')}
+            <p style="margin-top:14px; font-size:0.76rem; color:#999; line-height:1.5;">※ 내역 원본 열람이 필요하시면 사무국(대표 1600-7218)으로 문의해주세요.</p>
+          </div>`;
+        modal.addEventListener('click', (ev) => { if (ev.target === modal) modal.style.display = 'none'; });
+        document.body.appendChild(modal);
+      }
     } catch(e) {}
 
     // 3) 활동 리스트 (관리자가 추가한 활동을 news 카드로 대체 로드)
