@@ -667,6 +667,7 @@
       <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동사진 관리</a>
       <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 활동/소식 관리</a>
       <a href="#" class="menu-link" data-tab="banner"><span class="ico">📣</span> 이벤트 배너</a>
+      <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 슬라이드</a>
     </nav>
 
     <div class="sidebar-menu-title">신청·문의</div>
@@ -798,12 +799,14 @@
           <div class="form-field"><label>설명</label><textarea id="actDesc" placeholder="활동에 대한 설명을 입력하세요."></textarea></div>
         </div>
         <div class="form-grid full" style="margin-top:10px;">
-          <div class="form-field"><label>대표 이미지 (선택)</label>
-            <input type="file" id="actImage" accept="image/*" />
+          <div class="form-field"><label>사진 첨부 (여러 장 선택 가능)</label>
+            <input type="file" id="actImage" accept="image/*" multiple />
           </div>
         </div>
+        <div id="actEditHint" style="display:none; margin-top:10px; padding:10px 14px; background:#FFF6DC; border-radius:8px; font-size:0.88rem;"></div>
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-          <button class="btn btn-success" onclick="saveActivity()">🚀 등록 + 게시</button>
+          <button class="btn btn-ghost" id="actCancelBtn" style="display:none;" onclick="cancelEditActivity()">수정 취소</button>
+          <button class="btn btn-success" id="actSaveBtn" onclick="saveActivity()">🚀 등록 + 게시</button>
         </div>
       </div>
 
@@ -820,6 +823,38 @@
     </div>
 
     <!-- ========== 이벤트 배너 ========== -->
+    <!-- ========== 메인 슬라이드 ========== -->
+    <div class="tab-content" id="tab-hero">
+      <div class="main-header"><div><h1>🎠 메인 슬라이드 관리</h1><p class="subtitle">홈페이지 첫 화면에서 자동으로 넘어가는 큰 사진들을 관리합니다.</p></div></div>
+
+      <div class="info-banner">
+        💡 여기에 슬라이드를 등록하면 홈페이지 기본 사진 대신 등록한 사진들이 표시됩니다.
+        모두 삭제하면 다시 기본 사진으로 돌아갑니다.
+      </div>
+
+      <div class="card">
+        <h2>새 슬라이드 추가</h2>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>사진 파일</label><input type="file" id="heroImage" accept="image/*" /></div>
+          <div class="form-field"><label>배지 문구 (선택)</label><input type="text" id="heroTag" placeholder="예: 진로멘토링" /></div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>제목</label><input type="text" id="heroTitle" placeholder="예: 현대중학교 진로멘토링" /></div>
+          <div class="form-field"><label>부제 (선택)</label><input type="text" id="heroSubtitle" placeholder="예: 살아숨쉬는 My Dream" /></div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button class="btn btn-success" onclick="addHeroSlide()">➕ 슬라이드 추가</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>등록된 슬라이드</h2>
+        <p class="card-desc">위에서부터 순서대로 홈페이지에 표시됩니다. ▲▼로 순서를 바꿀 수 있습니다.</p>
+        <div id="heroList"></div>
+        <div id="heroEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">등록된 슬라이드가 없습니다. (홈페이지에는 기본 사진이 표시됩니다)</div>
+      </div>
+    </div>
+
     <div class="tab-content" id="tab-banner">
       <div class="main-header"><div><h1>📣 이벤트 배너</h1><p class="subtitle">메인 페이지 최상단에 표시되는 배너를 관리합니다.</p></div></div>
 
@@ -992,13 +1027,15 @@
     inquiries: 'ggumpasho_inquiries',
     donations: 'ggumpasho_donations_2026',
     banner: 'ggumpasho_event_banner',
+    hero: 'ggumpasho_hero',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
   KEYMAP[STORE.donations] = 'donations';
   KEYMAP[STORE.banner] = 'banner';
+  KEYMAP[STORE.hero] = 'hero';
 
   async function fetchAll() {
     const { data: rows, error: e1 } = await sb.from('site_content').select('key,value');
@@ -1095,6 +1132,7 @@
     renderPhotos();
     renderActivities();
     renderBanner();
+    renderHero();
     renderInquiries();
     renderFinance();
     renderBadges();
@@ -1278,32 +1316,74 @@
   // ===================================
   // 활동/소식
   // ===================================
+  let editingActivityId = null;
   async function saveActivity() {
     const category = document.getElementById('actCategory').value;
     const title = document.getElementById('actTitle').value.trim();
     const desc = document.getElementById('actDesc').value.trim();
-    const imgFile = document.getElementById('actImage').files[0];
+    const imgFiles = Array.from(document.getElementById('actImage').files).filter(f => f.type.startsWith('image/'));
     if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
-    let image = null;
-    if (imgFile && imgFile.type.startsWith('image/')) {
-      try { image = await uploadToStorage(imgFile, 'activities'); }
-      catch (err) { showToast('이미지 업로드 실패: ' + (err.message || err), 'error'); return; }
+
+    let images = [];
+    if (imgFiles.length > 0) {
+      showToast('사진 ' + imgFiles.length + '장 업로드 중...', '');
+      try {
+        for (const f of imgFiles) images.push(await uploadToStorage(f, 'activities'));
+      } catch (err) { showToast('이미지 업로드 실패: ' + (err.message || err), 'error'); return; }
     }
 
     const acts = load(STORE.activities, []);
-    acts.unshift({
-      id: 'a_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-      category, title, desc, image,
-      status: 'published',
-      createdAt: new Date().toISOString(),
-    });
+    if (editingActivityId) {
+      const idx = acts.findIndex(a => a.id === editingActivityId);
+      if (idx >= 0) {
+        acts[idx].category = category;
+        acts[idx].title = title;
+        acts[idx].desc = desc;
+        if (images.length > 0) { acts[idx].images = images; acts[idx].image = images[0]; }
+        acts[idx].updatedAt = new Date().toISOString();
+      }
+      showToast('활동이 수정되었습니다! ✏️', 'success');
+    } else {
+      acts.unshift({
+        id: 'a_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+        category, title, desc,
+        image: images[0] || null,
+        images,
+        status: 'published',
+        createdAt: new Date().toISOString(),
+      });
+      showToast('활동이 등록·게시되었습니다! 🚀', 'success');
+    }
     save(STORE.activities, acts);
+    cancelEditActivity();
+    renderActivities();
+    renderDashboard();
+  }
+  function editActivity(id) {
+    const acts = load(STORE.activities, []);
+    const a = acts.find(x => x.id === id);
+    if (!a) return;
+    editingActivityId = id;
+    document.getElementById('actCategory').value = a.category || '활동';
+    document.getElementById('actTitle').value = a.title || '';
+    document.getElementById('actDesc').value = a.desc || '';
+    document.getElementById('actImage').value = '';
+    document.getElementById('actSaveBtn').textContent = '✏️ 수정 저장';
+    document.getElementById('actCancelBtn').style.display = 'inline-flex';
+    const hint = document.getElementById('actEditHint');
+    hint.style.display = 'block';
+    hint.textContent = '"' + (a.title || '') + '" 수정 중입니다. 사진을 새로 선택하면 기존 사진이 교체되고, 선택하지 않으면 기존 사진이 그대로 유지됩니다.';
+    document.getElementById('tab-activities').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function cancelEditActivity() {
+    editingActivityId = null;
     document.getElementById('actTitle').value = '';
     document.getElementById('actDesc').value = '';
     document.getElementById('actImage').value = '';
-    renderActivities();
-    renderDashboard();
-    showToast('활동이 등록·게시되었습니다! 🚀', 'success');
+    document.getElementById('actSaveBtn').textContent = '🚀 등록 + 게시';
+    document.getElementById('actCancelBtn').style.display = 'none';
+    document.getElementById('actEditHint').style.display = 'none';
   }
   function renderActivities() {
     const acts = load(STORE.activities, []);
@@ -1319,6 +1399,7 @@
         <td>${escapeHtml(truncate(a.desc, 40))}</td>
         <td><span class="status ${a.status === 'published' ? 'done' : 'hold'}">${a.status === 'published' ? '게시중' : '비공개'}</span></td>
         <td class="row-actions">
+          <button class="toggle" onclick="editActivity('${a.id}')">✏️ 수정</button>
           <button class="toggle" onclick="toggleActivity('${a.id}')">${a.status === 'published' ? '숨기기' : '게시하기'}</button>
           <button class="del" onclick="deleteActivity('${a.id}')">삭제</button>
         </td>
@@ -1376,6 +1457,70 @@
     save(STORE.banner, { text: '', link: '', enabled: false, updatedAt: new Date().toISOString() });
     document.getElementById('bannerEnabled').checked = false;
     showToast('배너가 비활성화되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 메인 슬라이드
+  // ===================================
+  function renderHero() {
+    const h = load(STORE.hero, { slides: [] }) || { slides: [] };
+    const list = document.getElementById('heroList');
+    const empty = document.getElementById('heroEmpty');
+    if (!list) return;
+    const slides = h.slides || [];
+    if (slides.length === 0) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    list.innerHTML = slides.map((s, i) => `
+      <div style="display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--color-border);">
+        <img src="${s.image}" style="width:110px; height:70px; object-fit:cover; border-radius:8px; flex-shrink:0;" />
+        <div style="flex:1; min-width:0;">
+          <div style="font-weight:700;">${escapeHtml(s.title || '(제목 없음)')}</div>
+          <div style="font-size:0.85rem; color:var(--color-text-muted);">${escapeHtml(s.tag || '')} ${escapeHtml(s.subtitle || '')}</div>
+        </div>
+        <div style="display:flex; gap:6px; flex-shrink:0;">
+          <button class="btn btn-ghost" onclick="moveHeroSlide(${i}, -1)" ${i === 0 ? 'disabled' : ''}>▲</button>
+          <button class="btn btn-ghost" onclick="moveHeroSlide(${i}, 1)" ${i === slides.length - 1 ? 'disabled' : ''}>▼</button>
+          <button class="btn btn-ghost" onclick="deleteHeroSlide(${i})">🗑</button>
+        </div>
+      </div>`).join('');
+  }
+  async function addHeroSlide() {
+    const file = document.getElementById('heroImage').files[0];
+    const tag = document.getElementById('heroTag').value.trim();
+    const title = document.getElementById('heroTitle').value.trim();
+    const subtitle = document.getElementById('heroSubtitle').value.trim();
+    if (!file) { showToast('사진 파일을 선택해주세요.', 'error'); return; }
+    if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
+    showToast('사진 업로드 중...', '');
+    let url;
+    try { url = await uploadToStorage(file, 'hero'); }
+    catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); return; }
+    const h = load(STORE.hero, { slides: [] }) || { slides: [] };
+    h.slides = h.slides || [];
+    h.slides.push({ image: url, tag, title, subtitle });
+    save(STORE.hero, h);
+    document.getElementById('heroImage').value = '';
+    document.getElementById('heroTag').value = '';
+    document.getElementById('heroTitle').value = '';
+    document.getElementById('heroSubtitle').value = '';
+    renderHero();
+    showToast('슬라이드가 추가되었습니다! 홈페이지에 바로 반영됩니다 🚀', 'success');
+  }
+  function deleteHeroSlide(i) {
+    if (!confirm('이 슬라이드를 삭제하시겠습니까?')) return;
+    const h = load(STORE.hero, { slides: [] }) || { slides: [] };
+    h.slides.splice(i, 1);
+    save(STORE.hero, h);
+    renderHero();
+    showToast('삭제되었습니다.', 'success');
+  }
+  function moveHeroSlide(i, dir) {
+    const h = load(STORE.hero, { slides: [] }) || { slides: [] };
+    const j = i + dir;
+    if (!h.slides || j < 0 || j >= h.slides.length) return;
+    const t = h.slides[i]; h.slides[i] = h.slides[j]; h.slides[j] = t;
+    save(STORE.hero, h);
+    renderHero();
   }
 
   // ===================================

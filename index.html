@@ -2778,7 +2778,7 @@
   (async function loadAdminData() {
     let content = {};
     try {
-      const { data } = await sb.from('site_content').select('key,value').in('key', ['banner', 'donations', 'activities']);
+      const { data } = await sb.from('site_content').select('key,value').in('key', ['banner', 'donations', 'activities', 'hero', 'photos']);
       (data || []).forEach(r => { content[r.key] = r.value; });
     } catch (e) {}
 
@@ -2840,9 +2840,53 @@
               <div class="news-body">
                 <h4>${escapeHtml(a.title)}</h4>
                 <p>${escapeHtml(a.desc || '')}</p>
+                ${(a.images && a.images.length > 1) ? `
+                <div style="display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;">
+                  ${a.images.slice(1, 5).map(u => `<a href="${u}" target="_blank" rel="noopener"><img src="${u}" alt="" loading="lazy" style="width:52px; height:52px; object-fit:cover; border-radius:8px; display:block;" /></a>`).join('')}
+                  ${a.images.length > 5 ? `<a href="${a.images[5]}" target="_blank" rel="noopener" style="width:52px; height:52px; border-radius:8px; background:rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; color:inherit; text-decoration:none;">+${a.images.length - 5}</a>` : ''}
+                </div>` : ''}
               </div>
             </article>
           `).join('');
+        }
+      }
+    } catch(e) {}
+
+    // 4) 메인 슬라이드 (관리자 등록 시 교체)
+    try {
+      const heroSlides = (content.hero && content.hero.slides) || [];
+      if (heroSlides.length > 0) {
+        const slider = document.getElementById('heroSlider');
+        if (slider) {
+          slider.innerHTML = heroSlides.map((s, i) => `
+            <div class="hero-slide${i === 0 ? ' active' : ''}">
+              <img src="${s.image}" alt="${escapeHtml(s.title || '')}" />
+              <div class="caption-overlay">
+                ${s.tag ? `<span class="cap-tag">${escapeHtml(s.tag)}</span>` : ''}
+                <p class="cap-title">
+                  ${escapeHtml(s.title || '')}
+                  ${s.subtitle ? `<span class="cap-meta">${escapeHtml(s.subtitle)}</span>` : ''}
+                </p>
+              </div>
+            </div>
+          `).join('');
+          if (window.setupHeroSlider) window.setupHeroSlider();
+        }
+      }
+    } catch(e) {}
+
+    // 5) 게시된 활동사진 → 갤러리 맨 앞에 추가
+    try {
+      const photos = (content.photos || []).filter(p => p.status === 'published');
+      if (photos.length > 0) {
+        const grid = document.querySelector('.gallery-grid');
+        if (grid) {
+          grid.insertAdjacentHTML('afterbegin', photos.map(p => `
+            <div class="gallery-item">
+              <img src="${p.dataUrl}" alt="${escapeHtml(p.title || '')}" loading="lazy" />
+              <div class="gallery-caption"><span class="tag">${escapeHtml(p.category || '활동')}</span></div>
+            </div>
+          `).join(''));
         }
       }
     } catch(e) {}
@@ -2889,10 +2933,12 @@
   // ============================================
   // 히어로 슬라이더
   // ============================================
-  (function initHeroSlider() {
+  function setupHeroSlider() {
     const slides = document.querySelectorAll('.hero-slide');
     const dotsWrap = document.getElementById('heroDots');
     if (!slides.length || !dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    if (window.__heroTimer) clearInterval(window.__heroTimer);
 
     let cur = 0;
     let timer = null;
@@ -2921,6 +2967,7 @@
     function restart() {
       clearInterval(timer);
       timer = setInterval(next, INTERVAL);
+      window.__heroTimer = timer;
     }
 
     window.heroNext = next;
@@ -2933,7 +2980,9 @@
       container.addEventListener('mouseenter', () => clearInterval(timer));
       container.addEventListener('mouseleave', restart);
     }
-  })();
+  }
+  window.setupHeroSlider = setupHeroSlider;
+  setupHeroSlider();
 
   // 모바일 메뉴 토글
   const toggle = document.getElementById('mobileToggle');
