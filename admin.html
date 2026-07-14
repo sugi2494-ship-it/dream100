@@ -1105,6 +1105,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
   // ===================================
   // Supabase 연결
@@ -1754,13 +1755,18 @@
         ).join(' ');
         return `<tr>
           <td>${fmtDateTime(a.createdAt)}</td>
-          <td><strong>${escapeHtml(a.name)}</strong></td>
+          <td style="cursor:pointer;" onclick="openEventDetail('${a.id}')" title="클릭하면 상세보기가 열립니다">
+            <strong style="color:var(--color-primary);">${escapeHtml(a.name)}</strong><br />
+            <small style="color:var(--color-text-muted);">🔍 상세보기</small>
+          </td>
           <td>${escapeHtml(d.school || '')} ${escapeHtml(d.grade || '')} ${escapeHtml(d.klass || '')}</td>
           <td>${escapeHtml(a.phone || '')}</td>
-          <td>${files}</td>
+          <td>${files} <button class="toggle" onclick="zipEventFiles('${a.id}')">📦 ZIP</button></td>
           <td>${escapeHtml(truncate(d.message, 25))}</td>
           <td><span class="status ${a.status === 'done' ? 'done' : 'new'}">${a.status === 'done' ? '완료' : '신규'}</span></td>
           <td class="row-actions">
+            <button class="toggle" onclick="copyEventSms('${a.id}')">📋 문자복사</button>
+            <button class="toggle" onclick="smsEvent('${a.id}')">📱 문자</button>
             <button class="toggle" onclick="toggleEventStatus('${a.id}')">${a.status === 'done' ? '재열기' : '완료'}</button>
             <button class="del" onclick="deleteEventApp('${a.id}')">삭제</button>
           </td></tr>`;
@@ -1816,6 +1822,92 @@
     CACHE.eventApps = (CACHE.eventApps || []).filter(x => x.id !== id);
     renderEventApps();
     showToast('삭제되었습니다.', 'success');
+  }
+  function eventSmsText(a) {
+    return a.name + '님 제8회 울산청소년꿈비전 발표대회 접수가 완료되었습니다\n본선진출에 관한 회신 연락을 드리도록 하겠습니다 감사합니다\n여러분의 꿈을 응원합니다!';
+  }
+  function smsEvent(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    const num = (a.phone || '').replace(/[^0-9+]/g, '');
+    if (!num) { showToast('연락처가 없습니다.', 'error'); return; }
+    location.href = 'sms:' + num + '?body=' + encodeURIComponent(eventSmsText(a));
+  }
+  async function copyEventSms(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    try {
+      await navigator.clipboard.writeText(eventSmsText(a));
+      showToast('문자 내용이 복사되었습니다. 붙여넣기로 보내세요 📋', 'success');
+    } catch (e) {
+      prompt('아래 내용을 복사하세요.', eventSmsText(a));
+    }
+  }
+  async function zipEventFiles(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    const d = a.data || {};
+    const slots = [['photo', '사진'], ['script', '원고'], ['video', '영상']].filter(s => d[s[0]] && d[s[0]].path);
+    if (slots.length === 0) { showToast('제출된 파일이 없습니다.', 'error'); return; }
+    showToast('파일을 모아 ZIP으로 만드는 중... (영상이 있으면 시간이 걸려요)', '');
+    try {
+      const zip = new JSZip();
+      for (const s of slots) {
+        const f = d[s[0]];
+        const { data, error } = await sb.storage.from('submissions').download(f.path);
+        if (error || !data) throw new Error(s[1] + ' 다운로드 실패');
+        const ext = ((f.fileName || '').match(/\.[A-Za-z0-9]+$/) || [''])[0];
+        zip.file(a.name + '_' + s[1] + ext, data);
+      }
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const el = document.createElement('a');
+      el.href = url;
+      el.download = '꿈비전대회_' + a.name + '_제출파일.zip';
+      document.body.appendChild(el); el.click(); document.body.removeChild(el);
+      URL.revokeObjectURL(url);
+      showToast('ZIP 파일이 다운로드되었습니다! 📦', 'success');
+    } catch (err) {
+      showToast('ZIP 생성 실패: ' + (err.message || err), 'error');
+    }
+  }
+  function openEventDetail(id) {
+    const a = (CACHE.eventApps || []).find(x => x.id === id);
+    if (!a) return;
+    const d = a.data || {};
+    let box = document.getElementById('eventDetail');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'eventDetail';
+      box.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:3000; align-items:center; justify-content:center; padding:20px;';
+      box.addEventListener('click', (ev) => { if (ev.target === box) box.style.display = 'none'; });
+      document.body.appendChild(box);
+    }
+    const row = (k, v) => `<div style="display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--color-border); font-size:0.9rem;"><strong style="width:90px; flex-shrink:0;">${k}</strong><span>${v}</span></div>`;
+    const fileBtns = [['photo', '📷 사진'], ['script', '📄 원고'], ['video', '🎬 영상']].map(s =>
+      d[s[0]] && d[s[0]].path ? `<button class="btn btn-ghost" onclick="downloadSubmission('${d[s[0]].path}')">${s[1]} 다운로드</button>` : ''
+    ).join(' ');
+    box.innerHTML = `
+      <div style="background:white; border-radius:16px; max-width:520px; width:100%; max-height:85vh; overflow:auto; padding:26px;" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3 style="margin:0;">🎤 ${escapeHtml(a.name)} 참가 신청 상세</h3>
+          <button onclick="document.getElementById('eventDetail').style.display='none'" style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
+        </div>
+        ${row('접수일', fmtDateTime(a.createdAt))}
+        ${row('이름', escapeHtml(a.name))}
+        ${row('학교', escapeHtml(d.school || '-'))}
+        ${row('학년/반', escapeHtml((d.grade || '') + ' ' + (d.klass || '')))}
+        ${row('연락처', escapeHtml(a.phone || '-'))}
+        ${row('하고 싶은 말', escapeHtml(d.message || '-'))}
+        <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;">${fileBtns}</div>
+        <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;">
+          <button class="btn btn-primary" onclick="zipEventFiles('${a.id}')">📦 파일 3개 ZIP으로 받기</button>
+          <button class="btn btn-success" onclick="smsEvent('${a.id}')">📱 접수완료 문자 보내기</button>
+          <button class="btn btn-ghost" onclick="copyEventSms('${a.id}')">📋 문자 내용 복사</button>
+        </div>
+        <div style="margin-top:14px; padding:12px 14px; background:#FFF6DC; border-radius:8px; font-size:0.82rem; line-height:1.6; white-space:pre-line;">${escapeHtml(eventSmsText(a))}</div>
+      </div>`;
+    box.style.display = 'flex';
   }
   function exportEventExcel(kind) {
     const apps = (CACHE.eventApps || []).filter(a => a.type === kind);
