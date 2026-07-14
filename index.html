@@ -1616,7 +1616,7 @@
      ============================================ */
   @media (max-width: 1024px) {
     .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-image { max-width: 640px; margin: 0 auto; }
+    .hero-image { max-width: 640px; margin: 0 auto; width: 100%; }
     .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
     .board-grid { grid-template-columns: repeat(2, 1fr); }
     .footer-top { grid-template-columns: 1fr 1fr; }
@@ -2835,6 +2835,24 @@
           }
           bannerEl.style.display = 'block';
         }
+        // 배너 이미지가 있으면 팝업으로 표시 (세션당 1회)
+        if (banner.image && !sessionStorage.getItem('banner_popup_' + (banner.updatedAt || ''))) {
+          const pop = document.createElement('div');
+          pop.id = 'bannerPopup';
+          pop.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1200; display:flex; align-items:center; justify-content:center; padding:20px;';
+          pop.innerHTML = `
+            <div style="position:relative; max-width:420px; width:100%;">
+              <button id="bannerPopupClose" style="position:absolute; top:-14px; right:-8px; width:32px; height:32px; border-radius:50%; border:none; background:white; font-size:16px; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,0.3); z-index:2;">✕</button>
+              <a href="${banner.link || '#'}" ${banner.link ? '' : 'onclick="return false;"'} style="display:block;">
+                <img src="${banner.image}" alt="${escapeHtml(banner.text || '이벤트')}" style="width:100%; display:block; border-radius:14px; box-shadow:0 16px 48px rgba(0,0,0,0.4);" />
+              </a>
+              ${banner.link ? `<a href="${banner.link}" style="display:block; margin-top:10px; text-align:center; background:var(--color-primary, #C9284D); color:white; padding:13px; border-radius:10px; font-weight:800; text-decoration:none;">👉 신청하러 가기</a>` : ''}
+            </div>`;
+          document.body.appendChild(pop);
+          const dismissPopup = () => { pop.remove(); sessionStorage.setItem('banner_popup_' + (banner.updatedAt || ''), '1'); };
+          pop.querySelector('#bannerPopupClose').addEventListener('click', dismissPopup);
+          pop.addEventListener('click', (ev) => { if (ev.target === pop) dismissPopup(); });
+        }
       }
     } catch(e) {}
 
@@ -2861,10 +2879,13 @@
               <button onclick="document.getElementById('donationModal').style.display='none'" style="border:none; background:none; font-size:1.2rem; cursor:pointer;">✕</button>
             </div>
             ${entries.length === 0 ? '<p style="color:#888; font-size:0.9rem;">등록된 내역이 아직 없습니다.</p>' :
-              entries.map(e => `<div style="display:flex; justify-content:space-between; gap:10px; padding:10px 4px; border-bottom:1px solid #f0dde0; font-size:0.9rem;">
-                <strong style="flex-shrink:0;">${e.m}월</strong><span style="color:#666; word-break:break-all; text-align:right;">${escapeHtml(e.f.fileName || '')} ✅ 게시됨</span>
+              entries.map(e => `<div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px solid #f0dde0; font-size:0.9rem;">
+                <strong style="flex-shrink:0;">${e.m}월</strong>
+                ${e.f.url
+                  ? `<a href="${e.f.url}" target="_blank" rel="noopener" style="color:var(--color-primary, #C9284D); font-weight:700; text-decoration:none; word-break:break-all; text-align:right;">📄 ${escapeHtml(e.f.fileName || '내역 보기')} 보기 →</a>`
+                  : `<span style="color:#666; word-break:break-all; text-align:right;">${escapeHtml(e.f.fileName || '')} ✅ 게시됨</span>`}
               </div>`).join('')}
-            <p style="margin-top:14px; font-size:0.76rem; color:#999; line-height:1.5;">※ 내역 원본 열람이 필요하시면 사무국(대표 1600-7218)으로 문의해주세요.</p>
+            <p style="margin-top:14px; font-size:0.76rem; color:#999; line-height:1.5;">※ 파일명을 클릭하면 게시된 내역을 확인할 수 있습니다. 문의: 사무국 (대표 1600-7218)</p>
           </div>`;
         modal.addEventListener('click', (ev) => { if (ev.target === modal) modal.style.display = 'none'; });
         document.body.appendChild(modal);
@@ -2972,12 +2993,12 @@
       if (photos.length > 0) {
         const grid = document.querySelector('.gallery-grid');
         if (grid) {
-          grid.insertAdjacentHTML('afterbegin', photos.map(p => `
-            <div class="gallery-item">
+          grid.innerHTML = photos.map((p, i) => `
+            <div class="gallery-item${i === 0 ? ' tall' : ''}">
               <img src="${p.dataUrl}" alt="${escapeHtml(p.title || '')}" loading="lazy" />
               <div class="gallery-caption"><span class="tag">${escapeHtml(p.category || '활동')}</span></div>
             </div>
-          `).join(''));
+          `).join('');
         }
       }
     } catch(e) {}

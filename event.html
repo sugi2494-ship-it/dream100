@@ -82,8 +82,8 @@
 
 <div class="wrap">
 
-  <div class="poster" id="posterBox" onclick="document.getElementById('chooseBox').scrollIntoView({behavior:'smooth'})">
-    <img src="assets/event/poster8.jpg" alt="제8회 울산청소년 꿈비전 발표대회 포스터" onerror="this.parentElement.style.display='none'" />
+  <div class="poster" id="posterBox" style="display:none;" onclick="document.getElementById('chooseBox').scrollIntoView({behavior:'smooth'})">
+    <img id="posterImg" src="assets/event/poster8.jpg" alt="제8회 울산청소년 꿈비전 발표대회 포스터" onload="this.parentElement.style.display='block'" onerror="this.parentElement.style.display='none'" />
   </div>
 
   <div class="event-head">
@@ -184,6 +184,16 @@
   const SB_URL = 'https://oqxlsnyuwtmjmbhgzjoz.supabase.co';
   const SB_KEY = 'sb_publishable_mn7lAEbiyw1ArefbUh9R7w_fZOdW5g0';
   const sb = supabase.createClient(SB_URL, SB_KEY);
+
+  // 관리자 배너 이미지가 있으면 포스터로 표시
+  (async function loadPoster() {
+    try {
+      const { data } = await sb.from('site_content').select('value').eq('key', 'banner').single();
+      if (data && data.value && data.value.image) {
+        document.getElementById('posterImg').src = data.value.image;
+      }
+    } catch (e) {}
+  })();
 
   function showForm(which) {
     document.getElementById('formStudent').classList.toggle('hidden', which !== 'student');

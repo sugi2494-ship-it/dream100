@@ -993,13 +993,19 @@
         </div>
         <div class="form-grid" style="margin-top:10px;">
           <div class="form-field"><label>연결 링크 (선택)</label>
-            <input type="url" id="bannerLink" placeholder="https://form.naver.com/... (비워두면 링크 없음)" />
+            <input type="url" id="bannerLink" placeholder="예: /event (발표대회 신청 페이지) 또는 https://..." />
           </div>
           <div class="form-field" style="display:flex; align-items:flex-end; gap:8px;">
             <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
               <input type="checkbox" id="bannerEnabled" style="width:20px; height:20px;" />
               <span style="font-weight:600;">배너 활성화</span>
             </label>
+          </div>
+        </div>
+        <div class="form-grid full" style="margin-top:10px;">
+          <div class="form-field"><label>배너 이미지 (선택 — 포스터 등을 올리면 홈페이지에 팝업으로 표시됩니다)</label>
+            <input type="file" id="bannerImage" accept="image/*" />
+            <div id="bannerImgPreview" style="margin-top:8px;"></div>
           </div>
         </div>
         <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
@@ -1621,21 +1627,51 @@
       document.getElementById('bannerEnabled').checked = !!b.enabled;
       updateBannerPreview();
     }
+    renderBannerImage();
     document.getElementById('bannerText').addEventListener('input', updateBannerPreview);
+  }
+  function renderBannerImage() {
+    const b = load(STORE.banner, null);
+    const box = document.getElementById('bannerImgPreview');
+    if (!box) return;
+    box.innerHTML = (b && b.image)
+      ? `<div style="display:flex; align-items:center; gap:12px;">
+           <img src="${b.image}" style="width:90px; border-radius:8px; border:1px solid var(--color-border);" />
+           <button class="btn btn-ghost" onclick="removeBannerImage()">이미지 제거</button>
+         </div>`
+      : '<small style="color:var(--color-text-muted);">등록된 이미지가 없습니다.</small>';
+  }
+  function removeBannerImage() {
+    if (!confirm('배너 이미지를 제거할까요? 홈페이지 팝업이 사라집니다.')) return;
+    const b = load(STORE.banner, null) || {};
+    delete b.image;
+    b.updatedAt = new Date().toISOString();
+    save(STORE.banner, b);
+    renderBannerImage();
+    showToast('배너 이미지가 제거되었습니다.', 'success');
   }
   function updateBannerPreview() {
     const text = document.getElementById('bannerText').value.trim() || '배너 텍스트를 입력하고 저장하세요.';
     document.getElementById('bannerPreview').innerHTML = '📣 &nbsp; ' + escapeHtml(text);
   }
-  function saveBanner() {
+  async function saveBanner() {
     const text = document.getElementById('bannerText').value.trim();
     const link = document.getElementById('bannerLink').value.trim();
     const enabled = document.getElementById('bannerEnabled').checked;
     if (enabled && !text) { showToast('배너 텍스트를 입력해주세요.', 'error'); return; }
-    save(STORE.banner, {
-      text, link, enabled,
-      updatedAt: new Date().toISOString(),
-    });
+    const prev = load(STORE.banner, null) || {};
+    let image = prev.image || null;
+    const imgFile = document.getElementById('bannerImage').files[0];
+    if (imgFile && imgFile.type.startsWith('image/')) {
+      showToast('이미지 업로드 중...', '');
+      try { image = await uploadToStorage(imgFile, 'banner'); }
+      catch (err) { showToast('이미지 업로드 실패: ' + (err.message || err), 'error'); return; }
+    }
+    const b = { text, link, enabled, updatedAt: new Date().toISOString() };
+    if (image) b.image = image;
+    save(STORE.banner, b);
+    document.getElementById('bannerImage').value = '';
+    renderBannerImage();
     showToast('배너가 저장되었습니다! 🎉', 'success');
   }
   function clearBanner() {
@@ -2177,7 +2213,7 @@
     showToast('파일 업로드 중...', '');
     const extMatch = (file.name || '').match(/\.[A-Za-z0-9]+$/);
     const path = 'finance/' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) + (extMatch ? extMatch[0].toLowerCase() : '');
-    const { error } = await sb.storage.from('archive').upload(path, file, { contentType: file.type || undefined });
+    const { error } = await sb.storage.from('uploads').upload(path, file, { contentType: file.type || undefined });
     if (error) {
       showToast('업로드 실패: ' + error.message + (String(error.message).includes('security') ? ' — 로그인이 만료된 것 같습니다. 새로고침 후 다시 로그인해주세요.' : ''), 'error');
       return;
@@ -2187,6 +2223,7 @@
       fileName: file.name,
       size: file.size,
       path,
+      url: SB_URL + '/storage/v1/object/public/uploads/' + path,
       uploadedAt: new Date().toISOString(),
     };
     save(STORE.donations, donations);
@@ -2197,6 +2234,10 @@
   async function downloadFinance(monthKey) {
     const item = load(STORE.donations, {})[monthKey];
     if (!item) return;
+    if (item.url) {
+      window.open(item.url, '_blank');
+      return;
+    }
     if (item.path) {
       const { data, error } = await sb.storage.from('archive').createSignedUrl(item.path, 600);
       if (error || !data) { showToast('다운로드 링크 생성 실패', 'error'); return; }
