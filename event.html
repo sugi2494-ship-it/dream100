@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>제8회 울산청소년 꿈비전 발표대회 신청 | 꿈파쇼</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+<style>
+  :root {
+    --primary: #C9284D;
+    --primary-dark: #8B1E3F;
+    --navy: #101A3C;
+    --yellow: #FFD43B;
+    --bg: #FFF7F4;
+    --border: #F0DDE0;
+    --muted: #8a7f82;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Pretendard Variable', Pretendard, sans-serif; background: var(--bg); color: #2b2326; }
+  .topbar { background: white; border-bottom: 1px solid var(--border); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; color: var(--primary-dark); text-decoration: none; }
+  .topbar .brand img { width: 38px; height: 38px; }
+  .topbar a.home { font-size: 0.85rem; color: var(--muted); text-decoration: none; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  .poster { border-radius: 16px; overflow: hidden; box-shadow: 0 12px 36px rgba(16,26,60,0.25); cursor: pointer; }
+  .poster img { width: 100%; display: block; }
+
+  .event-head { background: var(--navy); color: white; border-radius: 16px; padding: 28px 24px; text-align: center; margin-top: 16px; }
+  .event-head .badge { display: inline-block; background: var(--yellow); color: var(--navy); font-weight: 800; padding: 4px 14px; border-radius: 999px; font-size: 0.85rem; }
+  .event-head h1 { font-size: 1.5rem; margin: 12px 0 4px; }
+  .event-head .slogan { color: var(--yellow); font-weight: 800; font-size: 1.15rem; }
+  .event-head .meta { margin-top: 14px; font-size: 0.92rem; line-height: 1.7; color: #dfe4f5; }
+  .event-head .meta strong { color: white; }
+
+  .choose { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 22px 0; }
+  .choose button {
+    padding: 20px 10px; border-radius: 14px; border: 2px solid var(--border); background: white;
+    font-family: inherit; font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); cursor: pointer; transition: all .15s;
+  }
+  .choose button.on { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 8px 20px rgba(201,40,77,0.3); }
+  .choose button small { display: block; font-weight: 500; font-size: 0.78rem; margin-top: 5px; opacity: 0.75; }
+
+  .card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 24px 20px; margin-bottom: 18px; }
+  .card h2 { font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 4px; }
+  .card .desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-weight: 700; font-size: 0.88rem; margin-bottom: 6px; }
+  .field label .req { color: var(--primary); }
+  .field input[type=text], .field input[type=tel], .field textarea, .field select {
+    width: 100%; padding: 11px 12px; border: 1px solid #ddc9cd; border-radius: 10px; font-family: inherit; font-size: 0.95rem; background: #fffdfd;
+  }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .field input[type=file] { width: 100%; font-size: 0.85rem; padding: 8px; border: 1px dashed #ddc9cd; border-radius: 10px; background: #fffdfd; }
+  .field .hint { font-size: 0.76rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; }
+  .radio-row { display: flex; flex-direction: column; gap: 8px; }
+  .radio-row label { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.92rem; cursor: pointer; }
+  .consent { background: #FFF3F0; border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; line-height: 1.6; }
+  .consent label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; font-weight: 600; }
+  .submit-btn {
+    width: 100%; padding: 16px; border: none; border-radius: 12px; background: var(--primary); color: white;
+    font-family: inherit; font-size: 1.1rem; font-weight: 800; cursor: pointer; margin-top: 6px;
+  }
+  .submit-btn:disabled { opacity: 0.6; cursor: wait; }
+  .done { text-align: center; padding: 50px 20px; }
+  .done .big { font-size: 3rem; }
+  .done h2 { color: var(--primary-dark); margin: 10px 0; }
+  .done p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+  .done a { color: var(--primary); font-weight: 700; }
+  .hidden { display: none; }
+  @media (max-width: 560px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="index.html"><img src="assets/logo/ggumpasho_logo.png" alt="꿈파쇼" /> 꿈파쇼</a>
+  <a class="home" href="index.html">← 메인 홈페이지</a>
+</div>
+
+<div class="wrap">
+
+  <div class="poster" id="posterBox" onclick="document.getElementById('chooseBox').scrollIntoView({behavior:'smooth'})">
+    <img src="assets/event/poster8.jpg" alt="제8회 울산청소년 꿈비전 발표대회 포스터" onerror="this.parentElement.style.display='none'" />
+  </div>
+
+  <div class="event-head">
+    <span class="badge">제8회</span>
+    <h1>울산청소년 꿈비전 발표대회</h1>
+    <div class="slogan">"꿈으로 차오르다"</div>
+    <div class="meta">
+      📅 <strong>2026년 8월 29일 (토) 오후 2시</strong><br />
+      📍 청소년 차오름센터 (법대로81번길 1, 2층)<br />
+      🎤 참가대상: 울산지역 만 13세~17세 청소년<br />
+      ⏰ 접수기간: 2026년 6월 24일(수) ~ 7월 17일(금)<br />
+      📞 접수문의: 010-6241-7707
+    </div>
+  </div>
+
+  <div class="choose" id="chooseBox">
+    <button id="btnStudent" class="on" onclick="showForm('student')">🎤 학생 참가 신청<small>발표대회 참가 접수</small></button>
+    <button id="btnVolunteer" onclick="showForm('volunteer')">💛 봉사 신청<small>행사 당일 봉사·후원</small></button>
+  </div>
+
+  <!-- ============ 학생 참가 신청 ============ -->
+  <div class="card" id="formStudent">
+    <h2>🎤 학생 참가 신청</h2>
+    <p class="desc">발표 원고(A4 1장)와 1분 이내 발표 동영상, 프로필 사진을 준비해주세요.</p>
+
+    <div class="field"><label>이름 <span class="req">*</span></label><input type="text" id="stName" placeholder="홍길동" /></div>
+    <div class="grid3">
+      <div class="field"><label>학교 <span class="req">*</span></label><input type="text" id="stSchool" placeholder="○○중학교" /></div>
+      <div class="field"><label>학년 <span class="req">*</span></label><input type="text" id="stGrade" placeholder="2학년" /></div>
+      <div class="field"><label>반</label><input type="text" id="stClass" placeholder="3반" /></div>
+    </div>
+    <div class="field"><label>연락처 <span class="req">*</span></label><input type="tel" id="stPhone" placeholder="010-0000-0000" /></div>
+    <div class="field"><label>프로필 사진 <span class="req">*</span></label><input type="file" id="stPhoto" accept="image/*" />
+      <div class="hint">얼굴이 잘 나온 사진 1장</div></div>
+    <div class="field"><label>발표 원고 <span class="req">*</span></label><input type="file" id="stScript" accept=".pdf,.doc,.docx,.hwp,.hwpx,.txt,image/*" />
+      <div class="hint">5분 이내 발표 원고 A4 1장 (PDF, 한글, 워드, 사진 가능)</div></div>
+    <div class="field"><label>발표 동영상 <span class="req">*</span></label><input type="file" id="stVideo" accept="video/*" />
+      <div class="hint">1분 이내 발표 촬영 동영상 · 최대 45MB (용량이 크면 짧게 다시 촬영하거나 화질을 낮춰주세요)</div></div>
+    <div class="field"><label>하고 싶은 말</label><textarea id="stMessage" placeholder="자유롭게 적어주세요."></textarea></div>
+
+    <div class="field consent">
+      <label><input type="checkbox" id="stConsent" style="margin-top:2px;" />
+        <span>(필수) 개인정보 수집·이용 동의 — 수집 항목: 이름, 학교, 학년, 반, 연락처, 사진, 원고, 동영상. 이용 목적: 제8회 꿈비전 발표대회 접수 및 운영. 보유 기간: 대회 종료 후 6개월.</span></label>
+    </div>
+    <button class="submit-btn" id="stSubmit" onclick="submitStudent()">🚀 참가 신청하기</button>
+  </div>
+
+  <!-- ============ 봉사 신청 ============ -->
+  <div class="card hidden" id="formVolunteer">
+    <h2>💛 봉사 신청</h2>
+    <p class="desc">행사 당일(8/29) 봉사자와 후원·협찬을 모집합니다. 1365 봉사시간 인정이 필요하면 1365 사이트에 미리 가입해주세요.</p>
+
+    <div class="grid2">
+      <div class="field"><label>이름 <span class="req">*</span></label><input type="text" id="voName" placeholder="홍길동" /></div>
+      <div class="field"><label>연락처 <span class="req">*</span></label><input type="tel" id="voPhone" placeholder="010-0000-0000" /></div>
+    </div>
+
+    <div class="field"><label>봉사 가능 시간 <span class="req">*</span></label>
+      <div class="radio-row">
+        <label><input type="radio" name="voTime" value="full" checked onchange="voTimeChange()" /> 12시 ~ 5시 (5시간 전체)</label>
+        <label><input type="radio" name="voTime" value="partial" onchange="voTimeChange()" /> 가능한 시간 직접 입력</label>
+      </div>
+      <input type="text" id="voTimeCustom" class="hidden" placeholder="예: 오후 1시 ~ 4시" style="margin-top:8px;" />
+    </div>
+
+    <div class="field"><label>주민등록번호</label><input type="text" id="voRrn" placeholder="000000-0000000" />
+      <div class="hint">🔒 1365 봉사시간 등록에만 사용됩니다. (1365 봉사 사이트에 미리 가입되어 있어야 봉사시간 인정이 가능합니다) 봉사시간 인정이 필요 없으면 비워두세요.</div></div>
+
+    <div class="field"><label>후원·상품 협찬</label>
+      <label style="display:flex; align-items:center; gap:8px; font-weight:500; font-size:0.92rem; cursor:pointer;">
+        <input type="checkbox" id="voSponsor" onchange="document.getElementById('voSponsorDetail').classList.toggle('hidden', !this.checked)" /> 후원 또는 상품 협찬을 하고 싶어요
+      </label>
+      <textarea id="voSponsorDetail" class="hidden" placeholder="어떤 후원/협찬을 생각하고 계신지 적어주세요. (예: 기념품 20개, 음료 협찬 등)" style="margin-top:8px;"></textarea>
+    </div>
+
+    <div class="field"><label>봉사를 신청한 이유</label><textarea id="voReason" placeholder="봉사에 참여하고 싶은 이유를 적어주세요."></textarea></div>
+    <div class="field"><label>문의 / 하고 싶은 말</label><textarea id="voMessage" placeholder="궁금한 점이나 하고 싶은 말을 적어주세요."></textarea></div>
+
+    <div class="field consent">
+      <label><input type="checkbox" id="voConsent" style="margin-top:2px;" />
+        <span>(필수) 개인정보 수집·이용 동의 — 수집 항목: 이름, 연락처, 주민등록번호(선택·1365 봉사시간 등록용). 이용 목적: 발표대회 봉사 운영 및 봉사시간 등록. 보유 기간: 대회 종료 후 6개월.</span></label>
+    </div>
+    <button class="submit-btn" id="voSubmit" onclick="submitVolunteer()">💛 봉사 신청하기</button>
+  </div>
+
+  <!-- ============ 완료 화면 ============ -->
+  <div class="card hidden done" id="doneBox">
+    <div class="big">🎉</div>
+    <h2>신청이 접수되었습니다!</h2>
+    <p id="doneMsg">담당자 확인 후 연락드리겠습니다.<br />문의: 010-6241-7707</p>
+    <p style="margin-top:16px;"><a href="index.html">← 꿈파쇼 홈페이지로 돌아가기</a></p>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SB_URL = 'https://oqxlsnyuwtmjmbhgzjoz.supabase.co';
+  const SB_KEY = 'sb_publishable_mn7lAEbiyw1ArefbUh9R7w_fZOdW5g0';
+  const sb = supabase.createClient(SB_URL, SB_KEY);
+
+  function showForm(which) {
+    document.getElementById('formStudent').classList.toggle('hidden', which !== 'student');
+    document.getElementById('formVolunteer').classList.toggle('hidden', which !== 'volunteer');
+    document.getElementById('btnStudent').classList.toggle('on', which === 'student');
+    document.getElementById('btnVolunteer').classList.toggle('on', which === 'volunteer');
+  }
+  function voTimeChange() {
+    const partial = document.querySelector('input[name=voTime]:checked').value === 'partial';
+    document.getElementById('voTimeCustom').classList.toggle('hidden', !partial);
+  }
+  function newId(prefix) {
+    return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+  }
+  async function uploadSubmission(file, folder) {
+    if (file.size > 45 * 1024 * 1024) throw new Error(file.name + ' 파일이 너무 큽니다 (최대 45MB)');
+    const extMatch = (file.name || '').match(/\.[A-Za-z0-9]+$/);
+    const path = 'event8/' + folder + '/' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) + (extMatch ? extMatch[0].toLowerCase() : '');
+    const { error } = await sb.storage.from('submissions').upload(path, file, { contentType: file.type || undefined });
+    if (error) throw new Error(file.name + ' 업로드 실패: ' + error.message);
+    return { path, fileName: file.name, size: file.size };
+  }
+  function showDone(msg) {
+    document.getElementById('formStudent').classList.add('hidden');
+    document.getElementById('formVolunteer').classList.add('hidden');
+    document.getElementById('chooseBox').style.display = 'none';
+    document.getElementById('doneMsg').innerHTML = msg;
+    document.getElementById('doneBox').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  async function submitStudent() {
+    const name = document.getElementById('stName').value.trim();
+    const school = document.getElementById('stSchool').value.trim();
+    const grade = document.getElementById('stGrade').value.trim();
+    const klass = document.getElementById('stClass').value.trim();
+    const phone = document.getElementById('stPhone').value.trim();
+    const photo = document.getElementById('stPhoto').files[0];
+    const script = document.getElementById('stScript').files[0];
+    const video = document.getElementById('stVideo').files[0];
+    const message = document.getElementById('stMessage').value.trim();
+
+    if (!name || !school || !grade || !phone) { alert('이름, 학교, 학년, 연락처를 입력해주세요.'); return; }
+    if (!photo) { alert('프로필 사진을 선택해주세요.'); return; }
+    if (!script) { alert('발표 원고 파일을 선택해주세요.'); return; }
+    if (!video) { alert('발표 동영상 파일을 선택해주세요.'); return; }
+    if (!document.getElementById('stConsent').checked) { alert('개인정보 수집·이용에 동의해주세요.'); return; }
+
+    const btn = document.getElementById('stSubmit');
+    btn.disabled = true;
+    btn.textContent = '📤 파일 업로드 중... 잠시만 기다려주세요';
+    try {
+      const photoInfo = await uploadSubmission(photo, 'photo');
+      btn.textContent = '📤 원고 업로드 중...';
+      const scriptInfo = await uploadSubmission(script, 'script');
+      btn.textContent = '📤 동영상 업로드 중... (시간이 걸릴 수 있어요)';
+      const videoInfo = await uploadSubmission(video, 'video');
+
+      const { error } = await sb.from('event_applications').insert({
+        id: newId('ev_st'),
+        type: 'student',
+        name, phone,
+        data: { school, grade, klass, message, photo: photoInfo, script: scriptInfo, video: videoInfo },
+      });
+      if (error) throw new Error(error.message);
+      showDone('<strong>' + name + '</strong> 학생의 참가 신청이 접수되었습니다.<br />담당자 확인 후 연락드리겠습니다. 📞 010-6241-7707');
+    } catch (err) {
+      alert('접수 중 오류가 발생했습니다.\n' + (err.message || err));
+      btn.disabled = false;
+      btn.textContent = '🚀 참가 신청하기';
+    }
+  }
+
+  async function submitVolunteer() {
+    const name = document.getElementById('voName').value.trim();
+    const phone = document.getElementById('voPhone').value.trim();
+    const timeType = document.querySelector('input[name=voTime]:checked').value;
+    const timeCustom = document.getElementById('voTimeCustom').value.trim();
+    const rrn = document.getElementById('voRrn').value.trim();
+    const sponsor = document.getElementById('voSponsor').checked;
+    const sponsorDetail = document.getElementById('voSponsorDetail').value.trim();
+    const reason = document.getElementById('voReason').value.trim();
+    const message = document.getElementById('voMessage').value.trim();
+
+    if (!name || !phone) { alert('이름과 연락처를 입력해주세요.'); return; }
+    if (timeType === 'partial' && !timeCustom) { alert('봉사 가능한 시간을 입력해주세요.'); return; }
+    if (!document.getElementById('voConsent').checked) { alert('개인정보 수집·이용에 동의해주세요.'); return; }
+
+    const btn = document.getElementById('voSubmit');
+    btn.disabled = true;
+    btn.textContent = '접수 중...';
+    try {
+      const { error } = await sb.from('event_applications').insert({
+        id: newId('ev_vo'),
+        type: 'volunteer',
+        name, phone,
+        data: {
+          time: timeType === 'full' ? '12시~5시 (5시간 전체)' : timeCustom,
+          rrn, sponsor, sponsorDetail: sponsor ? sponsorDetail : '',
+          reason, message,
+        },
+      });
+      if (error) throw new Error(error.message);
+      showDone('<strong>' + name + '</strong>님의 봉사 신청이 접수되었습니다. 감사합니다! 💛<br />담당자 확인 후 연락드리겠습니다. 📞 010-6241-7707');
+    } catch (err) {
+      alert('접수 중 오류가 발생했습니다.\n' + (err.message || err));
+      btn.disabled = false;
+      btn.textContent = '💛 봉사 신청하기';
+    }
+  }
+</script>
+</body>
+</html>
