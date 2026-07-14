@@ -644,7 +644,7 @@
       <button type="submit" class="login-btn">로그인</button>
     </form>
     <div class="login-hint">
-      🔑 비밀번호는 <strong>1004 + 휴대폰 뒷 4자리</strong> (8자리)입니다.
+      🔑 관리자 비밀번호를 입력해주세요.
     </div>
     <a href="index.html" class="back-link">← 메인 홈페이지로 돌아가기</a>
   </div>
@@ -682,7 +682,7 @@
     <nav>
       <a href="#" class="menu-link" data-tab="finance"><span class="ico">💰</span> 후원금 내역 (월별)</a>
       <a href="#" class="menu-link" data-tab="archive"><span class="ico">📂</span> 자료실</a>
-      <a href="#" class="menu-link" data-tab="admins"><span class="ico">👤</span> 관리자 계정</a>
+      <a href="#" class="menu-link" data-tab="admins" id="menuAdmins" style="display:none;"><span class="ico">👤</span> 관리자 계정</a>
     </nav>
 
     <div class="sidebar-menu-title">바로가기</div>
@@ -823,6 +823,18 @@
         </div>
         <div id="activitiesEmpty" class="empty-state" style="display:none;"><div class="icon">📭</div><p>등록된 활동이 없습니다.</p></div>
       </div>
+
+      <div class="card">
+        <h2>💬 소식 댓글 관리</h2>
+        <p class="card-desc">홈페이지 소식 카드에 달린 방문자 댓글입니다.</p>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>작성일</th><th>소식</th><th>이름</th><th>내용</th><th>관리</th></tr></thead>
+            <tbody id="commentsTbody"></tbody>
+          </table>
+        </div>
+        <div id="commentsEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">아직 댓글이 없습니다.</div>
+      </div>
     </div>
 
     <!-- ========== 이벤트 배너 ========== -->
@@ -865,7 +877,7 @@
 
       <div class="info-banner">
         🔑 등록하면 그 사람은 <strong>1004 + 본인 휴대폰 뒷 4자리</strong>를 비밀번호로 로그인할 수 있습니다.
-        (예: 뒷자리 1234 → 비밀번호 10041234)
+        (예: 뒷자리 1234 → 비밀번호 10041234) · 이 메뉴는 <strong>대표 계정으로 로그인했을 때만</strong> 보입니다.
       </div>
 
       <div class="card">
@@ -1110,7 +1122,17 @@
   function showAdmin() {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminLayout').style.display = 'grid';
+    applyRole();
     refreshAll();
+  }
+  const MASTER_EMAILS = ['admin7997@dreamshow.kr', 'sugi2494@gmail.com'];
+  async function applyRole() {
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const isMaster = !!(session && MASTER_EMAILS.includes(session.user.email));
+      const link = document.getElementById('menuAdmins');
+      if (link) link.style.display = isMaster ? '' : 'none';
+    } catch (e) {}
   }
   async function handleLogin() {
     const pw = document.getElementById('loginPw').value.trim();
@@ -1148,7 +1170,7 @@
     hero: 'ggumpasho_hero',
     archive: 'ggumpasho_archive',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [] };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
@@ -1165,6 +1187,8 @@
       id: r.id, name: r.name, email: r.email, phone: r.phone, type: r.type,
       message: r.message, status: r.status, receipt: r.receipt, createdAt: r.created_at,
     }));
+    const { data: cms, error: e4 } = await sb.from('news_comments').select('*').order('created_at', { ascending: false });
+    if (!e4 && cms) CACHE.comments = cms;
     const { data: evs, error: e3 } = await sb.from('event_applications').select('*').order('created_at', { ascending: false });
     if (!e3 && evs) CACHE.eventApps = evs.map(r => ({
       id: r.id, type: r.type, name: r.name, phone: r.phone,
@@ -1262,6 +1286,7 @@
     renderHero();
     renderArchive();
     renderAdmins();
+    renderComments();
     renderEventApps();
     renderInquiries();
     renderFinance();
@@ -1552,6 +1577,37 @@
     renderActivities();
     renderDashboard();
     showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
+  // 소식 댓글 관리
+  // ===================================
+  function renderComments() {
+    const tbody = document.getElementById('commentsTbody');
+    const empty = document.getElementById('commentsEmpty');
+    if (!tbody) return;
+    const cms = CACHE.comments || [];
+    if (cms.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    const acts = load(STORE.activities, []);
+    tbody.innerHTML = cms.map(c => {
+      const act = acts.find(a => a.id === c.activity_id);
+      return `<tr>
+        <td>${fmtDateTime(c.created_at)}</td>
+        <td>${escapeHtml(truncate(act ? act.title : '(삭제된 소식)', 16))}</td>
+        <td><strong>${escapeHtml(c.name)}</strong></td>
+        <td>${escapeHtml(truncate(c.message, 40))}</td>
+        <td class="row-actions"><button class="del" onclick="deleteComment('${c.id}')">삭제</button></td>
+      </tr>`;
+    }).join('');
+  }
+  async function deleteComment(id) {
+    if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
+    const { error } = await sb.from('news_comments').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message, 'error'); return; }
+    CACHE.comments = (CACHE.comments || []).filter(c => c.id !== id);
+    renderComments();
+    showToast('댓글이 삭제되었습니다.', 'success');
   }
 
   // ===================================
