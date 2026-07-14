@@ -1242,15 +1242,15 @@
       <div class="photo-card">
         <div class="photo-thumb">
           <img src="${p.dataUrl}" alt="${escapeHtml(p.title)}" />
-          <span class="status-badge ${p.status}">${p.status === 'published' ? '● 게시' : '○ 임시'}</span>
+          <span class="status-badge ${p.status}">${p.status === 'published' ? '● 게시중' : '○ 비공개 상태'}</span>
         </div>
         <div class="photo-body">
           <h4>${escapeHtml(p.title)}</h4>
           <div class="meta">${escapeHtml(p.category)} · ${fmtBytes(p.size)}</div>
           <div class="photo-actions">
             ${p.status === 'published'
-              ? `<button class="unpublish" onclick="togglePhoto('${p.id}')">비공개</button>`
-              : `<button class="publish" onclick="togglePhoto('${p.id}')">🚀 게시</button>`}
+              ? `<button class="unpublish" onclick="togglePhoto('${p.id}')">비공개로 내리기</button>`
+              : `<button class="publish" onclick="togglePhoto('${p.id}')">🚀 게시하기</button>`}
             <button class="delete" onclick="deletePhoto('${p.id}')">🗑</button>
           </div>
         </div>
@@ -1317,9 +1317,9 @@
         <td>${escapeHtml(a.category)}</td>
         <td>${escapeHtml(a.title)}</td>
         <td>${escapeHtml(truncate(a.desc, 40))}</td>
-        <td><span class="status ${a.status === 'published' ? 'done' : 'hold'}">${a.status === 'published' ? '게시' : '임시'}</span></td>
+        <td><span class="status ${a.status === 'published' ? 'done' : 'hold'}">${a.status === 'published' ? '게시중' : '비공개'}</span></td>
         <td class="row-actions">
-          <button class="toggle" onclick="toggleActivity('${a.id}')">${a.status === 'published' ? '숨김' : '게시'}</button>
+          <button class="toggle" onclick="toggleActivity('${a.id}')">${a.status === 'published' ? '숨기기' : '게시하기'}</button>
           <button class="del" onclick="deleteActivity('${a.id}')">삭제</button>
         </td>
       </tr>
