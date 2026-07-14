@@ -663,11 +663,11 @@
 
     <div class="sidebar-menu-title">MAIN MENU</div>
     <nav>
+      <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 슬라이드</a>
       <a href="#" class="menu-link active" data-tab="dashboard"><span class="ico">📊</span> 대시보드</a>
       <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동사진 관리</a>
       <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 활동/소식 관리</a>
       <a href="#" class="menu-link" data-tab="banner"><span class="ico">📣</span> 이벤트 배너</a>
-      <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 슬라이드</a>
     </nav>
 
     <div class="sidebar-menu-title">신청·문의</div>
@@ -680,6 +680,7 @@
     <div class="sidebar-menu-title">재정 관리</div>
     <nav>
       <a href="#" class="menu-link" data-tab="finance"><span class="ico">💰</span> 후원금 내역 (월별)</a>
+      <a href="#" class="menu-link" data-tab="archive"><span class="ico">📂</span> 자료실</a>
     </nav>
 
     <div class="sidebar-menu-title">바로가기</div>
@@ -823,6 +824,51 @@
     </div>
 
     <!-- ========== 이벤트 배너 ========== -->
+    <!-- ========== 자료실 ========== -->
+    <div class="tab-content" id="tab-archive">
+      <div class="main-header"><div><h1>📂 자료실</h1><p class="subtitle">고유번호증, 도장·로고 파일, 결과보고서, 회계자료, 명단 등을 보관합니다.</p></div></div>
+
+      <div class="info-banner">
+        🔒 <strong>비공개</strong> 자료는 관리자만 열람·다운로드할 수 있습니다.
+        <strong>공개</strong>로 설정한 자료는 홈페이지 "투명한 재정 공시" 문서 목록에 표시됩니다.
+      </div>
+
+      <div class="card">
+        <h2>파일 올리기</h2>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>파일 선택</label><input type="file" id="archiveFile" /></div>
+          <div class="form-field"><label>자료 이름 (목록에 표시될 이름)</label><input type="text" id="archiveName" placeholder="예: 2023년 결과보고서" /></div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-field"><label>구분</label>
+            <select id="archiveCategory">
+              <option>재정·회계</option><option>증빙·서류</option><option>로고·디자인</option><option>명단</option><option>기타</option>
+            </select>
+          </div>
+          <div class="form-field" style="display:flex; align-items:flex-end;">
+            <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
+              <input type="checkbox" id="archivePublic" style="width:20px; height:20px;" />
+              <span style="font-weight:600;">홈페이지 재정공시에 공개</span>
+            </label>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+          <button class="btn btn-success" onclick="uploadArchive()">📤 업로드</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>보관 중인 자료</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>등록일</th><th>구분</th><th>자료 이름</th><th>크기</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="archiveTbody"></tbody>
+          </table>
+        </div>
+        <div id="archiveEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">보관 중인 자료가 없습니다.</div>
+      </div>
+    </div>
+
     <!-- ========== 메인 슬라이드 ========== -->
     <div class="tab-content" id="tab-hero">
       <div class="main-header"><div><h1>🎠 메인 슬라이드 관리</h1><p class="subtitle">홈페이지 첫 화면에서 자동으로 넘어가는 큰 사진들을 관리합니다.</p></div></div>
@@ -835,7 +881,7 @@
       <div class="card">
         <h2>새 슬라이드 추가</h2>
         <div class="form-grid" style="margin-top:10px;">
-          <div class="form-field"><label>사진 파일</label><input type="file" id="heroImage" accept="image/*" /></div>
+          <div class="form-field"><label>사진 파일 (여러 장 선택 가능)</label><input type="file" id="heroImage" accept="image/*" multiple /></div>
           <div class="form-field"><label>배지 문구 (선택)</label><input type="text" id="heroTag" placeholder="예: 진로멘토링" /></div>
         </div>
         <div class="form-grid" style="margin-top:10px;">
@@ -1028,14 +1074,16 @@
     donations: 'ggumpasho_donations_2026',
     banner: 'ggumpasho_event_banner',
     hero: 'ggumpasho_hero',
+    archive: 'ggumpasho_archive',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
   KEYMAP[STORE.donations] = 'donations';
   KEYMAP[STORE.banner] = 'banner';
   KEYMAP[STORE.hero] = 'hero';
+  KEYMAP[STORE.archive] = 'archive';
 
   async function fetchAll() {
     const { data: rows, error: e1 } = await sb.from('site_content').select('key,value');
@@ -1133,6 +1181,7 @@
     renderActivities();
     renderBanner();
     renderHero();
+    renderArchive();
     renderInquiries();
     renderFinance();
     renderBadges();
@@ -1460,6 +1509,114 @@
   }
 
   // ===================================
+  // 자료실
+  // ===================================
+  function archivePublicUrl(path) {
+    return SB_URL + '/storage/v1/object/public/uploads/' + path;
+  }
+  function renderArchive() {
+    const arr = load(STORE.archive, []);
+    const tbody = document.getElementById('archiveTbody');
+    const empty = document.getElementById('archiveEmpty');
+    if (!tbody) return;
+    if (arr.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    tbody.innerHTML = arr.map(d => `
+      <tr>
+        <td>${fmtDate(d.uploadedAt)}</td>
+        <td>${escapeHtml(d.category || '기타')}</td>
+        <td><strong>${escapeHtml(d.name)}</strong><br /><small style="color:var(--color-text-muted);">${escapeHtml(d.fileName || '')}</small></td>
+        <td>${fmtBytes(d.size)}</td>
+        <td><span class="status ${d.public ? 'done' : 'hold'}">${d.public ? '공개' : '🔒 비공개'}</span></td>
+        <td class="row-actions">
+          <button class="toggle" onclick="downloadArchive('${d.id}')">💾 다운로드</button>
+          <button class="toggle" onclick="renameArchive('${d.id}')">이름변경</button>
+          <button class="toggle" onclick="toggleArchivePublic('${d.id}')">${d.public ? '비공개로' : '공개로'}</button>
+          <button class="del" onclick="deleteArchive('${d.id}')">삭제</button>
+        </td>
+      </tr>`).join('');
+  }
+  async function uploadArchive() {
+    const file = document.getElementById('archiveFile').files[0];
+    if (!file) { showToast('파일을 선택해주세요.', 'error'); return; }
+    if (file.size > 45 * 1024 * 1024) { showToast('파일이 너무 큽니다 (최대 45MB).', 'error'); return; }
+    const name = document.getElementById('archiveName').value.trim() || file.name.replace(/\.[^.]+$/, '');
+    const category = document.getElementById('archiveCategory').value;
+    const isPublic = document.getElementById('archivePublic').checked;
+    const bucket = isPublic ? 'uploads' : 'archive';
+    const extMatch = (file.name || '').match(/\.[A-Za-z0-9]+$/);
+    const path = 'docs/' + Date.now() + '_' + Math.random().toString(36).slice(2, 7) + (extMatch ? extMatch[0].toLowerCase() : '');
+    showToast('파일 업로드 중...', '');
+    const { error } = await sb.storage.from(bucket).upload(path, file, { contentType: file.type || undefined });
+    if (error) { showToast('업로드 실패: ' + error.message, 'error'); return; }
+    const arr = load(STORE.archive, []);
+    arr.unshift({
+      id: 'd_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      name, category,
+      fileName: file.name, size: file.size,
+      bucket, path,
+      public: isPublic,
+      url: isPublic ? archivePublicUrl(path) : null,
+      uploadedAt: new Date().toISOString(),
+    });
+    save(STORE.archive, arr);
+    document.getElementById('archiveFile').value = '';
+    document.getElementById('archiveName').value = '';
+    document.getElementById('archivePublic').checked = false;
+    renderArchive();
+    showToast(isPublic ? '업로드 완료! 홈페이지 재정공시에 표시됩니다 🚀' : '업로드 완료! (비공개 보관) 🔒', 'success');
+  }
+  async function downloadArchive(id) {
+    const d = load(STORE.archive, []).find(x => x.id === id);
+    if (!d) return;
+    if (d.public) { window.open(archivePublicUrl(d.path), '_blank'); return; }
+    const { data, error } = await sb.storage.from('archive').createSignedUrl(d.path, 600);
+    if (error || !data) { showToast('다운로드 링크 생성 실패: ' + (error && error.message), 'error'); return; }
+    window.open(data.signedUrl, '_blank');
+  }
+  function renameArchive(id) {
+    const arr = load(STORE.archive, []);
+    const d = arr.find(x => x.id === id);
+    if (!d) return;
+    const n = prompt('새 이름을 입력하세요.', d.name);
+    if (!n || !n.trim()) return;
+    d.name = n.trim();
+    save(STORE.archive, arr);
+    renderArchive();
+    showToast('이름이 변경되었습니다.', 'success');
+  }
+  async function toggleArchivePublic(id) {
+    const arr = load(STORE.archive, []);
+    const d = arr.find(x => x.id === id);
+    if (!d) return;
+    const from = d.public ? 'uploads' : 'archive';
+    const to = d.public ? 'archive' : 'uploads';
+    if (!confirm(d.public ? '이 자료를 비공개로 전환할까요? 홈페이지에서 내려갑니다.' : '이 자료를 공개할까요? 홈페이지 재정공시에 표시됩니다.')) return;
+    showToast('파일 이동 중...', '');
+    const { data: blob, error: e1 } = await sb.storage.from(from).download(d.path);
+    if (e1 || !blob) { showToast('파일 이동 실패: ' + (e1 && e1.message), 'error'); return; }
+    const { error: e2 } = await sb.storage.from(to).upload(d.path, blob, { upsert: true });
+    if (e2) { showToast('파일 이동 실패: ' + e2.message, 'error'); return; }
+    await sb.storage.from(from).remove([d.path]);
+    d.public = !d.public;
+    d.bucket = to;
+    d.url = d.public ? archivePublicUrl(d.path) : null;
+    save(STORE.archive, arr);
+    renderArchive();
+    showToast(d.public ? '공개로 전환되었습니다. 홈페이지에 표시됩니다 🚀' : '비공개로 전환되었습니다 🔒', 'success');
+  }
+  async function deleteArchive(id) {
+    const arr = load(STORE.archive, []);
+    const d = arr.find(x => x.id === id);
+    if (!d) return;
+    if (!confirm('"' + d.name + '" 자료를 삭제하시겠습니까?')) return;
+    await sb.storage.from(d.bucket).remove([d.path]);
+    save(STORE.archive, arr.filter(x => x.id !== id));
+    renderArchive();
+    showToast('삭제되었습니다.', 'success');
+  }
+
+  // ===================================
   // 메인 슬라이드
   // ===================================
   function renderHero() {
@@ -1485,19 +1642,21 @@
       </div>`).join('');
   }
   async function addHeroSlide() {
-    const file = document.getElementById('heroImage').files[0];
+    const files = Array.from(document.getElementById('heroImage').files).filter(f => f.type.startsWith('image/'));
     const tag = document.getElementById('heroTag').value.trim();
     const title = document.getElementById('heroTitle').value.trim();
     const subtitle = document.getElementById('heroSubtitle').value.trim();
-    if (!file) { showToast('사진 파일을 선택해주세요.', 'error'); return; }
+    if (files.length === 0) { showToast('사진 파일을 선택해주세요.', 'error'); return; }
     if (!title) { showToast('제목을 입력해주세요.', 'error'); return; }
-    showToast('사진 업로드 중...', '');
-    let url;
-    try { url = await uploadToStorage(file, 'hero'); }
-    catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); return; }
+    showToast('사진 ' + files.length + '장 업로드 중...', '');
     const h = load(STORE.hero, { slides: [] }) || { slides: [] };
     h.slides = h.slides || [];
-    h.slides.push({ image: url, tag, title, subtitle });
+    try {
+      for (const file of files) {
+        const url = await uploadToStorage(file, 'hero');
+        h.slides.push({ image: url, tag, title, subtitle });
+      }
+    } catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); return; }
     save(STORE.hero, h);
     document.getElementById('heroImage').value = '';
     document.getElementById('heroTag').value = '';
