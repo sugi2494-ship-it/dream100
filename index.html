@@ -2762,6 +2762,30 @@
   </div>
 </footer>
 
+<!-- QR 접속 위젯 -->
+<style>
+  .qr-float {
+    position: fixed; right: 18px; bottom: 18px; z-index: 900;
+    background: white; border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px; padding: 12px 14px 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    text-align: center; width: 136px;
+  }
+  .qr-float img { width: 108px; height: 108px; display: block; margin: 0 auto; }
+  .qr-float .qr-label { font-size: 0.72rem; font-weight: 700; color: var(--color-primary-dark, #8B1E3F); margin-top: 6px; line-height: 1.35; }
+  .qr-float .qr-close {
+    position: absolute; top: -9px; right: -9px; width: 22px; height: 22px;
+    border-radius: 50%; border: none; background: var(--color-primary-dark, #8B1E3F); color: white;
+    font-size: 12px; line-height: 1; cursor: pointer;
+  }
+  @media (max-width: 860px) { .qr-float { display: none; } }
+</style>
+<div class="qr-float" id="qrFloat">
+  <button class="qr-close" onclick="document.getElementById('qrFloat').style.display='none'" aria-label="QR 닫기">✕</button>
+  <img src="assets/logo/qr_dreamshow.png" alt="꿈파쇼 홈페이지 QR코드" />
+  <div class="qr-label">QR로 접속하세요<br />www.dreamshow.kr</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
   // ============================================
