@@ -1890,6 +1890,7 @@
         <td><span class="status ${d.public ? 'done' : 'hold'}">${d.public ? '공개' : '🔒 비공개'}</span></td>
         <td>${(d.downloads && d.downloads.length) ? d.downloads.length + '회<br /><small style="color:var(--color-text-muted);">최근: ' + escapeHtml(fmtDateTime(d.downloads[d.downloads.length - 1].at) + ' ' + d.downloads[d.downloads.length - 1].name) + '</small>' : '-'}</td>
         <td class="row-actions" style="white-space:normal;">
+          ${/\.(png|jpe?g|gif|webp|pdf)$/i.test(d.fileName || '') ? `<button class="toggle" onclick="previewArchive('${d.id}')">👁 미리보기</button>` : ''}
           <button class="toggle" onclick="downloadArchive('${d.id}')">💾 다운로드</button>
           <button class="toggle" onclick="showDownloadLog('${d.id}')">기록</button>
           <button class="toggle" onclick="renameArchive('${d.id}')">이름변경</button>
@@ -1899,6 +1900,33 @@
         </td>
       </tr>`).join('');
     }).join('');
+  }
+  async function previewArchive(id) {
+    const d = load(STORE.archive, []).find(x => x.id === id);
+    if (!d) return;
+    let url;
+    if (d.public) { url = archivePublicUrl(d.path); }
+    else {
+      const { data, error } = await sb.storage.from('archive').createSignedUrl(d.path, 600);
+      if (error || !data) { showToast('미리보기 실패: ' + (error && error.message), 'error'); return; }
+      url = data.signedUrl;
+    }
+    if (/\.pdf$/i.test(d.fileName || '')) { window.open(url, '_blank'); return; }
+    let box = document.getElementById('archivePreview');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'archivePreview';
+      box.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; align-items:center; justify-content:center; flex-direction:column; padding:20px;';
+      box.innerHTML = `
+        <button onclick="document.getElementById('archivePreview').style.display='none'" style="position:absolute; top:16px; right:20px; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer;">✕</button>
+        <img id="archivePreviewImg" src="" style="max-width:90vw; max-height:80vh; border-radius:10px; background:white;" />
+        <div id="archivePreviewCap" style="color:white; margin-top:12px; font-size:0.9rem;"></div>`;
+      box.addEventListener('click', (ev) => { if (ev.target === box) box.style.display = 'none'; });
+      document.body.appendChild(box);
+    }
+    document.getElementById('archivePreviewImg').src = url;
+    document.getElementById('archivePreviewCap').textContent = d.name + ' (' + (d.fileName || '') + ')';
+    box.style.display = 'flex';
   }
   function createArchiveFolder() {
     const n = prompt('새 폴더 이름을 입력하세요.');
