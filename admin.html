@@ -852,7 +852,7 @@
         <h2>🎓 학생 참가 신청</h2>
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>접수일</th><th>이름</th><th>학교/학년/반</th><th>연락처</th><th>제출 파일</th><th>하고 싶은 말</th><th>상태</th><th>관리</th></tr></thead>
+            <thead><tr><th>접수일</th><th>이름</th><th>학교/학년/반</th><th>연락처</th><th>발표주제</th><th>제출 파일</th><th>하고 싶은 말</th><th>상태</th><th>관리</th></tr></thead>
             <tbody id="evStudentTbody"></tbody>
           </table>
         </div>
@@ -863,7 +863,7 @@
         <h2>💛 봉사 신청</h2>
         <div class="table-wrapper">
           <table class="data-table">
-            <thead><tr><th>접수일</th><th>이름</th><th>연락처</th><th>봉사시간</th><th>주민등록번호</th><th>후원·협찬</th><th>이유/문의</th><th>상태</th><th>관리</th></tr></thead>
+            <thead><tr><th>접수일</th><th>이름</th><th>소속/직업</th><th>연락처</th><th>봉사시간</th><th>생년월일(1365)</th><th>이유/하고싶은말</th><th>상태</th><th>관리</th></tr></thead>
             <tbody id="evVolunteerTbody"></tbody>
           </table>
         </div>
@@ -1761,6 +1761,7 @@
           </td>
           <td>${escapeHtml(d.school || '')} ${escapeHtml(d.grade || '')} ${escapeHtml(d.klass || '')}</td>
           <td>${escapeHtml(a.phone || '')}</td>
+          <td>${escapeHtml(truncate(d.topic || '-', 20))}</td>
           <td>${files} <button class="toggle" onclick="zipEventFiles('${a.id}')">📦 ZIP</button></td>
           <td>${escapeHtml(truncate(d.message, 25))}</td>
           <td><span class="status ${a.status === 'done' ? 'done' : 'new'}">${a.status === 'done' ? '완료' : '신규'}</span></td>
@@ -1782,10 +1783,10 @@
         return `<tr>
           <td>${fmtDateTime(a.createdAt)}</td>
           <td><strong>${escapeHtml(a.name)}</strong></td>
+          <td>${escapeHtml(truncate((d.org || '') + (d.job ? ' / ' + d.job : ''), 18)) || '-'}</td>
           <td>${escapeHtml(a.phone || '')}</td>
           <td>${escapeHtml(d.time || '')}</td>
-          <td>${escapeHtml(d.rrn || '-')}</td>
-          <td>${d.sponsor ? '✅ ' + escapeHtml(truncate(d.sponsorDetail || '', 18)) : '-'}</td>
+          <td>${escapeHtml(d.birth || d.rrn || '-')}</td>
           <td>${escapeHtml(truncate((d.reason || '') + (d.message ? ' / ' + d.message : ''), 35))}</td>
           <td><span class="status ${a.status === 'done' ? 'done' : 'new'}">${a.status === 'done' ? '완료' : '신규'}</span></td>
           <td class="row-actions">
@@ -1898,6 +1899,7 @@
         ${row('학교', escapeHtml(d.school || '-'))}
         ${row('학년/반', escapeHtml((d.grade || '') + ' ' + (d.klass || '')))}
         ${row('연락처', escapeHtml(a.phone || '-'))}
+        ${row('발표주제', escapeHtml(d.topic || '-'))}
         ${row('하고 싶은 말', escapeHtml(d.message || '-'))}
         <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;">${fileBtns}</div>
         <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;">
@@ -1914,12 +1916,12 @@
     if (apps.length === 0) { showToast('다운로드할 데이터가 없습니다.', 'error'); return; }
     let headers, rows, filename;
     if (kind === 'student') {
-      headers = ['접수일', '이름', '학교', '학년', '반', '연락처', '하고싶은말', '상태'];
-      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.data.school || '', a.data.grade || '', a.data.klass || '', a.phone || '', (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
+      headers = ['접수일', '이름', '학교', '학년', '반', '연락처', '발표주제', '하고싶은말', '상태'];
+      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.data.school || '', a.data.grade || '', a.data.klass || '', a.phone || '', a.data.topic || '', (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
       filename = '꿈비전대회_참가신청_' + fmtDate(new Date().toISOString()).replace(/\./g, '') + '.xls';
     } else {
-      headers = ['접수일', '이름', '연락처', '봉사시간', '주민등록번호', '후원협찬', '협찬내용', '신청이유', '문의', '상태'];
-      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.phone || '', a.data.time || '', a.data.rrn || '', a.data.sponsor ? 'Y' : 'N', (a.data.sponsorDetail || '').replace(/[\r\n]+/g, ' '), (a.data.reason || '').replace(/[\r\n]+/g, ' '), (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
+      headers = ['접수일', '이름', '소속', '직업', '연락처', '봉사시간', '생년월일(1365)', '신청이유', '하고싶은말', '상태'];
+      rows = apps.map(a => [fmtDateTime(a.createdAt), a.name, a.data.org || '', a.data.job || '', a.phone || '', a.data.time || '', a.data.birth || a.data.rrn || '', (a.data.reason || '').replace(/[\r\n]+/g, ' '), (a.data.message || '').replace(/[\r\n]+/g, ' '), a.status === 'done' ? '완료' : '신규']);
       filename = '꿈비전대회_봉사신청_' + fmtDate(new Date().toISOString()).replace(/\./g, '') + '.xls';
     }
     const html = `\uFEFF<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">

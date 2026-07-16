@@ -94,7 +94,7 @@
       📅 <strong>2026년 8월 29일 (토) 오후 2시</strong><br />
       📍 청소년 차오름센터 (법대로81번길 1, 2층)<br />
       🎤 참가대상: 울산지역 만 13세~17세 청소년<br />
-      ⏰ 접수기간: 2026년 6월 24일(수) ~ 7월 17일(금)<br />
+      ⏰ 사전접수 진행 중<br />
       📞 접수문의: 010-6241-7707
     </div>
   </div>
@@ -107,7 +107,7 @@
   <!-- ============ 학생 참가 신청 ============ -->
   <div class="card" id="formStudent">
     <h2>🎤 학생 참가 신청</h2>
-    <p class="desc">발표 원고(A4 1장)와 1분 이내 발표 동영상, 프로필 사진을 준비해주세요.</p>
+    <p class="desc">프로필 사진을 준비해주세요. 발표 원고와 동영상은 준비된 경우 함께 올려주시면 됩니다.</p>
 
     <div class="field"><label>이름 <span class="req">*</span></label><input type="text" id="stName" placeholder="홍길동" /></div>
     <div class="grid3">
@@ -116,13 +116,14 @@
       <div class="field"><label>반</label><input type="text" id="stClass" placeholder="3반" /></div>
     </div>
     <div class="field"><label>연락처 <span class="req">*</span></label><input type="tel" id="stPhone" placeholder="010-0000-0000" /></div>
+    <div class="field"><label>발표주제 (제목) <span class="req">*</span></label><input type="text" id="stTopic" placeholder="예: 내가 찾은 나의 진로 - 미래의 간호사" /></div>
     <div class="field"><label>프로필 사진 <span class="req">*</span></label><input type="file" id="stPhoto" accept="image/*" />
       <div class="hint">얼굴이 잘 나온 사진 1장</div></div>
-    <div class="field"><label>발표 원고 <span class="req">*</span></label><input type="file" id="stScript" accept=".pdf,.doc,.docx,.hwp,.hwpx,.txt,image/*" />
-      <div class="hint">5분 이내 발표 원고 A4 1장 (PDF, 한글, 워드, 사진 가능)</div></div>
+    <div class="field"><label>발표 원고 (선택)</label><input type="file" id="stScript" accept=".pdf,.doc,.docx,.hwp,.hwpx,.txt,image/*" />
+      <div class="hint">5분 이내 발표 원고 A4 1장 (PDF, 한글, 워드, 사진 가능) · 준비되면 올려주세요</div></div>
     <div class="field"><label>발표 동영상 (선택)</label><input type="file" id="stVideo" accept="video/*" />
       <div class="hint">1분 이내 발표 촬영 동영상 · 최대 45MB (지금 준비가 안 됐으면 비워두고 나중에 제출하셔도 됩니다)</div></div>
-    <div class="field"><label>하고 싶은 말</label><textarea id="stMessage" placeholder="자유롭게 적어주세요."></textarea></div>
+    <div class="field"><label>하고 싶은 말 · 소속 단체</label><textarea id="stMessage" placeholder="하고 싶은 말이나 소속 단체(있는 경우)를 자유롭게 적어주세요."></textarea></div>
 
     <div class="field consent">
       <label><input type="checkbox" id="stConsent" style="margin-top:2px;" />
@@ -134,11 +135,15 @@
   <!-- ============ 봉사 신청 ============ -->
   <div class="card hidden" id="formVolunteer">
     <h2>💛 봉사 신청</h2>
-    <p class="desc">행사 당일(8/29) 봉사자와 후원·협찬을 모집합니다. 1365 봉사시간 인정이 필요하면 1365 사이트에 미리 가입해주세요.</p>
+    <p class="desc">어른들이 함께할 수 있는 가치 있는 봉사에 동참해주셔서 감사합니다. 💛<br />자세한 봉사 안내는 별도로 안내될 예정입니다.</p>
 
     <div class="grid2">
       <div class="field"><label>이름 <span class="req">*</span></label><input type="text" id="voName" placeholder="홍길동" /></div>
       <div class="field"><label>연락처 <span class="req">*</span></label><input type="tel" id="voPhone" placeholder="010-0000-0000" /></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>소속</label><input type="text" id="voOrg" placeholder="예: ○○회사, ○○단체, 개인" /></div>
+      <div class="field"><label>직업</label><input type="text" id="voJob" placeholder="예: 간호사, 자영업" /></div>
     </div>
 
     <div class="field"><label>봉사 가능 시간 <span class="req">*</span></label>
@@ -149,22 +154,16 @@
       <input type="text" id="voTimeCustom" class="hidden" placeholder="예: 오후 1시 ~ 4시" style="margin-top:8px;" />
     </div>
 
-    <div class="field"><label>주민등록번호</label><input type="text" id="voRrn" placeholder="000000-0000000" />
-      <div class="hint">🔒 1365 봉사시간 등록에만 사용됩니다. (1365 봉사 사이트에 미리 가입되어 있어야 봉사시간 인정이 가능합니다) 봉사시간 인정이 필요 없으면 비워두세요.</div></div>
-
-    <div class="field"><label>후원·상품 협찬</label>
-      <label style="display:flex; align-items:center; gap:8px; font-weight:500; font-size:0.92rem; cursor:pointer;">
-        <input type="checkbox" id="voSponsor" onchange="document.getElementById('voSponsorDetail').classList.toggle('hidden', !this.checked)" /> 후원 또는 상품 협찬을 하고 싶어요
-      </label>
-      <textarea id="voSponsorDetail" class="hidden" placeholder="어떤 후원/협찬을 생각하고 계신지 적어주세요. (예: 기념품 20개, 음료 협찬 등)" style="margin-top:8px;"></textarea>
-    </div>
+    <div class="field"><label>봉사시간 1365 입력</label><input type="text" id="voBirth" placeholder="생년월일 예: 2001-01-04" />
+      <div class="hint">1365 봉사시간 입력을 위해 <strong>생년월일만</strong> 적어주세요. 주민등록번호는 행사 당일 현장에서 봉사 서명 시 작성하시면 됩니다. (1365 사이트에 미리 가입되어 있어야 봉사시간 인정이 가능합니다)</div></div>
 
     <div class="field"><label>봉사를 신청한 이유</label><textarea id="voReason" placeholder="봉사에 참여하고 싶은 이유를 적어주세요."></textarea></div>
-    <div class="field"><label>문의 / 하고 싶은 말</label><textarea id="voMessage" placeholder="궁금한 점이나 하고 싶은 말을 적어주세요."></textarea></div>
+    <div class="field"><label>하고 싶은 말</label><textarea id="voMessage" placeholder="하고 싶은 말을 자유롭게 적어주세요."></textarea>
+      <div class="hint">📞 문의사항은 단장 (010-6241-7707)으로 연락해주세요.</div></div>
 
     <div class="field consent">
       <label><input type="checkbox" id="voConsent" style="margin-top:2px;" />
-        <span>(필수) 개인정보 수집·이용 동의 — 수집 항목: 이름, 연락처, 주민등록번호(선택·1365 봉사시간 등록용). 이용 목적: 발표대회 봉사 운영 및 봉사시간 등록. 보유 기간: 대회 종료 후 6개월.</span></label>
+        <span>(필수) 개인정보 수집·이용 동의 — 수집 항목: 이름, 소속, 직업, 연락처, 생년월일(1365 봉사시간 입력용). 이용 목적: 발표대회 봉사 운영 및 봉사시간 등록. 보유 기간: 대회 종료 후 6개월.</span></label>
     </div>
     <button class="submit-btn" id="voSubmit" onclick="submitVolunteer()">💛 봉사 신청하기</button>
   </div>
@@ -231,14 +230,15 @@
     const grade = document.getElementById('stGrade').value.trim();
     const klass = document.getElementById('stClass').value.trim();
     const phone = document.getElementById('stPhone').value.trim();
+    const topic = document.getElementById('stTopic').value.trim();
     const photo = document.getElementById('stPhoto').files[0];
     const script = document.getElementById('stScript').files[0];
     const video = document.getElementById('stVideo').files[0];
     const message = document.getElementById('stMessage').value.trim();
 
     if (!name || !school || !grade || !phone) { alert('이름, 학교, 학년, 연락처를 입력해주세요.'); return; }
+    if (!topic) { alert('발표주제(제목)를 입력해주세요.'); return; }
     if (!photo) { alert('프로필 사진을 선택해주세요.'); return; }
-    if (!script) { alert('발표 원고 파일을 선택해주세요.'); return; }
     if (!document.getElementById('stConsent').checked) { alert('개인정보 수집·이용에 동의해주세요.'); return; }
 
     const btn = document.getElementById('stSubmit');
@@ -246,8 +246,11 @@
     btn.textContent = '📤 파일 업로드 중... 잠시만 기다려주세요';
     try {
       const photoInfo = await uploadSubmission(photo, 'photo');
-      btn.textContent = '📤 원고 업로드 중...';
-      const scriptInfo = await uploadSubmission(script, 'script');
+      let scriptInfo = null;
+      if (script) {
+        btn.textContent = '📤 원고 업로드 중...';
+        scriptInfo = await uploadSubmission(script, 'script');
+      }
       let videoInfo = null;
       if (video) {
         btn.textContent = '📤 동영상 업로드 중... (시간이 걸릴 수 있어요)';
@@ -258,7 +261,7 @@
         id: newId('ev_st'),
         type: 'student',
         name, phone,
-        data: { school, grade, klass, message, photo: photoInfo, script: scriptInfo, video: videoInfo },
+        data: { school, grade, klass, topic, message, photo: photoInfo, script: scriptInfo, video: videoInfo },
       });
       if (error) throw new Error(error.message);
       showDone('<strong>' + name + '</strong> 학생의 참가 신청이 접수되었습니다.<br />담당자 확인 후 연락드리겠습니다. 📞 010-6241-7707');
@@ -274,9 +277,9 @@
     const phone = document.getElementById('voPhone').value.trim();
     const timeType = document.querySelector('input[name=voTime]:checked').value;
     const timeCustom = document.getElementById('voTimeCustom').value.trim();
-    const rrn = document.getElementById('voRrn').value.trim();
-    const sponsor = document.getElementById('voSponsor').checked;
-    const sponsorDetail = document.getElementById('voSponsorDetail').value.trim();
+    const org = document.getElementById('voOrg').value.trim();
+    const job = document.getElementById('voJob').value.trim();
+    const birth = document.getElementById('voBirth').value.trim();
     const reason = document.getElementById('voReason').value.trim();
     const message = document.getElementById('voMessage').value.trim();
 
@@ -294,7 +297,7 @@
         name, phone,
         data: {
           time: timeType === 'full' ? '12시~5시 (5시간 전체)' : timeCustom,
-          rrn, sponsor, sponsorDetail: sponsor ? sponsorDetail : '',
+          org, job, birth,
           reason, message,
         },
       });

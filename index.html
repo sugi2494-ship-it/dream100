@@ -2733,7 +2733,7 @@
 <!-- QR 접속 위젯 -->
 <style>
   .qr-float {
-    position: fixed; right: 18px; bottom: 18px; z-index: 900;
+    position: static; margin: 36px auto 14px;
     background: white; border: 1px solid rgba(0,0,0,0.08);
     border-radius: 14px; padding: 12px 14px 10px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.14);
@@ -2741,7 +2741,8 @@
   }
   .qr-float img { width: 108px; height: 108px; display: block; margin: 0 auto; }
   .qr-float .qr-label { font-size: 0.72rem; font-weight: 700; color: var(--color-primary-dark, #8B1E3F); margin-top: 6px; line-height: 1.35; }
-  .qr-float .qr-close {
+  .qr-float .qr-close { display: none; }
+  .qr-float .qr-close-unused {
     position: absolute; top: -9px; right: -9px; width: 22px; height: 22px;
     border-radius: 50%; border: none; background: var(--color-primary-dark, #8B1E3F); color: white;
     font-size: 12px; line-height: 1; cursor: pointer;
