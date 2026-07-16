@@ -1969,7 +1969,9 @@
       const open = !!window.__archiveOpen[k];
       const header = `
       <tr data-folder="${escapeHtml(k)}" onclick="toggleArchiveFolder(this.dataset.folder)" style="cursor:pointer;">
-        <td colspan="5" style="background:#FDF3F5; font-weight:800;">${open ? '📂' : '📁'} ${escapeHtml(k)} <small style="color:var(--color-text-muted); font-weight:500;">(${groups[k].length}개)</small> <span style="float:right; color:var(--color-text-muted);">${open ? '▲ 접기' : '▼ 펼치기'}</span></td>
+        <td colspan="5" style="background:#FDF3F5; font-weight:800;">${open ? '📂' : '📁'} ${escapeHtml(k)} <small style="color:var(--color-text-muted); font-weight:500;">(${groups[k].length}개)</small>
+          <button class="toggle" onclick="event.stopPropagation(); renameArchiveFolder(this.closest('tr').dataset.folder)" style="margin-left:10px;">✏️ 폴더 이름변경</button>
+          <span style="float:right; color:var(--color-text-muted);">${open ? '▲ 접기' : '▼ 펼치기'}</span></td>
       </tr>`;
       if (!open) return header;
       if (groups[k].length === 0) {
@@ -2051,14 +2053,68 @@
     const arr = load(STORE.archive, []);
     const d = arr.find(x => x.id === id);
     if (!d) return;
-    const n = prompt('이동할 폴더 이름을 입력하세요.\n(진로멘토단, 꿈비전 발표대회, 드림캠프, 송년후원의밤, 이사회 임원회의, 공익활동사업, 홍보마케팅 자료 등)', d.category || '');
-    if (!n || !n.trim()) return;
-    d.category = n.trim();
+    const cats = [];
+    FOLDER_ORDER.forEach(c => { if (!cats.includes(c)) cats.push(c); });
+    (load(STORE.folders, []) || []).forEach(c => { if (!cats.includes(c)) cats.push(c); });
+    arr.forEach(x => { const c = x.category || '기타'; if (!cats.includes(c)) cats.push(c); });
+    const cur = d.category || '기타';
+    let box = document.getElementById('folderPick');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'folderPick';
+      box.style.cssText = 'display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:3200; align-items:center; justify-content:center; padding:20px;';
+      box.addEventListener('click', (ev) => { if (ev.target === box) box.style.display = 'none'; });
+      document.body.appendChild(box);
+    }
+    box.innerHTML = `
+      <div style="background:white; border-radius:16px; max-width:460px; width:100%; max-height:80vh; overflow:auto; padding:24px;" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <h3 style="margin:0; font-size:1.05rem;">📁 "${escapeHtml(d.name)}" 이동</h3>
+          <button onclick="document.getElementById('folderPick').style.display='none'" style="border:none; background:none; font-size:1.1rem; cursor:pointer;">✕</button>
+        </div>
+        <p style="font-size:0.82rem; color:var(--color-text-muted); margin-bottom:14px;">이동할 폴더를 클릭하세요. (현재: ${escapeHtml(cur)})</p>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          ${cats.map(c => c === cur
+            ? `<button class="btn btn-ghost" disabled style="opacity:0.45; text-align:left;">📂 ${escapeHtml(c)} (현재 폴더)</button>`
+            : `<button class="btn btn-ghost" style="text-align:left;" data-c="${escapeHtml(c)}" onclick="doMoveArchive('${d.id}', this.dataset.c)">📁 ${escapeHtml(c)}</button>`
+          ).join('')}
+          <button class="btn btn-primary" onclick="doMoveArchivePrompt('${d.id}')" style="margin-top:6px;">➕ 새 폴더 이름 직접 입력</button>
+        </div>
+      </div>`;
+    box.style.display = 'flex';
+  }
+  function doMoveArchive(id, cat) {
+    const arr = load(STORE.archive, []);
+    const d = arr.find(x => x.id === id);
+    if (!d || !cat) return;
+    d.category = cat;
     save(STORE.archive, arr);
     window.__archiveOpen = window.__archiveOpen || {};
-    window.__archiveOpen[n.trim()] = true;
+    window.__archiveOpen[cat] = true;
+    const box = document.getElementById('folderPick');
+    if (box) box.style.display = 'none';
     renderArchive();
-    showToast('"' + n.trim() + '" 폴더로 이동했습니다.', 'success');
+    showToast('"' + cat + '" 폴더로 이동했습니다. 📁', 'success');
+  }
+  function doMoveArchivePrompt(id) {
+    const n = prompt('새 폴더 이름을 입력하세요.');
+    if (!n || !n.trim()) return;
+    doMoveArchive(id, n.trim());
+  }
+  function renameArchiveFolder(k) {
+    if (!k) return;
+    const n = prompt('"' + k + '" 폴더의 새 이름을 입력하세요.', k);
+    if (!n || !n.trim() || n.trim() === k) return;
+    const name = n.trim();
+    const arr = load(STORE.archive, []);
+    arr.forEach(x => { if ((x.category || '기타') === k) x.category = name; });
+    save(STORE.archive, arr);
+    const folders = (load(STORE.folders, []) || []).map(f => f === k ? name : f);
+    save(STORE.folders, [...new Set(folders)]);
+    window.__archiveOpen = window.__archiveOpen || {};
+    window.__archiveOpen[name] = true;
+    renderArchive();
+    showToast('폴더 이름이 "' + name + '"(으)로 변경되었습니다. ✏️', 'success');
   }
   async function uploadArchive() {
     const file = document.getElementById('archiveFile').files[0];

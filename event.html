@@ -120,8 +120,8 @@
       <div class="hint">얼굴이 잘 나온 사진 1장</div></div>
     <div class="field"><label>발표 원고 <span class="req">*</span></label><input type="file" id="stScript" accept=".pdf,.doc,.docx,.hwp,.hwpx,.txt,image/*" />
       <div class="hint">5분 이내 발표 원고 A4 1장 (PDF, 한글, 워드, 사진 가능)</div></div>
-    <div class="field"><label>발표 동영상 <span class="req">*</span></label><input type="file" id="stVideo" accept="video/*" />
-      <div class="hint">1분 이내 발표 촬영 동영상 · 최대 45MB (용량이 크면 짧게 다시 촬영하거나 화질을 낮춰주세요)</div></div>
+    <div class="field"><label>발표 동영상 (선택)</label><input type="file" id="stVideo" accept="video/*" />
+      <div class="hint">1분 이내 발표 촬영 동영상 · 최대 45MB (지금 준비가 안 됐으면 비워두고 나중에 제출하셔도 됩니다)</div></div>
     <div class="field"><label>하고 싶은 말</label><textarea id="stMessage" placeholder="자유롭게 적어주세요."></textarea></div>
 
     <div class="field consent">
@@ -239,7 +239,6 @@
     if (!name || !school || !grade || !phone) { alert('이름, 학교, 학년, 연락처를 입력해주세요.'); return; }
     if (!photo) { alert('프로필 사진을 선택해주세요.'); return; }
     if (!script) { alert('발표 원고 파일을 선택해주세요.'); return; }
-    if (!video) { alert('발표 동영상 파일을 선택해주세요.'); return; }
     if (!document.getElementById('stConsent').checked) { alert('개인정보 수집·이용에 동의해주세요.'); return; }
 
     const btn = document.getElementById('stSubmit');
@@ -249,8 +248,11 @@
       const photoInfo = await uploadSubmission(photo, 'photo');
       btn.textContent = '📤 원고 업로드 중...';
       const scriptInfo = await uploadSubmission(script, 'script');
-      btn.textContent = '📤 동영상 업로드 중... (시간이 걸릴 수 있어요)';
-      const videoInfo = await uploadSubmission(video, 'video');
+      let videoInfo = null;
+      if (video) {
+        btn.textContent = '📤 동영상 업로드 중... (시간이 걸릴 수 있어요)';
+        videoInfo = await uploadSubmission(video, 'video');
+      }
 
       const { error } = await sb.from('event_applications').insert({
         id: newId('ev_st'),
