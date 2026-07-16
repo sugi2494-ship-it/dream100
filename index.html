@@ -2816,7 +2816,7 @@
       const donations = content.donations || {};
       const wrap = document.getElementById('donationMonths');
       if (wrap) {
-        const SLOTS = [['income', '💰 후원금 내역'], ['usage', '📑 사용내역'], ['donors', '💛 후원자 명단']];
+        const SLOTS = [['income', '💰 후원금 내역'], ['usage', '📑 사용내역']];
         const norm = it => it ? (it.files ? it.files : { income: it }) : {};
         const entries = Object.keys(donations).sort().map(k => ({ m: parseInt(k, 10), files: norm(donations[k]), raw: donations[k] }));
         wrap.style.display = 'block';
