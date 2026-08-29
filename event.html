@@ -94,7 +94,7 @@
       📅 <strong>2026년 8월 29일 (토) 오후 2시</strong><br />
       📍 청소년 차오름센터 (법대로81번길 1, 2층)<br />
       🎤 참가대상: 울산지역 만 13세~17세 청소년<br />
-      ⏰ 사전접수 진행 중<br />
+      🎉 제8회 대회가 성황리에 마무리되었습니다 · <a href="#review" style="color:var(--yellow); font-weight:800;">소감 남기기 ↓</a><br />
       📞 접수문의: 010-6241-7707
     </div>
   </div>
@@ -174,6 +174,26 @@
     <h2>신청이 접수되었습니다!</h2>
     <p id="doneMsg">담당자 확인 후 연락드리겠습니다.<br />문의: 010-6241-7707</p>
     <p style="margin-top:16px;"><a href="index.html">← 꿈파쇼 홈페이지로 돌아가기</a></p>
+  </div>
+
+  <!-- ============ 소감 남기기 ============ -->
+  <div class="card" id="review">
+    <h2>💬 발표대회 소감 남기기</h2>
+    <p class="desc">참가 학생, 학부모, 봉사자, 관람객 누구나 남길 수 있어요. 남겨주신 소감은 확인 후 꿈파쇼 홈페이지에 소개됩니다.</p>
+    <div class="grid2">
+      <div class="field"><label>이름 <span class="req">*</span></label><input type="text" id="rvName" placeholder="홍길동" /></div>
+      <div class="field"><label>구분</label>
+        <select id="rvRole">
+          <option value="참가 학생">참가 학생</option>
+          <option value="학부모·가족">학부모·가족</option>
+          <option value="봉사자">봉사자</option>
+          <option value="관람객">관람객</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>소감 <span class="req">*</span></label><textarea id="rvMessage" style="min-height:120px;" placeholder="대회에 함께한 소감을 자유롭게 남겨주세요 :)"></textarea></div>
+    <button class="submit-btn" id="rvSubmit" onclick="submitReview()">💛 소감 보내기</button>
   </div>
 
 </div>
@@ -270,6 +290,26 @@
       btn.disabled = false;
       btn.textContent = '🚀 참가 신청하기';
     }
+  }
+
+  async function submitReview() {
+    const name = document.getElementById('rvName').value.trim();
+    const role = document.getElementById('rvRole').value;
+    const message = document.getElementById('rvMessage').value.trim();
+    if (!name) { alert('이름을 입력해주세요.'); return; }
+    if (!message) { alert('소감을 입력해주세요.'); return; }
+    const btn = document.getElementById('rvSubmit');
+    btn.disabled = true; btn.textContent = '보내는 중...';
+    try {
+      const { error } = await sb.from('testimonials').insert({ name, role, message, status: 'pending' });
+      if (error) throw error;
+      document.getElementById('rvName').value = '';
+      document.getElementById('rvMessage').value = '';
+      alert('소중한 소감 감사합니다! 💛' + String.fromCharCode(10) + '확인 후 홈페이지에 소개해드릴게요.');
+    } catch (err) {
+      alert('전송에 실패했습니다. 잠시 후 다시 시도해주세요.' + String.fromCharCode(10) + '(' + (err.message || err) + ')');
+    }
+    btn.disabled = false; btn.textContent = '💛 소감 보내기';
   }
 
   async function submitVolunteer() {
