@@ -50,7 +50,7 @@
     --color-bg-dark: #3D2635;
 
     /* 간격 */
-    --container: 1200px;
+    --container: 1340px;
     --radius: 10px;
     --radius-lg: 20px;
 
@@ -324,11 +324,15 @@
      ============================================ */
   .hero {
     position: relative;
-    padding: 80px 0 100px;
-    background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-cream-soft) 100%);
+    padding: 0;
+    min-height: min(88vh, 800px);
+    display: flex;
+    align-items: center;
+    background: #101A3C;
     overflow: hidden;
   }
   .hero::before {
+    display: none;
     content: '';
     position: absolute;
     top: -100px; right: -100px;
@@ -338,6 +342,7 @@
     pointer-events: none;
   }
   .hero::after {
+    display: none;
     content: '';
     position: absolute;
     bottom: -150px; left: -150px;
@@ -347,13 +352,15 @@
     pointer-events: none;
   }
   .hero-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 60px;
-    align-items: center;
-    position: relative;
+    display: block;
+    width: 100%;
   }
-  .hero-content { position: relative; z-index: 2; }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    padding: 110px 0 140px;
+  }
   .hero-tag {
     display: inline-flex;
     align-items: center;
@@ -384,10 +391,11 @@
     line-height: 1.2;
     margin-bottom: 20px;
     letter-spacing: -0.03em;
-    color: var(--color-text);
+    color: white;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.5);
   }
   .hero h1 .highlight {
-    color: var(--color-primary);
+    color: #FF7A95;
     position: relative;
     display: inline-block;
   }
@@ -401,13 +409,14 @@
   }
   .hero .sub-slogan {
     font-size: 1.1rem;
-    color: var(--color-primary-dark);
+    color: #FFD54F;
     font-weight: 600;
     margin-bottom: 24px;
   }
   .hero p.lead {
     font-size: 1.1rem;
-    color: var(--color-text-muted);
+    color: rgba(255,255,255,0.93);
+    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     margin-bottom: 36px;
     max-width: 540px;
     line-height: 1.75;
@@ -417,16 +426,32 @@
     gap: 12px;
     flex-wrap: wrap;
   }
+  .hero .btn-outline {
+    border-color: rgba(255,255,255,0.75);
+    color: white;
+    background: rgba(255,255,255,0.08);
+  }
+  .hero .btn-outline:hover {
+    background: white;
+    color: var(--color-primary-dark);
+    border-color: white;
+  }
 
   /* Hero 이미지 영역 - 슬라이더 */
   html, body { max-width: 100%; overflow-x: hidden; }
   .hero-image {
-    position: relative;
-    aspect-ratio: 4/3;
-    border-radius: var(--radius-lg);
+    position: absolute;
+    inset: 0;
     overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    background: linear-gradient(135deg, #FCE8EE 0%, #FFF5C4 100%);
+    background: #101A3C;
+  }
+  .hero-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(10,14,32,0.88) 0%, rgba(10,14,32,0.62) 42%, rgba(10,14,32,0.28) 75%, rgba(10,14,32,0.12) 100%);
   }
   .hero-slider {
     position: absolute;
@@ -1624,8 +1649,8 @@
      📱 반응형 - 모바일 최적화
      ============================================ */
   @media (max-width: 1024px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
-    .hero-image { max-width: 640px; margin: 0 auto; width: 100%; }
+    .hero-content { padding: 100px 0 140px; }
+    .hero-image { max-width: none; margin: 0; }
     .impact-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
     .board-grid { grid-template-columns: repeat(2, 1fr); }
     .footer-top { grid-template-columns: 1fr 1fr; }
@@ -1663,7 +1688,9 @@
     .mobile-toggle { display: flex; }
     .header-cta .btn-outline { display: none; }
 
-    .hero { padding: 60px 0 80px; }
+    .hero { min-height: 0; }
+    .hero-content { padding: 90px 0 130px; }
+    .hero-image::after { background: linear-gradient(180deg, rgba(10,14,32,0.72) 0%, rgba(10,14,32,0.6) 60%, rgba(10,14,32,0.78) 100%); }
     .hero-floating-card.card-1 { left: 10px; bottom: 10px; padding: 12px 14px; }
     .hero-floating-card.card-2 { right: 10px; top: 10px; padding: 12px 14px; }
     .hero-floating-card .num { font-size: 1.15rem; }
@@ -1788,7 +1815,7 @@
         진로교육멘토
       </h1>
       <p class="lead">
-        비영리민간단체 <strong style="color: var(--color-primary-dark);">꿈파쇼</strong>는
+        비영리민간단체 <strong style="color: #FFD54F;">꿈파쇼</strong>는
         대한민국의 미래인 청소년들이 꿈과 재능을 발휘하여
         자신의 꿈을 펼칠 수 있도록 응원하는 울산광역시 등록 비영리민간단체입니다.
         2013년 창립 이래 12년째 청소년의 성장을 함께해 오고 있습니다.
@@ -1800,7 +1827,7 @@
         <a href="#programs" class="btn btn-outline">
           사업 살펴보기
         </a>
-        <a href="event.html" class="btn btn-primary" style="background:#101A3C; border-color:#101A3C;">
+        <a href="event.html" class="btn btn-primary" style="background:#FFD43B; border-color:#FFD43B; color:#101A3C;">
           🎤 발표대회 접수하기
         </a>
       </div>
