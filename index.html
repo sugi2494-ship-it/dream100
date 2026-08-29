@@ -361,6 +361,18 @@
     max-width: 640px;
     padding: 110px 0 140px;
   }
+  .hero-content::before {
+    content: '';
+    position: absolute;
+    top: 72px; bottom: 100px; left: -48px; right: -36px;
+    background: linear-gradient(115deg, rgba(10,13,28,0.72), rgba(10,13,28,0.5));
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    z-index: -1;
+    pointer-events: none;
+  }
   .hero-tag {
     display: inline-flex;
     align-items: center;
