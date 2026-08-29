@@ -676,6 +676,7 @@
       <a href="#" class="menu-link" data-tab="mentors"><span class="ico">🎓</span> 멘토 신청 <span class="badge" id="badgeMentors" style="display:none;">0</span></a>
       <a href="#" class="menu-link" data-tab="inquiries"><span class="ico">💬</span> 일반 문의 <span class="badge" id="badgeInquiries" style="display:none;">0</span></a>
       <a href="#" class="menu-link" data-tab="event"><span class="ico">🎤</span> 발표대회 접수 <span class="badge" id="badgeEvent" style="display:none;">0</span></a>
+      <a href="#" class="menu-link" data-tab="reviews"><span class="ico">💬</span> 발표대회 소감 <span class="badge" id="badgeReviews" style="display:none;">0</span></a>
     </nav>
 
     <div class="sidebar-menu-title">재정 관리</div>
@@ -868,6 +869,22 @@
           </table>
         </div>
         <div id="evVolunteerEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">접수된 봉사 신청이 없습니다.</div>
+      </div>
+    </div>
+
+    <!-- ========== 발표대회 소감 ========== -->
+    <div class="tab-content" id="tab-reviews">
+      <div class="main-header">
+        <div><h1>💬 발표대회 소감 관리</h1><p class="subtitle">방문자가 남긴 소감입니다. "승인·공개"를 누르면 메인 홈페이지 소감 섹션에 공개됩니다.</p></div>
+      </div>
+      <div class="card">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>작성일</th><th>이름</th><th>구분</th><th>소감</th><th>상태</th><th>관리</th></tr></thead>
+            <tbody id="reviewsTbody"></tbody>
+          </table>
+        </div>
+        <div id="reviewsEmpty" style="display:none; text-align:center; color:var(--color-text-muted); padding:20px;">등록된 소감이 없습니다.</div>
       </div>
     </div>
 
@@ -1181,7 +1198,7 @@
     archive: 'ggumpasho_archive',
     folders: 'ggumpasho_folders',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [], folders: [] };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [], folders: [], testimonials: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
@@ -1206,6 +1223,8 @@
       id: r.id, type: r.type, name: r.name, phone: r.phone,
       data: r.data || {}, status: r.status, createdAt: r.created_at,
     }));
+    const { data: tms, error: e5 } = await sb.from('testimonials').select('*').order('created_at', { ascending: false });
+    if (!e5 && tms) CACHE.testimonials = tms;
   }
   function load(key, def) {
     if (key === STORE.inquiries) return CACHE.inquiries;
@@ -1300,6 +1319,7 @@
     renderAdmins();
     renderComments();
     renderEventApps();
+    renderReviews();
     renderInquiries();
     renderFinance();
     renderBadges();
@@ -1738,6 +1758,46 @@
   // ===================================
   // 발표대회 접수
   // ===================================
+  function renderReviews() {
+    const list = CACHE.testimonials || [];
+    const tbody = document.getElementById('reviewsTbody');
+    const empty = document.getElementById('reviewsEmpty');
+    if (!tbody) return;
+    const pending = list.filter(t => t.status === 'pending').length;
+    const b = document.getElementById('badgeReviews');
+    if (b) { if (pending > 0) { b.textContent = pending; b.style.display = 'inline-block'; } else b.style.display = 'none'; }
+    tbody.innerHTML = list.map(t => `
+      <tr>
+        <td>${(t.created_at || '').slice(0, 16).replace('T', ' ')}</td>
+        <td><strong>${escapeHtml(t.name)}</strong></td>
+        <td>${escapeHtml(t.role || '')}</td>
+        <td style="max-width:420px; white-space:pre-line;">${escapeHtml(t.message)}</td>
+        <td><span class="status ${t.status === 'approved' ? 'done' : 'new'}">${t.status === 'approved' ? '공개 중' : '대기'}</span></td>
+        <td class="row-actions">
+          ${t.status === 'approved'
+            ? `<button class="toggle" onclick="setReviewStatus('${t.id}', 'pending')">숨기기</button>`
+            : `<button class="toggle" onclick="setReviewStatus('${t.id}', 'approved')">✅ 승인·공개</button>`}
+          <button class="del" onclick="deleteReview('${t.id}')">삭제</button>
+        </td>
+      </tr>`).join('');
+    if (empty) empty.style.display = list.length === 0 ? 'block' : 'none';
+  }
+  async function setReviewStatus(id, status) {
+    const { error } = await sb.from('testimonials').update({ status }).eq('id', id);
+    if (error) { showToast('변경 실패: ' + error.message, 'error'); return; }
+    const t = (CACHE.testimonials || []).find(x => x.id === id);
+    if (t) t.status = status;
+    renderReviews();
+    showToast(status === 'approved' ? '소감이 홈페이지에 공개되었습니다! 💬' : '소감을 숨겼습니다.', 'success');
+  }
+  async function deleteReview(id) {
+    if (!confirm('이 소감을 삭제하시겠습니까?')) return;
+    const { error } = await sb.from('testimonials').delete().eq('id', id);
+    if (error) { showToast('삭제 실패: ' + error.message, 'error'); return; }
+    CACHE.testimonials = (CACHE.testimonials || []).filter(x => x.id !== id);
+    renderReviews();
+    showToast('삭제되었습니다.', 'success');
+  }
   function renderEventApps() {
     const apps = CACHE.eventApps || [];
     const students = apps.filter(a => a.type === 'student');
