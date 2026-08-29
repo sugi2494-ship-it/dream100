@@ -484,7 +484,7 @@
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: linear-gradient(90deg, rgba(8,11,24,0.85) 0%, rgba(8,11,24,0.62) 45%, rgba(8,11,24,0.42) 75%, rgba(8,11,24,0.32) 100%);
+    background: linear-gradient(90deg, rgba(8,11,24,0.68) 0%, rgba(8,11,24,0.42) 45%, rgba(8,11,24,0.25) 75%, rgba(8,11,24,0.15) 100%);
   }
   .hero-slider {
     position: absolute;
@@ -1734,7 +1734,7 @@
 
     .hero { min-height: 0; }
     .hero-content { padding: 90px 0 130px; }
-    .hero-image::after { background: linear-gradient(180deg, rgba(10,14,32,0.72) 0%, rgba(10,14,32,0.6) 60%, rgba(10,14,32,0.78) 100%); }
+    .hero-image::after { background: linear-gradient(180deg, rgba(10,14,32,0.55) 0%, rgba(10,14,32,0.42) 60%, rgba(10,14,32,0.62) 100%); }
     .hero-floating-card.card-1 { left: 10px; bottom: 10px; padding: 12px 14px; }
     .hero-floating-card.card-2 { right: 10px; top: 10px; padding: 12px 14px; }
     .hero-floating-card .num { font-size: 1.15rem; }
@@ -1860,9 +1860,9 @@
         울산광역시 등록 비영리민간단체 제381호
       </div>
       <h1>
-        청소년의 꿈을<br />
-        <span class="highlight">후원하고 봉사</span>하는<br />
-        진로교육멘토
+        청소년의 꿈을 위한 <span class="highlight">후원</span>과<br />
+        진로교육으로 <span class="highlight">봉사</span>하는<br />
+        꿈파쇼 진로멘토단.
       </h1>
       <p class="lead">
         비영리민간단체 <strong style="color: #FFD54F;">꿈파쇼</strong>는
@@ -1876,9 +1876,6 @@
         </a>
         <a href="#programs" class="btn btn-outline">
           사업 살펴보기
-        </a>
-        <a href="event.html" class="btn btn-primary" style="background:#FFD43B; border-color:#FFD43B; color:#101A3C;">
-          🎤 발표대회 접수하기
         </a>
       </div>
     </div>
@@ -2589,6 +2586,25 @@
 </section>
 
 <!-- ============================================
+     발표대회 참가 소감
+     ============================================ -->
+<section class="reviews" id="reviews" style="background: var(--color-cream-soft);">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">REVIEWS</span>
+      <h2 class="section-title">🎤 발표대회 참가 소감</h2>
+      <p class="section-subtitle">제8회 울산청소년 꿈비전 발표대회에 함께해주신 분들의 생생한 소감입니다.</p>
+    </div>
+    <div id="reviewsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
+      <p id="reviewsEmptyMsg" style="grid-column:1/-1; text-align:center; color:var(--color-text-muted); padding:6px 0 14px;">아직 등록된 소감이 없습니다. 첫 소감의 주인공이 되어주세요! 💛</p>
+    </div>
+    <div style="text-align:center; margin-top:30px;">
+      <a href="event.html#review" class="btn btn-primary">💬 소감 남기기</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
      재정보고
      ============================================ -->
 <section class="finance" id="finance">
@@ -3059,6 +3075,23 @@
             </a>
           `).join(''));
         }
+      }
+    } catch(e) {}
+
+    // 7) 발표대회 소감 (승인된 것만 공개)
+    try {
+      const { data: revs } = await sb.from('testimonials').select('*').eq('status', 'approved').order('created_at', { ascending: false }).limit(30);
+      if (revs && revs.length > 0) {
+        const grid = document.getElementById('reviewsGrid');
+        const emptyMsg = document.getElementById('reviewsEmptyMsg');
+        if (emptyMsg) emptyMsg.remove();
+        grid.innerHTML = revs.map(r => `
+          <div style="background:white; border:1px solid var(--color-border); border-radius:14px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column;">
+            <div style="font-size:1.5rem; color:var(--color-primary); line-height:1; margin-bottom:10px;">“</div>
+            <p style="color:var(--color-text); font-size:0.95rem; line-height:1.75; white-space:pre-line; word-break:keep-all; flex:1;">${escapeHtml(r.message)}</p>
+            <div style="margin-top:14px; font-size:0.85rem; color:var(--color-text-muted);"><strong style="color:var(--color-primary-dark);">${escapeHtml(r.name)}</strong>${r.role ? ' · ' + escapeHtml(r.role) : ''} · ${(r.created_at || '').slice(0, 10).replace(/-/g, '.')}</div>
+          </div>
+        `).join('');
       }
     } catch(e) {}
   })();
