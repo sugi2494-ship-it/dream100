@@ -2306,7 +2306,7 @@
     <div class="programs-grid">
       <article class="program-card">
         <div class="program-thumb thumb-1">
-          <img src="assets/gallery/dream_vision_speech.jpg" alt="꿈비전 발표대회" />
+          <img id="prog-img-0" src="assets/gallery/dream_vision_speech.jpg" alt="꿈비전 발표대회" />
           <div class="thumb-overlay"></div>
           <span class="badge">01 발표대회</span>
         </div>
@@ -2319,7 +2319,7 @@
 
       <article class="program-card">
         <div class="program-thumb thumb-2">
-          <img src="assets/gallery/mentoring.jpg" alt="청소년 진로멘토링" />
+          <img id="prog-img-1" src="assets/gallery/mentoring.jpg" alt="청소년 진로멘토링" />
           <div class="thumb-overlay"></div>
           <span class="badge">02 진로멘토링</span>
         </div>
@@ -2333,7 +2333,7 @@
 
       <article class="program-card">
         <div class="program-thumb thumb-3">
-          <img src="assets/gallery/scholarship.jpg" alt="장학금 후원사업" />
+          <img id="prog-img-2" src="assets/gallery/scholarship.jpg" alt="장학금 후원사업" />
           <div class="thumb-overlay"></div>
           <span class="badge">03 장학사업</span>
         </div>
@@ -2346,7 +2346,7 @@
 
       <article class="program-card">
         <div class="program-thumb thumb-4">
-          <img src="assets/gallery/16_culture_point.jpg" alt="울산문화점빵 공익활동" />
+          <img id="prog-img-3" src="assets/gallery/16_culture_point.jpg" alt="울산문화점빵 공익활동" />
           <div class="thumb-overlay"></div>
           <span class="badge">04 공익활동</span>
         </div>
@@ -2896,7 +2896,7 @@
   (async function loadAdminData() {
     let content = {};
     try {
-      const { data } = await sb.from('site_content').select('key,value').in('key', ['banner', 'donations', 'activities', 'hero', 'photos', 'archive']);
+      const { data } = await sb.from('site_content').select('key,value').in('key', ['banner', 'donations', 'activities', 'hero', 'photos', 'archive', 'programs']);
       (data || []).forEach(r => { content[r.key] = r.value; });
     } catch (e) {}
 
@@ -3106,6 +3106,17 @@
               <span class="doc-icon">↓</span>
             </a>
           `).join(''));
+        }
+      }
+    } catch(e) {}
+
+    // 6-2) 4대 공익사업 사진 교체
+    try {
+      const progs = (content.programs && content.programs.images) || {};
+      for (let i = 0; i < 4; i++) {
+        if (progs[i]) {
+          const el = document.getElementById('prog-img-' + i);
+          if (el) el.src = progs[i];
         }
       }
     } catch(e) {}
