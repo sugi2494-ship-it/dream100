@@ -664,6 +664,7 @@
     <div class="sidebar-menu-title">MAIN MENU</div>
     <nav>
       <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 슬라이드</a>
+      <a href="#" class="menu-link" data-tab="programs"><span class="ico">🏅</span> 4대 공익사업 사진</a>
       <a href="#" class="menu-link active" data-tab="dashboard"><span class="ico">📊</span> 대시보드</a>
       <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동사진 관리</a>
       <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 활동/소식 관리</a>
@@ -1000,6 +1001,14 @@
       </div>
     </div>
 
+    <div class="tab-content" id="tab-programs">
+      <div class="main-header"><div><h1>🏅 4대 공익사업 사진</h1><p class="subtitle">홈페이지 '꿈파쇼 4대 공익 사업' 4장의 사진을 바꿉니다.</p></div></div>
+      <div class="info-banner">💡 각 칸의 "사진 바꾸기"로 새 사진을 올리면 홈페이지에 바로 반영됩니다. "기본 사진으로"를 누르면 원래 사진으로 돌아갑니다.</div>
+      <div class="card">
+        <div id="programsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:16px;"></div>
+      </div>
+    </div>
+
     <div class="tab-content" id="tab-banner">
       <div class="main-header"><div><h1>📣 이벤트 배너</h1><p class="subtitle">메인 페이지 최상단에 표시되는 배너를 관리합니다.</p></div></div>
 
@@ -1195,16 +1204,18 @@
     donations: 'ggumpasho_donations_2026',
     banner: 'ggumpasho_event_banner',
     hero: 'ggumpasho_hero',
+    programs: 'ggumpasho_programs',
     archive: 'ggumpasho_archive',
     folders: 'ggumpasho_folders',
   };
-  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, archive: [], eventApps: [], comments: [], folders: [], testimonials: [] };
+  const CACHE = { photos: [], activities: [], inquiries: [], donations: {}, banner: null, hero: null, programs: null, archive: [], eventApps: [], comments: [], folders: [], testimonials: [] };
   const KEYMAP = {};
   KEYMAP[STORE.photos] = 'photos';
   KEYMAP[STORE.activities] = 'activities';
   KEYMAP[STORE.donations] = 'donations';
   KEYMAP[STORE.banner] = 'banner';
   KEYMAP[STORE.hero] = 'hero';
+  KEYMAP[STORE.programs] = 'programs';
   KEYMAP[STORE.archive] = 'archive';
   KEYMAP[STORE.folders] = 'folders';
 
@@ -1315,6 +1326,7 @@
     renderActivities();
     renderBanner();
     renderHero();
+    renderPrograms();
     renderArchive();
     renderAdmins();
     renderComments();
@@ -2275,6 +2287,54 @@
   // ===================================
   // 메인 슬라이드
   // ===================================
+  const PROGRAM_SLOTS = [
+    { title: '01 꿈비전 발표대회', def: 'assets/gallery/dream_vision_speech.jpg' },
+    { title: '02 청소년 진로멘토링', def: 'assets/gallery/mentoring.jpg' },
+    { title: '03 장학금 후원사업', def: 'assets/gallery/scholarship.jpg' },
+    { title: '04 공익활동 및 봉사활동', def: 'assets/gallery/16_culture_point.jpg' },
+  ];
+  function renderPrograms() {
+    const grid = document.getElementById('programsGrid');
+    if (!grid) return;
+    const data = (load(STORE.programs, null) || {}).images || {};
+    grid.innerHTML = PROGRAM_SLOTS.map((s, i) => {
+      const custom = data[i];
+      const src = custom || s.def;
+      return `<div style="border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
+        <div style="aspect-ratio:16/10; background:#f5f5f5; overflow:hidden;"><img src="${src}" style="width:100%; height:100%; object-fit:cover; display:block;" /></div>
+        <div style="padding:12px;">
+          <div style="font-weight:800; font-size:0.9rem; margin-bottom:8px;">${s.title}${custom ? ' <span style=\'color:var(--color-success); font-size:0.75rem;\'>· 변경됨</span>' : ' <span style=\'color:var(--color-text-muted); font-size:0.75rem;\'>· 기본</span>'}</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <label class="btn btn-primary btn-sm" style="cursor:pointer; margin:0;">📷 사진 바꾸기
+              <input type="file" accept="image/*" style="display:none" onchange="uploadProgramImage(${i}, this.files[0])" />
+            </label>
+            ${custom ? `<button class="btn btn-ghost btn-sm" onclick="resetProgramImage(${i})">기본 사진으로</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  async function uploadProgramImage(idx, file) {
+    if (!file) return;
+    showToast('사진 업로드 중...', '');
+    try {
+      const url = await uploadToStorage(file, 'programs');
+      const data = load(STORE.programs, null) || { images: {} };
+      data.images = data.images || {};
+      data.images[idx] = url;
+      save(STORE.programs, data);
+      renderPrograms();
+      showToast('사진이 변경되었습니다! 홈페이지에 바로 반영됩니다 🚀', 'success');
+    } catch (err) { showToast('업로드 실패: ' + (err.message || err), 'error'); }
+  }
+  function resetProgramImage(idx) {
+    const data = load(STORE.programs, null) || { images: {} };
+    data.images = data.images || {};
+    delete data.images[idx];
+    save(STORE.programs, data);
+    renderPrograms();
+    showToast('기본 사진으로 되돌렸습니다.', 'success');
+  }
   function renderHero() {
     const h = load(STORE.hero, { slides: [] }) || { slides: [] };
     const list = document.getElementById('heroList');
