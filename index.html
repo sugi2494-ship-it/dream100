@@ -2363,119 +2363,6 @@
 <!-- ============================================
      후원하기 (실제 계좌 정보)
      ============================================ -->
-<section class="donate" id="donate">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">DONATION</span>
-      <h2 class="section-title">함께 만들어가는 청소년의 미래</h2>
-      <p class="section-subtitle">
-        여러분의 따뜻한 후원이 취약계층 청소년의 장학금·진로 교육활동·멘토링을 위해 소중히 사용됩니다.<br />
-        꿈파쇼에 후원해 주심에 진심으로 감사합니다.
-      </p>
-    </div>
-
-    <!-- 🚀 온라인 후원/멘토단 신청 CTA 배너 -->
-    <div class="donate-cta-banner">
-      <div>
-        <span class="cta-badge">📝 온라인 간편신청</span>
-        <h3>지금 바로 후원 신청하기</h3>
-        <p>
-          종이 서류 없이 네이버 폼으로 간편하게 신청하세요.<br />
-          <strong>일반후원 · 정기후원(CMS) · 진로멘토단</strong> 모두 신청 가능합니다.
-        </p>
-        <div class="cta-buttons">
-          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta">
-            온라인 신청서 작성하기 →
-          </a>
-          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta-outline">
-            링크 복사
-          </a>
-        </div>
-        <div style="margin-top:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--color-cream); border:1.5px dashed var(--color-primary-light); border-radius:10px; padding:12px 16px;">
-          <span style="font-size:0.85rem; font-weight:800; color:var(--color-text-muted); flex-shrink:0;">🏦 후원계좌</span>
-          <span>
-            <strong style="font-size:1.05rem; color:var(--color-primary-dark); letter-spacing:0.02em;">새마을금고 9002-1780-0175-4</strong>
-            <small style="display:block; font-size:0.8rem; color:var(--color-text-muted);">예금주: 꿈을파는강연쇼</small>
-          </span>
-          <button onclick="copyAccount()" style="margin-left:auto; padding:9px 16px; border:1.5px solid var(--color-primary); background:white; color:var(--color-primary); border-radius:8px; font-family:inherit; font-size:0.88rem; font-weight:800; cursor:pointer; flex-shrink:0;">📋 계좌번호 복사</button>
-        </div>
-      </div>
-      <div class="cta-qr-wrap">
-        <img src="assets/donation/donation_form_qr.png" alt="꿈파쇼 후원 신청서 QR코드" />
-        <div class="qr-label">핸드폰으로 스캔<small>카메라로 찍으면 신청 페이지 이동</small></div>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:10px;">
-      <button onclick="document.getElementById('donateModal').style.display='flex'"
-        style="padding:15px 34px; border:2px solid var(--color-primary); background:white; color:var(--color-primary); border-radius:12px; font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer;">
-        🏦 계좌이체·신청 방법 자세히 보기
-      </button>
-    </div>
-
-    <div id="donateModal" onclick="if (event.target === this) this.style.display='none'"
-      style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:flex-start; justify-content:center; padding:30px 16px; overflow:auto;">
-      <div style="background:#FFF7F4; border-radius:16px; max-width:900px; width:100%; padding:26px 22px; position:relative;">
-        <button onclick="document.getElementById('donateModal').style.display='none'" style="position:absolute; top:12px; right:14px; border:none; background:none; font-size:1.3rem; cursor:pointer;">✕</button>
-        <h3 style="margin:0 0 18px; text-align:center;">💛 후원 안내</h3>
-    <div class="donate-grid">
-      <!-- 계좌 후원 -->
-      <div class="donate-card">
-        <h3>🏦 계좌이체 후원</h3>
-        <div class="account-info">
-          <div class="bank">새마을금고</div>
-          <div class="number">9002-1780-0175-4</div>
-          <div class="holder">예금주: 꿈을파는강연쇼</div>
-        </div>
-        <button class="copy-btn" onclick="copyAccount()">📋 계좌번호 복사하기</button>
-
-        <div class="support-options">
-          <div class="opt"><span>일반 후원</span><strong>자유 금액</strong></div>
-          <div class="opt"><span>정기 후원 (CMS)</span><strong>월 5천원~10만원</strong></div>
-          <div class="opt"><span>물품 후원</span><strong>국장 문의</strong></div>
-        </div>
-
-        <div class="donate-info">
-          기부금 영수증 발급을 원하시면<br />
-          국장 <strong>010-8343-7772</strong> 로 연락주시기 바랍니다.
-        </div>
-      </div>
-
-      <!-- 후원 및 멘토단 신청 -->
-      <div class="donate-card">
-        <h3>💛 후원 및 멘토단 신청</h3>
-        <div class="account-info" style="background: var(--color-warm-soft); border-left-color: var(--color-warm);">
-          <div class="bank" style="color: var(--color-primary-dark); font-weight: 700;">신청 방식</div>
-          <div style="font-size: 1rem; margin-top: 8px; line-height: 1.75;">
-            ✓ <strong>일반 후원</strong> - 정기/일시 후원 선택<br />
-            ✓ <strong>진로 멘토단</strong> - 소속·경력 등록 후 멘토링 참여
-          </div>
-        </div>
-
-        <p style="margin: 20px 0 12px; font-weight: 600; font-size: 0.95rem;">신청 방법</p>
-        <div class="support-options">
-          <div class="opt"><span>👤 국장 직통</span><strong>010-8343-7772</strong></div>
-          <div class="opt"><span>📞 대표전화</span><strong>1600-7218</strong></div>
-          <div class="opt"><span>✉ 이메일 신청</span><strong>dream_ss100@naver.com</strong></div>
-          <div class="opt"><span>📠 팩스 신청</span><strong>0504-435-7997</strong></div>
-        </div>
-
-        <div class="donate-info">
-          취약계층 청소년 장학금·진로 교육활동·<br />
-          멘토링을 위해 꿈파쇼에 후원해 주심에<br />
-          <strong>진심으로 감사드립니다.</strong>
-        </div>
-      </div>
-    </div>
-      </div>
-    </div>
-
-    <p class="donate-note">
-      💡 꿈파쇼는 <strong>기부금대상민간단체(2020년 인증)</strong>로,<br />
-      기부금은 연말정산 시 세액공제 대상입니다.
-    </p>
-  </div>
-</section>
 
 <!-- ============================================
      갤러리
@@ -2639,15 +2526,147 @@
 <!-- ============================================
      재정보고
      ============================================ -->
+<!-- ============================================
+     이달의 후원자
+     ============================================ -->
+<section class="finance" id="donors">
+  <div class="container">
+    <div class="donation-monthly">
+      <div class="donation-monthly-header">
+        <div>
+          <span class="section-tag" style="margin-bottom: 10px;">THANKS TO</span>
+          <h3>💛 이달의 후원자</h3>
+          <p>소중한 후원으로 청소년의 꿈을 함께 응원해 주신 분들입니다. 지난달 명단은 눌러서 펼쳐볼 수 있습니다.</p>
+        </div>
+      </div>
+      <div class="donation-months" id="donorMonths"></div>
+    </div>
+  </div>
+</section>
+
+<section class="donate" id="donate">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">DONATION</span>
+      <h2 class="section-title">함께 만들어가는 청소년의 미래</h2>
+      <p class="section-subtitle">
+        여러분의 따뜻한 후원이 취약계층 청소년의 장학금·진로 교육활동·멘토링을 위해 소중히 사용됩니다.<br />
+        꿈파쇼에 후원해 주심에 진심으로 감사합니다.
+      </p>
+    </div>
+
+    <!-- 🚀 온라인 후원/멘토단 신청 CTA 배너 -->
+    <div class="donate-cta-banner">
+      <div>
+        <span class="cta-badge">📝 온라인 간편신청</span>
+        <h3>지금 바로 후원 신청하기</h3>
+        <p>
+          종이 서류 없이 네이버 폼으로 간편하게 신청하세요.<br />
+          <strong>일반후원 · 정기후원(CMS) · 진로멘토단</strong> 모두 신청 가능합니다.
+        </p>
+        <div class="cta-buttons">
+          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta">
+            온라인 신청서 작성하기 →
+          </a>
+          <a href="https://form.naver.com/response/oYyfbaszDeXcTx0cLzdChg" target="_blank" rel="noopener" class="btn-cta-outline">
+            링크 복사
+          </a>
+        </div>
+        <div style="margin-top:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:var(--color-cream); border:1.5px dashed var(--color-primary-light); border-radius:10px; padding:12px 16px;">
+          <span style="font-size:0.85rem; font-weight:800; color:var(--color-text-muted); flex-shrink:0;">🏦 후원계좌</span>
+          <span>
+            <strong style="font-size:1.05rem; color:var(--color-primary-dark); letter-spacing:0.02em;">새마을금고 9002-1780-0175-4</strong>
+            <small style="display:block; font-size:0.8rem; color:var(--color-text-muted);">예금주: 꿈을파는강연쇼</small>
+          </span>
+          <button onclick="copyAccount()" style="margin-left:auto; padding:9px 16px; border:1.5px solid var(--color-primary); background:white; color:var(--color-primary); border-radius:8px; font-family:inherit; font-size:0.88rem; font-weight:800; cursor:pointer; flex-shrink:0;">📋 계좌번호 복사</button>
+        </div>
+      </div>
+      <div class="cta-qr-wrap">
+        <img src="assets/donation/donation_form_qr.png" alt="꿈파쇼 후원 신청서 QR코드" />
+        <div class="qr-label">핸드폰으로 스캔<small>카메라로 찍으면 신청 페이지 이동</small></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:10px;">
+      <button onclick="document.getElementById('donateModal').style.display='flex'"
+        style="padding:15px 34px; border:2px solid var(--color-primary); background:white; color:var(--color-primary); border-radius:12px; font-family:inherit; font-size:1rem; font-weight:800; cursor:pointer;">
+        🏦 계좌이체·신청 방법 자세히 보기
+      </button>
+    </div>
+
+    <div id="donateModal" onclick="if (event.target === this) this.style.display='none'"
+      style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:flex-start; justify-content:center; padding:30px 16px; overflow:auto;">
+      <div style="background:#FFF7F4; border-radius:16px; max-width:900px; width:100%; padding:26px 22px; position:relative;">
+        <button onclick="document.getElementById('donateModal').style.display='none'" style="position:absolute; top:12px; right:14px; border:none; background:none; font-size:1.3rem; cursor:pointer;">✕</button>
+        <h3 style="margin:0 0 18px; text-align:center;">💛 후원 안내</h3>
+    <div class="donate-grid">
+      <!-- 계좌 후원 -->
+      <div class="donate-card">
+        <h3>🏦 계좌이체 후원</h3>
+        <div class="account-info">
+          <div class="bank">새마을금고</div>
+          <div class="number">9002-1780-0175-4</div>
+          <div class="holder">예금주: 꿈을파는강연쇼</div>
+        </div>
+        <button class="copy-btn" onclick="copyAccount()">📋 계좌번호 복사하기</button>
+
+        <div class="support-options">
+          <div class="opt"><span>일반 후원</span><strong>자유 금액</strong></div>
+          <div class="opt"><span>정기 후원 (CMS)</span><strong>월 5천원~10만원</strong></div>
+          <div class="opt"><span>물품 후원</span><strong>국장 문의</strong></div>
+        </div>
+
+        <div class="donate-info">
+          기부금 영수증 발급을 원하시면<br />
+          국장 <strong>010-8343-7772</strong> 로 연락주시기 바랍니다.
+        </div>
+      </div>
+
+      <!-- 후원 및 멘토단 신청 -->
+      <div class="donate-card">
+        <h3>💛 후원 및 멘토단 신청</h3>
+        <div class="account-info" style="background: var(--color-warm-soft); border-left-color: var(--color-warm);">
+          <div class="bank" style="color: var(--color-primary-dark); font-weight: 700;">신청 방식</div>
+          <div style="font-size: 1rem; margin-top: 8px; line-height: 1.75;">
+            ✓ <strong>일반 후원</strong> - 정기/일시 후원 선택<br />
+            ✓ <strong>진로 멘토단</strong> - 소속·경력 등록 후 멘토링 참여
+          </div>
+        </div>
+
+        <p style="margin: 20px 0 12px; font-weight: 600; font-size: 0.95rem;">신청 방법</p>
+        <div class="support-options">
+          <div class="opt"><span>👤 국장 직통</span><strong>010-8343-7772</strong></div>
+          <div class="opt"><span>📞 대표전화</span><strong>1600-7218</strong></div>
+          <div class="opt"><span>✉ 이메일 신청</span><strong>dream_ss100@naver.com</strong></div>
+          <div class="opt"><span>📠 팩스 신청</span><strong>0504-435-7997</strong></div>
+        </div>
+
+        <div class="donate-info">
+          취약계층 청소년 장학금·진로 교육활동·<br />
+          멘토링을 위해 꿈파쇼에 후원해 주심에<br />
+          <strong>진심으로 감사드립니다.</strong>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <p class="donate-note">
+      💡 꿈파쇼는 <strong>기부금대상민간단체(2020년 인증)</strong>로,<br />
+      기부금은 연말정산 시 세액공제 대상입니다.
+    </p>
+  </div>
+</section>
+
 <section class="finance" id="finance">
   <div class="container">
     <!-- 💰 2026년 후원금 내역 (월별 공시) -->
     <div class="donation-monthly" id="donation">
       <div class="donation-monthly-header">
         <div>
-          <span class="section-tag" style="margin-bottom: 10px;">2026 DONATION</span>
-          <h3>2026년 후원금 내역</h3>
-          <p>월별 후원금 접수 및 사용 내역을 투명하게 공개합니다.</p>
+          <span class="section-tag" style="margin-bottom: 10px;">2026 REPORT</span>
+          <h3>📑 후원금 사용내역</h3>
+          <p>후원금이 청소년을 위해 어떻게 쓰였는지 매월 투명하게 공개합니다.</p>
         </div>
         <a href="admin.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 8px 16px;">🔐 관리자 업로드</a>
       </div>
@@ -2971,43 +2990,11 @@
       }
     } catch(e) {}
 
-    // 2) 2026 월별 후원금 내역: 게시글(게시판) 형태 — 후원금 내역/사용내역/후원자 명단
+    // 2) 월별 후원금 사용내역 + 이달의 후원자 (게시판 아코디언, 방문자 다운로드 없음)
     try {
       const donations = content.donations || {};
-      const wrap = document.getElementById('donationMonths');
-      if (wrap) {
-        const SLOTS = [['income', '💰 후원금 내역'], ['usage', '📑 사용내역']];
-        const norm = it => it ? (it.files ? it.files : { income: it }) : {};
-        const entries = Object.keys(donations).sort().map(k => ({ m: parseInt(k, 10), files: norm(donations[k]), raw: donations[k] }));
-        wrap.style.display = 'block';
-        wrap.innerHTML = entries.length === 0
-          ? '<p style="text-align:center; color:#999; padding:20px 0;">등록된 내역이 아직 없습니다.</p>'
-          : entries.map((e, i) => {
-              const date = ((e.raw && (e.raw.updatedAt || e.raw.uploadedAt)) || (e.files.income && e.files.income.uploadedAt) || '').slice(0, 10).replace(/-/g, '.');
-              const cnt = SLOTS.filter(s => e.files[s[0]] && e.files[s[0]].url).length;
-              const body = SLOTS.map(s => {
-                const f = e.files[s[0]];
-                if (!f || !f.url) return '';
-                const isImg = /\.(png|jpe?g|gif|webp)$/i.test(f.fileName || '');
-                return `<div style="margin-top:18px;">
-                  <div style="font-weight:800; color:var(--color-primary-dark, #8B1E3F); margin-bottom:8px;">${s[1]}</div>
-                  ${isImg
-                    ? `<img src="${f.url}" alt="${s[1]}" loading="lazy" style="max-width:100%; border-radius:8px;" />`
-                    : `<a href="${f.url}" target="_blank" rel="noopener" style="color:var(--color-primary, #C9284D); font-weight:700;">📎 ${escapeHtml(f.fileName || '파일')} 열기 →</a>`}
-                </div>`;
-              }).join('');
-              return `
-              <div style="border:1px solid #f0dde0; border-radius:12px; margin-bottom:10px; overflow:hidden; background:white;">
-                <div onclick="toggleDonation(${i})" style="display:flex; justify-content:space-between; align-items:center; padding:15px 18px; cursor:pointer;">
-                  <strong style="color:var(--color-primary-dark, #8B1E3F);">📄 2026년 ${e.m}월 후원금 내역${cnt > 1 ? ` <small style="color:#999; font-weight:500;">(자료 ${cnt}건)</small>` : ''}</strong>
-                  <span style="font-size:0.8rem; color:#999; flex-shrink:0;">${date} 게시 <span id="donaArrow${i}">▼</span></span>
-                </div>
-                <div id="donaBody${i}" style="display:none; padding:0 18px 18px; border-top:1px solid #f7e8ec;">
-                  ${body || '<p style="margin-top:14px; color:#999;">파일 준비 중입니다.</p>'}
-                </div>
-              </div>`;
-            }).join('');
-      }
+      renderMonthlyBoard(donations, 'donorMonths', 'donors', 'donor');
+      renderMonthlyBoard(donations, 'donationMonths', 'usage', 'usage');
     } catch(e) {}
 
     // 3) 활동 리스트 (관리자가 추가한 활동을 news 카드로 대체 로드)
@@ -3227,9 +3214,40 @@
     }
   }
 
-  function toggleDonation(i) {
-    const b = document.getElementById('donaBody' + i);
-    const a = document.getElementById('donaArrow' + i);
+  // 월별 게시판(아코디언) 범용 렌더 — 방문자 다운로드 불가(이미지 인라인만)
+  function renderMonthlyBoard(donations, wrapId, slotKey, prefix) {
+    const wrap = document.getElementById(wrapId);
+    if (!wrap) return;
+    const norm = it => it ? (it.files ? it.files : { income: it }) : {};
+    const entries = Object.keys(donations).sort((a, b) => parseInt(a) - parseInt(b))
+      .map(k => ({ m: parseInt(k, 10), files: norm(donations[k]), raw: donations[k] }))
+      .filter(e => e.files[slotKey] && e.files[slotKey].url);
+    wrap.style.display = 'block';
+    if (entries.length === 0) { wrap.innerHTML = '<p style="text-align:center; color:#999; padding:20px 0;">아직 게시된 내역이 없습니다.</p>'; return; }
+    const lastIdx = entries.length - 1;
+    wrap.innerHTML = entries.map((e, i) => {
+      const f = e.files[slotKey];
+      const date = ((e.raw && (e.raw.updatedAt || e.raw.uploadedAt)) || (f && f.uploadedAt) || '').slice(0, 10).replace(/-/g, '.');
+      const isImg = /\.(png|jpe?g|gif|webp)$/i.test(f.fileName || '');
+      const body = isImg
+        ? `<img src="${f.url}" alt="자료" loading="lazy" style="max-width:100%; border-radius:8px; pointer-events:none;" oncontextmenu="return false;" />`
+        : `<div style="color:#777; font-size:0.92rem;">📄 ${escapeHtml(f.fileName || '자료')} <span style="color:#aaa;">(게시됨 · 관리자 열람)</span></div>`;
+      const open = i === lastIdx;
+      return `<div style="border:1px solid #f0dde0; border-radius:12px; margin-bottom:10px; overflow:hidden; background:white;">
+        <div onclick="toggleBoard('${prefix}', ${i})" style="display:flex; justify-content:space-between; align-items:center; padding:15px 18px; cursor:pointer;">
+          <strong style="color:var(--color-primary-dark, #8B1E3F);">📅 2026년 ${e.m}월</strong>
+          <span style="font-size:0.8rem; color:#999; flex-shrink:0;">${date ? date + ' 게시 ' : ''}<span id="${prefix}Arrow${i}">${open ? '▲' : '▼'}</span></span>
+        </div>
+        <div id="${prefix}Body${i}" style="display:${open ? 'block' : 'none'}; padding:0 18px 18px; border-top:1px solid #f7e8ec;">
+          ${body}
+        </div>
+      </div>`;
+    }).join('');
+  }
+  function toggleBoard(prefix, i) {
+    const b = document.getElementById(prefix + 'Body' + i);
+    const a = document.getElementById(prefix + 'Arrow' + i);
+    if (!b) return;
     const open = b.style.display === 'none';
     b.style.display = open ? 'block' : 'none';
     if (a) a.textContent = open ? '▲' : '▼';
