@@ -661,13 +661,13 @@
       <div class="name">꿈파쇼<small>관리자 시스템</small></div>
     </div>
 
-    <div class="sidebar-menu-title">MAIN MENU</div>
+    <div class="sidebar-menu-title">홈페이지 콘텐츠</div>
     <nav>
-      <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 슬라이드</a>
-      <a href="#" class="menu-link" data-tab="programs"><span class="ico">🏅</span> 4대 공익사업 사진</a>
       <a href="#" class="menu-link active" data-tab="dashboard"><span class="ico">📊</span> 대시보드</a>
-      <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동사진 관리</a>
-      <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 활동/소식 관리</a>
+      <a href="#" class="menu-link" data-tab="hero"><span class="ico">🎠</span> 메인 페이지 (슬라이드)</a>
+      <a href="#" class="menu-link" data-tab="activities"><span class="ico">📰</span> 꿈파쇼 소식</a>
+      <a href="#" class="menu-link" data-tab="programs"><span class="ico">🏅</span> 4대 공익사업</a>
+      <a href="#" class="menu-link" data-tab="photos"><span class="ico">🖼️</span> 활동 갤러리</a>
       <a href="#" class="menu-link" data-tab="banner"><span class="ico">📣</span> 이벤트 배너</a>
     </nav>
 
@@ -1475,15 +1475,21 @@
     const empty = document.getElementById('photosEmpty');
     if (photos.length === 0) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
-    grid.innerHTML = photos.map(p => `
+    grid.innerHTML = photos.map((p, i) => `
       <div class="photo-card">
         <div class="photo-thumb">
           <img src="${p.dataUrl}" alt="${escapeHtml(p.title)}" />
           <span class="status-badge ${p.status}">${p.status === 'published' ? '● 게시중' : '○ 비공개 상태'}</span>
+          <span style="position:absolute; top:8px; left:8px; background:rgba(0,0,0,0.6); color:#fff; font-size:0.72rem; font-weight:800; padding:2px 8px; border-radius:999px;">${i + 1}번째</span>
         </div>
         <div class="photo-body">
           <h4>${escapeHtml(p.title)}</h4>
           <div class="meta">${escapeHtml(p.category)} · ${fmtBytes(p.size)}</div>
+          <div style="display:flex; gap:4px; margin:8px 0;">
+            <button class="btn btn-ghost btn-sm" onclick="movePhoto('${p.id}', -1)" ${i === 0 ? 'disabled' : ''} title="앞으로">◀ 앞으로</button>
+            <button class="btn btn-ghost btn-sm" onclick="movePhoto('${p.id}', 1)" ${i === photos.length - 1 ? 'disabled' : ''} title="뒤로">뒤로 ▶</button>
+            <button class="btn btn-ghost btn-sm" onclick="editPhoto('${p.id}')">✏️ 수정</button>
+          </div>
           <div class="photo-actions">
             ${p.status === 'published'
               ? `<button class="unpublish" onclick="togglePhoto('${p.id}')">비공개로 내리기</button>`
@@ -1493,6 +1499,30 @@
         </div>
       </div>
     `).join('');
+  }
+  function movePhoto(id, dir) {
+    const photos = load(STORE.photos, []);
+    const idx = photos.findIndex(p => p.id === id);
+    const j = idx + dir;
+    if (idx < 0 || j < 0 || j >= photos.length) return;
+    const tmp = photos[idx]; photos[idx] = photos[j]; photos[j] = tmp;
+    save(STORE.photos, photos);
+    renderPhotos();
+    showToast('사진 순서를 바꿨습니다. 홈페이지에 바로 반영됩니다 🔀', 'success');
+  }
+  function editPhoto(id) {
+    const photos = load(STORE.photos, []);
+    const p = photos.find(x => x.id === id);
+    if (!p) return;
+    const title = prompt('사진 제목을 입력하세요.', p.title || '');
+    if (title === null) return;
+    const category = prompt('분류(태그)를 입력하세요. 예: 발표대회, 멘토링, 봉사', p.category || '활동');
+    if (category === null) return;
+    p.title = title.trim();
+    p.category = (category.trim() || '활동');
+    save(STORE.photos, photos);
+    renderPhotos();
+    showToast('사진 정보를 수정했습니다. ✏️', 'success');
   }
   function togglePhoto(id) {
     const photos = load(STORE.photos, []);
