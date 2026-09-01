@@ -2310,9 +2310,9 @@
           <span class="badge">01 발표대회</span>
         </div>
         <div class="program-body">
-          <h3>꿈비전 발표대회</h3>
-          <div class="subtitle">진로를 찾고 꿈을 찾는 프로젝트</div>
-          <p>만 13~17세 청소년들이 자신의 꿈과 비전을 발표하는 자기효능감 향상 대회입니다. 2018년 제1회를 시작으로 매년 개최하여 <strong>2025년 제7회</strong>를 맞이했습니다.</p>
+          <h3 id="prog-title-0">꿈비전 발표대회</h3>
+          <div class="subtitle" id="prog-sub-0">진로를 찾고 꿈을 찾는 프로젝트</div>
+          <p id="prog-desc-0">만 13~17세 청소년들이 자신의 꿈과 비전을 발표하는 자기효능감 향상 대회입니다. 2018년 제1회를 시작으로 매년 개최하여 <strong>2025년 제7회</strong>를 맞이했습니다.</p>
         </div>
       </article>
 
@@ -2323,9 +2323,9 @@
           <span class="badge">02 진로멘토링</span>
         </div>
         <div class="program-body">
-          <h3>청소년 진로멘토링</h3>
-          <div class="subtitle">"별빛이 되어줄래" · "드림 캠퍼스"</div>
-          <p>꿈파쇼 진로멘토단을 통한 학교 및 공익 활동사업으로 청소년을 위한 교육과 멘토링을 제공합니다. (청운중·화진중 등 진행)</p>
+          <h3 id="prog-title-1">청소년 진로멘토링</h3>
+          <div class="subtitle" id="prog-sub-1">"별빛이 되어줄래" · "드림 캠퍼스"</div>
+          <p id="prog-desc-1">꿈파쇼 진로멘토단을 통한 학교 및 공익 활동사업으로 청소년을 위한 교육과 멘토링을 제공합니다. (청운중·화진중 등 진행)</p>
           <a href="mentors.html" class="more">🌟 멘토단 소개 · 섭외 요청하기 →</a>
         </div>
       </article>
@@ -2337,9 +2337,9 @@
           <span class="badge">03 장학사업</span>
         </div>
         <div class="program-body">
-          <h3>장학금 후원사업</h3>
-          <div class="subtitle">취약계층 청소년 장학후원</div>
-          <p>경제적 어려움으로 배움을 이어가기 어려운 취약계층 청소년에게 장학금과 학습 지원을 제공합니다.</p>
+          <h3 id="prog-title-2">장학금 후원사업</h3>
+          <div class="subtitle" id="prog-sub-2">취약계층 청소년 장학후원</div>
+          <p id="prog-desc-2">경제적 어려움으로 배움을 이어가기 어려운 취약계층 청소년에게 장학금과 학습 지원을 제공합니다.</p>
         </div>
       </article>
 
@@ -2350,9 +2350,9 @@
           <span class="badge">04 공익활동</span>
         </div>
         <div class="program-body">
-          <h3>공익활동 및 봉사활동</h3>
-          <div class="subtitle">지역 봉사활동 및 환경정화</div>
-          <p>울산문화점빵, ESG환경, 야영장 활성화 프로그램 등 지역사회와 함께하는 공익·봉사활동을 전개합니다.</p>
+          <h3 id="prog-title-3">공익활동 및 봉사활동</h3>
+          <div class="subtitle" id="prog-sub-3">지역 봉사활동 및 환경정화</div>
+          <p id="prog-desc-3">울산문화점빵, ESG환경, 야영장 활성화 프로그램 등 지역사회와 함께하는 공익·봉사활동을 전개합니다.</p>
         </div>
       </article>
     </div>
@@ -3112,10 +3112,20 @@
     // 6-2) 4대 공익사업 사진 교체
     try {
       const progs = (content.programs && content.programs.images) || {};
+      const ptext = (content.programs && content.programs.texts) || {};
       for (let i = 0; i < 4; i++) {
         if (progs[i]) {
           const el = document.getElementById('prog-img-' + i);
           if (el) el.src = progs[i];
+        }
+        const t = ptext[i];
+        if (t) {
+          const h = document.getElementById('prog-title-' + i);
+          if (h && t.title) h.textContent = t.title;
+          const su = document.getElementById('prog-sub-' + i);
+          if (su && t.subtitle) su.textContent = t.subtitle;
+          const d = document.getElementById('prog-desc-' + i);
+          if (d && t.desc) d.textContent = t.desc;
         }
       }
     } catch(e) {}
