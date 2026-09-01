@@ -2876,12 +2876,43 @@
     font-size: 12px; line-height: 1; cursor: pointer;
   }
   @media (max-width: 860px) { .qr-float { display: none; } }
+
+  /* 떠다니는 후원 버튼 */
+  .donate-float {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+    z-index: 900; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff; border: none; border-radius: 999px; padding: 16px 14px; cursor: pointer;
+    box-shadow: 0 10px 28px rgba(201,40,77,0.45); font-family: inherit;
+    font-weight: 800; font-size: 0.9rem; line-height: 1.25; transition: transform .18s, box-shadow .18s;
+    writing-mode: vertical-rl; letter-spacing: 0.04em;
+  }
+  .donate-float .heart { writing-mode: horizontal-tb; font-size: 1.2rem; margin-bottom: 2px; }
+  .donate-float:hover { transform: translateY(-50%) scale(1.06); box-shadow: 0 14px 34px rgba(201,40,77,0.55); }
+  @media (max-width: 768px) {
+    .donate-float { right: 12px; padding: 12px 10px; font-size: 0.82rem; }
+    .donate-float .heart { font-size: 1rem; }
+  }
+
+  /* 갤러리 더보기 */
+  .gallery-item.gallery-hidden { display: none !important; }
+  .gallery-more-wrap { text-align: center; margin-top: 26px; }
+  .gallery-more-btn {
+    padding: 13px 30px; border-radius: 999px; border: 1.5px solid var(--color-primary);
+    background: white; color: var(--color-primary); font-family: inherit; font-weight: 800;
+    font-size: 0.98rem; cursor: pointer; transition: all .18s;
+  }
+  .gallery-more-btn:hover { background: var(--color-primary); color: white; }
 </style>
 <div class="qr-float" id="qrFloat">
   <button class="qr-close" onclick="document.getElementById('qrFloat').style.display='none'" aria-label="QR 닫기">✕</button>
   <img src="assets/logo/qr_dreamshow.png" alt="꿈파쇼 홈페이지 QR코드" />
   <div class="qr-label">QR로 접속하세요<br />www.dreamshow.kr</div>
 </div>
+
+<button class="donate-float" onclick="document.getElementById('donate').scrollIntoView({behavior:'smooth'})" aria-label="후원하기">
+  <span class="heart">❤</span>후원하기
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
@@ -2892,6 +2923,7 @@
   const SB_KEY = 'sb_publishable_mn7lAEbiyw1ArefbUh9R7w_fZOdW5g0';
   const sb = supabase.createClient(SB_URL, SB_KEY);
   let __bannerData = null;
+  document.addEventListener('DOMContentLoaded', function(){ try { applyGalleryFold(); } catch(e){} });
 
   (async function loadAdminData() {
     let content = {};
@@ -3089,6 +3121,7 @@
           `).join('');
         }
       }
+      applyGalleryFold();
     } catch(e) {}
 
     // 6) 자료실 공개 문서 → 재정공시 목록에 추가
@@ -3200,6 +3233,33 @@
     const open = b.style.display === 'none';
     b.style.display = open ? 'block' : 'none';
     if (a) a.textContent = open ? '▲' : '▼';
+  }
+
+  // 갤러리: 메인 8장만 보이고 나머지는 접기
+  function applyGalleryFold(limit) {
+    limit = limit || 8;
+    const grid = document.querySelector('.gallery-grid');
+    if (!grid) return;
+    const items = Array.from(grid.querySelectorAll('.gallery-item'));
+    const old = document.getElementById('galleryMoreWrap');
+    if (old) old.remove();
+    items.forEach((el, i) => el.classList.toggle('gallery-hidden', i >= limit));
+    if (items.length <= limit) return;
+    const hiddenCount = items.length - limit;
+    const wrap = document.createElement('div');
+    wrap.id = 'galleryMoreWrap';
+    wrap.className = 'gallery-more-wrap';
+    wrap.innerHTML = `<button class="gallery-more-btn" id="galleryMoreBtn">사진 더보기 (+${hiddenCount}장) ▼</button>`;
+    grid.parentNode.insertBefore(wrap, grid.nextSibling);
+    let expanded = false;
+    document.getElementById('galleryMoreBtn').addEventListener('click', () => {
+      expanded = !expanded;
+      items.forEach((el, i) => { if (i >= limit) el.classList.toggle('gallery-hidden', !expanded); });
+      document.getElementById('galleryMoreBtn').innerHTML = expanded
+        ? '접기 ▲'
+        : `사진 더보기 (+${hiddenCount}장) ▼`;
+      if (!expanded) document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    });
   }
 
   // 갤러리 사진 크게 보기
