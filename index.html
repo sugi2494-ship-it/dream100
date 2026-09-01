@@ -1817,7 +1817,7 @@
           <a href="#programs" style="color:var(--color-primary); font-weight:800;">공익사업안내 ▾</a>
           <ul class="submenu">
             <li><a href="mentors.html">🌟 진로멘토링</a></li>
-            <li><a href="event.html">🎤 꿈비전발표대회</a></li>
+            <li><a href="#news">🎤 꿈비전발표대회</a></li>
             <li><a href="#donate">💝 후원금 장학사업</a></li>
           </ul>
         </li>
@@ -2504,25 +2504,6 @@
 </section>
 
 <!-- ============================================
-     발표대회 참가 소감
-     ============================================ -->
-<section class="reviews" id="reviews" style="background: var(--color-cream-soft);">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">REVIEWS</span>
-      <h2 class="section-title">🎤 발표대회 참가 소감</h2>
-      <p class="section-subtitle">제8회 울산청소년 꿈비전 발표대회에 함께해주신 분들의 생생한 소감입니다.</p>
-    </div>
-    <div id="reviewsGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:18px;">
-      <p id="reviewsEmptyMsg" style="grid-column:1/-1; text-align:center; color:var(--color-text-muted); padding:6px 0 14px;">아직 등록된 소감이 없습니다. 첫 소감의 주인공이 되어주세요! 💛</p>
-    </div>
-    <div style="text-align:center; margin-top:30px;">
-      <a href="event.html#review" class="btn btn-primary">💬 소감 남기기</a>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================
      재정보고
      ============================================ -->
 <!-- ============================================
@@ -2664,8 +2645,8 @@
       <div class="donation-monthly-header">
         <div>
           <span class="section-tag" style="margin-bottom: 10px;">2026 REPORT</span>
-          <h3>📑 후원금 사용내역</h3>
-          <p>후원금이 청소년을 위해 어떻게 쓰였는지 매월 투명하게 공개합니다.</p>
+          <h3>💰 후원금 내역</h3>
+          <p>매월 후원금 접수 내역과 사용 내역을 투명하게 공개합니다.</p>
         </div>
         <a href="admin.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 8px 16px;">🔐 관리자 업로드</a>
       </div>
@@ -2992,8 +2973,8 @@
     // 2) 월별 후원금 사용내역 + 이달의 후원자 (게시판 아코디언, 방문자 다운로드 없음)
     try {
       const donations = content.donations || {};
-      renderMonthlyBoard(donations, 'donorMonths', 'donors', 'donor');
-      renderMonthlyBoard(donations, 'donationMonths', 'usage', 'usage');
+      renderMonthlyBoard(donations, 'donorMonths', [['donors', '']], 'donor');
+      renderMonthlyBoard(donations, 'donationMonths', [['income', '후원금 내역'], ['usage', '사용내역']], 'usage');
     } catch(e) {}
 
     // 3) 활동 리스트 (관리자가 추가한 활동을 news 카드로 대체 로드)
@@ -3035,9 +3016,8 @@
           loadComments(published.map(a => a.id));
         }
 
-        // 최신 소식 팝업 (비활성화)
+        // 최신 소식 팝업 (활성화)
         try {
-          if (true) throw 0; // 팝업 사용 안 함
           const latest = published[0];
           const dismissKey = 'news_popup_' + latest.id;
           if (localStorage.getItem(dismissKey) !== new Date().toDateString()) {
@@ -3057,7 +3037,7 @@
                       <input type="checkbox" id="newsPopupToday" /> 오늘 하루 보지 않기
                     </label>
                     <div style="display:flex; gap:8px;">
-                      <button onclick="closeNewsPopup('${latest.id}', true)" style="border:1px solid #e5cdd2; background:white; color:#C9284D; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">소식 보러가기</button>
+                      <button onclick="closeNewsPopup('${latest.id}', true)" style="border:1px solid #e5cdd2; background:white; color:#C9284D; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">📢 소식 보고 소감 남기기</button>
                       <button onclick="closeNewsPopup('${latest.id}', false)" style="border:none; background:#C9284D; color:white; border-radius:8px; padding:8px 16px; font-weight:700; cursor:pointer; font-family:inherit; font-size:0.85rem;">닫기</button>
                     </div>
                   </div>
@@ -3140,22 +3120,6 @@
       }
     } catch(e) {}
 
-    // 7) 발표대회 소감 (승인된 것만 공개)
-    try {
-      const { data: revs } = await sb.from('testimonials').select('*').eq('status', 'approved').order('created_at', { ascending: false }).limit(30);
-      if (revs && revs.length > 0) {
-        const grid = document.getElementById('reviewsGrid');
-        const emptyMsg = document.getElementById('reviewsEmptyMsg');
-        if (emptyMsg) emptyMsg.remove();
-        grid.innerHTML = revs.map(r => `
-          <div style="background:white; border:1px solid var(--color-border); border-radius:14px; padding:22px; box-shadow:var(--shadow-sm); display:flex; flex-direction:column;">
-            <div style="font-size:1.5rem; color:var(--color-primary); line-height:1; margin-bottom:10px;">“</div>
-            <p style="color:var(--color-text); font-size:0.95rem; line-height:1.75; white-space:pre-line; word-break:keep-all; flex:1;">${escapeHtml(r.message)}</p>
-            <div style="margin-top:14px; font-size:0.85rem; color:var(--color-text-muted);"><strong style="color:var(--color-primary-dark);">${escapeHtml(r.name)}</strong>${r.role ? ' · ' + escapeHtml(r.role) : ''} · ${(r.created_at || '').slice(0, 10).replace(/-/g, '.')}</div>
-          </div>
-        `).join('');
-      }
-    } catch(e) {}
   })();
 
   // ============================================
@@ -3214,23 +3178,27 @@
   }
 
   // 월별 게시판(아코디언) 범용 렌더 — 방문자 다운로드 불가(이미지 인라인만)
-  function renderMonthlyBoard(donations, wrapId, slotKey, prefix) {
+  function renderMonthlyBoard(donations, wrapId, slots, prefix) {
     const wrap = document.getElementById(wrapId);
     if (!wrap) return;
     const norm = it => it ? (it.files ? it.files : { income: it }) : {};
     const entries = Object.keys(donations).sort((a, b) => parseInt(a) - parseInt(b))
       .map(k => ({ m: parseInt(k, 10), files: norm(donations[k]), raw: donations[k] }))
-      .filter(e => e.files[slotKey] && e.files[slotKey].url);
+      .filter(e => slots.some(sl => e.files[sl[0]] && e.files[sl[0]].url));
     wrap.style.display = 'block';
     if (entries.length === 0) { wrap.innerHTML = '<p style="text-align:center; color:#999; padding:20px 0;">아직 게시된 내역이 없습니다.</p>'; return; }
     const lastIdx = entries.length - 1;
     wrap.innerHTML = entries.map((e, i) => {
-      const f = e.files[slotKey];
-      const date = ((e.raw && (e.raw.updatedAt || e.raw.uploadedAt)) || (f && f.uploadedAt) || '').slice(0, 10).replace(/-/g, '.');
-      const isImg = /\.(png|jpe?g|gif|webp)$/i.test(f.fileName || '');
-      const body = isImg
-        ? `<img src="${f.url}" alt="자료" loading="lazy" style="max-width:100%; border-radius:8px; pointer-events:none;" oncontextmenu="return false;" />`
-        : `<div style="color:#777; font-size:0.92rem;">📄 ${escapeHtml(f.fileName || '자료')} <span style="color:#aaa;">(게시됨 · 관리자 열람)</span></div>`;
+      const date = ((e.raw && (e.raw.updatedAt || e.raw.uploadedAt)) || '').slice(0, 10).replace(/-/g, '.');
+      const body = slots.map(sl => {
+        const f = e.files[sl[0]];
+        if (!f || !f.url) return '';
+        const isImg = /\.(png|jpe?g|gif|webp)$/i.test(f.fileName || '');
+        const inner = isImg
+          ? `<img src="${f.url}" alt="자료" loading="lazy" style="max-width:100%; border-radius:8px; pointer-events:none;" oncontextmenu="return false;" />`
+          : `<div style="color:#777; font-size:0.92rem;">📄 ${escapeHtml(f.fileName || '자료')} <span style="color:#aaa;">(게시됨 · 관리자 열람)</span></div>`;
+        return `<div style="margin-top:14px;">${sl[1] ? `<div style="font-weight:800; color:var(--color-primary-dark, #8B1E3F); margin-bottom:6px;">${sl[1]}</div>` : ''}${inner}</div>`;
+      }).join('');
       const open = i === lastIdx;
       return `<div style="border:1px solid #f0dde0; border-radius:12px; margin-bottom:10px; overflow:hidden; background:white;">
         <div onclick="toggleBoard('${prefix}', ${i})" style="display:flex; justify-content:space-between; align-items:center; padding:15px 18px; cursor:pointer;">
@@ -3238,7 +3206,7 @@
           <span style="font-size:0.8rem; color:#999; flex-shrink:0;">${date ? date + ' 게시 ' : ''}<span id="${prefix}Arrow${i}">${open ? '▲' : '▼'}</span></span>
         </div>
         <div id="${prefix}Body${i}" style="display:${open ? 'block' : 'none'}; padding:0 18px 18px; border-top:1px solid #f7e8ec;">
-          ${body}
+          ${body || '<p style="color:#999; margin-top:12px;">자료 준비 중입니다.</p>'}
         </div>
       </div>`;
     }).join('');
