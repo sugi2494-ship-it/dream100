@@ -2318,27 +2318,38 @@
   // 메인 슬라이드
   // ===================================
   const PROGRAM_SLOTS = [
-    { title: '01 꿈비전 발표대회', def: 'assets/gallery/dream_vision_speech.jpg' },
-    { title: '02 청소년 진로멘토링', def: 'assets/gallery/mentoring.jpg' },
-    { title: '03 장학금 후원사업', def: 'assets/gallery/scholarship.jpg' },
-    { title: '04 공익활동 및 봉사활동', def: 'assets/gallery/16_culture_point.jpg' },
+    { title: '01 꿈비전 발표대회', def: 'assets/gallery/dream_vision_speech.jpg', dTitle: '꿈비전 발표대회', dSub: '진로를 찾고 꿈을 찾는 프로젝트', dDesc: '만 13~17세 청소년들이 자신의 꿈과 비전을 발표하는 자기효능감 향상 대회입니다.' },
+    { title: '02 청소년 진로멘토링', def: 'assets/gallery/mentoring.jpg', dTitle: '청소년 진로멘토링', dSub: '"별빛이 되어줄래" · "드림 캠퍼스"', dDesc: '꿈파쇼 진로멘토단을 통한 학교 및 공익 활동사업으로 청소년을 위한 교육과 멘토링을 제공합니다.' },
+    { title: '03 장학금 후원사업', def: 'assets/gallery/scholarship.jpg', dTitle: '장학금 후원사업', dSub: '취약계층 청소년 장학후원', dDesc: '경제적 어려움으로 배움을 이어가기 어려운 취약계층 청소년에게 장학금과 학습 지원을 제공합니다.' },
+    { title: '04 공익활동 및 봉사활동', def: 'assets/gallery/16_culture_point.jpg', dTitle: '공익활동 및 봉사활동', dSub: '지역 봉사활동 및 환경정화', dDesc: '울산문화점빵, ESG환경, 야영장 활성화 프로그램 등 지역사회와 함께하는 공익·봉사활동을 전개합니다.' },
   ];
   function renderPrograms() {
     const grid = document.getElementById('programsGrid');
     if (!grid) return;
     const data = (load(STORE.programs, null) || {}).images || {};
+    const texts = (load(STORE.programs, null) || {}).texts || {};
     grid.innerHTML = PROGRAM_SLOTS.map((s, i) => {
       const custom = data[i];
       const src = custom || s.def;
+      const t = texts[i] || {};
       return `<div style="border:1px solid var(--color-border); border-radius:12px; overflow:hidden;">
         <div style="aspect-ratio:16/10; background:#f5f5f5; overflow:hidden;"><img src="${src}" style="width:100%; height:100%; object-fit:cover; display:block;" /></div>
         <div style="padding:12px;">
-          <div style="font-weight:800; font-size:0.9rem; margin-bottom:8px;">${s.title}${custom ? ' <span style=\'color:var(--color-success); font-size:0.75rem;\'>· 변경됨</span>' : ' <span style=\'color:var(--color-text-muted); font-size:0.75rem;\'>· 기본</span>'}</div>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <div style="font-weight:800; font-size:0.9rem; margin-bottom:8px;">${s.title}${custom ? ' <span style=\'color:var(--color-success); font-size:0.75rem;\'>· 사진변경</span>' : ''}</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
             <label class="btn btn-primary btn-sm" style="cursor:pointer; margin:0;">📷 사진 바꾸기
               <input type="file" accept="image/*" style="display:none" onchange="uploadProgramImage(${i}, this.files[0])" />
             </label>
             ${custom ? `<button class="btn btn-ghost btn-sm" onclick="resetProgramImage(${i})">기본 사진으로</button>` : ''}
+          </div>
+          <div style="border-top:1px dashed var(--color-border); padding-top:10px;">
+            <label style="font-size:0.72rem; font-weight:700; color:var(--color-text-muted);">제목</label>
+            <input type="text" id="pt-title-${i}" value="${escapeHtml(t.title || s.dTitle)}" style="width:100%; padding:7px 9px; margin:3px 0 8px; border:1px solid var(--color-border); border-radius:7px; font-family:inherit; font-size:0.85rem;" />
+            <label style="font-size:0.72rem; font-weight:700; color:var(--color-text-muted);">부제(작은 제목)</label>
+            <input type="text" id="pt-sub-${i}" value="${escapeHtml(t.subtitle || s.dSub)}" style="width:100%; padding:7px 9px; margin:3px 0 8px; border:1px solid var(--color-border); border-radius:7px; font-family:inherit; font-size:0.85rem;" />
+            <label style="font-size:0.72rem; font-weight:700; color:var(--color-text-muted);">설명</label>
+            <textarea id="pt-desc-${i}" style="width:100%; min-height:64px; padding:7px 9px; margin:3px 0 8px; border:1px solid var(--color-border); border-radius:7px; font-family:inherit; font-size:0.85rem; resize:vertical;">${escapeHtml(t.desc || s.dDesc)}</textarea>
+            <button class="btn btn-success btn-sm" style="width:100%;" onclick="saveProgramText(${i})">💾 글 저장</button>
           </div>
         </div>
       </div>`;
@@ -2364,6 +2375,17 @@
     save(STORE.programs, data);
     renderPrograms();
     showToast('기본 사진으로 되돌렸습니다.', 'success');
+  }
+  function saveProgramText(idx) {
+    const data = load(STORE.programs, null) || { images: {} };
+    data.texts = data.texts || {};
+    data.texts[idx] = {
+      title: (document.getElementById('pt-title-' + idx).value || '').trim(),
+      subtitle: (document.getElementById('pt-sub-' + idx).value || '').trim(),
+      desc: (document.getElementById('pt-desc-' + idx).value || '').trim(),
+    };
+    save(STORE.programs, data);
+    showToast('글이 저장되었습니다! 홈페이지에 바로 반영됩니다 ✏️', 'success');
   }
   function renderHero() {
     const h = load(STORE.hero, { slides: [] }) || { slides: [] };
